@@ -1,0 +1,9 @@
+D:\Projects\Validation\Flow.Library\bin\Debug\Flow.Library.dll
+D:\Projects\Validation\Flow.Library\bin\Debug\Flow.Library.pdb
+D:\Projects\Validation\Flow.Library\bin\Debug\Dapper.dll
+D:\Projects\Validation\Flow.Library\bin\Debug\Dapper.pdb
+D:\Projects\Validation\Flow.Library\bin\Debug\Dapper.xml
+D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.dll
+D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.pdb
+D:\Projects\Validation\Flow.Library\bin\Debug\Noesis.Javascript.dll
+D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.csprojResolveAssemblyReference.cache

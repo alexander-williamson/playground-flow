@@ -1,0 +1,8 @@
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\FakeItEasy.dll
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\xunit.dll
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\FakeItEasy.xml
+d:\Projects\Validation\ConsoleApplication1\bin\Debug\xunit.xml
+d:\Projects\Validation\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.exe
+d:\Projects\Validation\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.pdb

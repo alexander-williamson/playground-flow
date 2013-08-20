@@ -1,0 +1,9 @@
+<Modules>
+  <Module PersistentId="328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA" ModuleId="ConsoleApplication1" />
+  <Module PersistentId="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="mscorlib" />
+  <Module PersistentId="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="System.Core" />
+  <Module PersistentId="C01DAA36-7675-4920-A67B-88D3988C9B2C" ModuleId="Web" />
+  <Module PersistentId="DC581325-4ED2-48D6-AE74-67F242C0AA0A" ModuleId="Web_1" />
+  <Module PersistentId="69FFDADE-F00E-4903-AF27-B3E48D674C6D" ModuleId="Flow.Library" />
+  <Module PersistentId="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="System.Core_1" />
+</Modules>
