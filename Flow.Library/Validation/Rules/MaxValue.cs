@@ -5,12 +5,7 @@ namespace Flow.Library.Validation.Rules
 {
     public class MaxValue : IValidate
     {
-        public int Max { get; private set; }
-        public MaxValue(int max)
-        {
-            Max = max;
-        }
-
+        public int Max { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)
         {
             if (!variables.ContainsKey(key))

@@ -5,12 +5,7 @@ namespace Flow.Library.Validation.Rules
 {
     public class StringMaxLength : IValidate
     {
-        public int MaxLength { get; private set; }
-        public StringMaxLength(int maxLength)
-        {
-            MaxLength = maxLength;
-        }
-
+        public int MaxLength { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)
         {
             if (!variables.ContainsKey(key))

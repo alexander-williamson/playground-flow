@@ -45,7 +45,7 @@ namespace Flow.Console.Tests
             // assemble
             var rules = new List<ValidationRule>();
             rules.Add(new ValidationRule { Key = "PropertyOne", Validator = new StringRequired() });
-            rules.Add(new ValidationRule { Key = "PropertyOne", Validator = new StringMaxLength(10) });
+            rules.Add(new ValidationRule { Key = "PropertyOne", Validator = new StringMaxLength { MaxLength = 10} });
 
             // act
             dynamic instance = new ExpandoObject();
@@ -68,8 +68,8 @@ namespace Flow.Console.Tests
             var rules = new List<ValidationRule>
                             {
                                 new ValidationRule {Key = "FirstProperty", Validator = new StringRequired()},
-                                new ValidationRule {Key = "FirstProperty", Validator = new StringMaxLength(10)},
-                                new ValidationRule {Key = "SecondProperty", Validator = new MaxValue(100)}
+                                new ValidationRule {Key = "FirstProperty", Validator = new StringMaxLength { MaxLength = 10}},
+                                new ValidationRule {Key = "SecondProperty", Validator = new MaxValue { Max = 100 }}
                             };
 
             // act
@@ -90,9 +90,9 @@ namespace Flow.Console.Tests
         public void javascript_validator_returns_false()
         {
             // assemble
-            var instance = new {PropertyOne = "hello world"};
+            var instance = new { PropertyOne = "hello world" };
             var rules = new List<ValidationRule>();
-            rules.Add(new ValidationRule {Key = "PropertyOne", Validator = new JavascriptRule {Source = "result = false; "}});
+            rules.Add(new ValidationRule { Key = "PropertyOne", Validator = new JavascriptRule { Source = "result = false; " } });
             var validator = new ValidationEngine(rules, instance);
 
             // act
@@ -119,5 +119,23 @@ namespace Flow.Console.Tests
             Assert.True(result);
             Assert.Equal(0, validator.BrokenRules.Count);
         }
+
+        [Fact]
+        public void javascript_validator_compares_string()
+        {
+            // assemble
+            var instance = new { PropertyOne = "hello world", PropertyTwo = 3 };
+            var rules = new List<ValidationRule>();
+            rules.Add(new ValidationRule { Key = "PropertyOne", Validator = new JavascriptRule { Source = " if(PropertyOne == 'hello world' && PropertyTwo == 3) { result = true; }" } });
+            var validator = new ValidationEngine(rules, instance);
+
+            // act
+            var result = validator.IsValid;
+
+            // assert
+            Assert.True(result);
+            Assert.Equal(0, validator.BrokenRules.Count);
+        }
+
     }
 }

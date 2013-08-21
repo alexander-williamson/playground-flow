@@ -1,5 +1,6 @@
 ﻿//using System.Collections.Generic;
 //using ConsoleApplication1.Library;
+//using Flow.Library;
 //using Xunit;
 
 //namespace ConsoleApplication1.Tests
@@ -14,7 +15,7 @@
 
 //            // assert
 //            Assert.Equal(0, instance.Arguments.Count);
-//            Assert.Equal(0, instance.Values.Count);
+//            Assert.Equal(0, instance.Variables.Count);
 //        }
 
 //        [Fact]
@@ -31,7 +32,7 @@
 //            var instance = new FormProvider(arguments);
 
 //            // act
-//            instance.Process();
+//            instance.();
 
 //            // assert
 //            Assert.Equal(4, instance.Arguments.Count);
@@ -40,11 +41,11 @@
 //            Assert.Equal(string.Empty, instance.Arguments["Telephone"]);
 //            Assert.Equal(string.Empty, instance.Arguments["Memo"]);
 
-//            Assert.Equal(4, instance.Values.Count);
-//            Assert.Equal(string.Empty, instance.Values["FirstName"]);
-//            Assert.Equal(string.Empty, instance.Values["LastName"]);
-//            Assert.Equal(string.Empty, instance.Values["Telephone"]);
-//            Assert.Equal(string.Empty, instance.Values["Memo"]);
+//            Assert.Equal(4, instance.Variables.Count);
+//            Assert.Equal(string.Empty, instance.Variables["FirstName"]);
+//            Assert.Equal(string.Empty, instance.Variables["LastName"]);
+//            Assert.Equal(string.Empty, instance.Variables["Telephone"]);
+//            Assert.Equal(string.Empty, instance.Variables["Memo"]);
 //        }
 
 //        [Fact]
@@ -61,11 +62,11 @@
 //            var instance = new FormProvider(arguments);
 
 //            // act
-//            instance.Values["FirstName"] = "AAA";
-//            instance.Values["LastName"] = "BBB";
-//            instance.Values["Telephone"] = "CCC";
-//            instance.Values["Memo"] = "DDD";
-            
+//            instance.Variables["FirstName"] = "AAA";
+//            instance.Variables["LastName"] = "BBB";
+//            instance.Variables["Telephone"] = "CCC";
+//            instance.Variables["Memo"] = "DDD";
+
 //            // assert
 //            Assert.Equal(4, instance.Arguments.Count);
 //            Assert.Equal(string.Empty, instance.Arguments["FirstName"]);
@@ -73,11 +74,11 @@
 //            Assert.Equal(string.Empty, instance.Arguments["Telephone"]);
 //            Assert.Equal(string.Empty, instance.Arguments["Memo"]);
 
-//            Assert.Equal(4, instance.Values.Count);
-//            Assert.Equal("AAA", instance.Values["FirstName"]);
-//            Assert.Equal("BBB", instance.Values["LastName"]);
-//            Assert.Equal("CCC", instance.Values["Telephone"]);
-//            Assert.Equal("DDD", instance.Values["Memo"]);
+//            Assert.Equal(4, instance.Variables.Count);
+//            Assert.Equal("AAA", instance.Variables["FirstName"]);
+//            Assert.Equal("BBB", instance.Variables["LastName"]);
+//            Assert.Equal("CCC", instance.Variables["Telephone"]);
+//            Assert.Equal("DDD", instance.Variables["Memo"]);
 //        }
 //    }
 //}

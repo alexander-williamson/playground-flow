@@ -5,12 +5,7 @@ namespace Flow.Library.Validation.Rules
 {
     public class MinValue : IValidate
     {
-        public int Min { get; private set; }
-        public MinValue(int min)
-        {
-            Min = min;
-        }
-        
+        public int Min { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)
         {
             if (!variables.ContainsKey(key))

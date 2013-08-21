@@ -10,11 +10,12 @@ namespace Flow.Console.Tests
 {
     public class WebApiTestRunner
     {
+
         private FlowInstance GetFlowInstance()
         {
             var instance = new FlowInstance { Id = 100, Name = "Example Flow" };
             instance.Variables.Add("Name", string.Empty);
-            instance.Variables.Add("Age", int.MinValue);
+            instance.Variables.Add("Age", (int?) null);
             instance.Steps = new List<StepBase>
             {
                 new StartStepBase(instance) {Id = 0, MaximumNodes = int.MaxValue, MinimumNodes = 1, Name = "Start"},
