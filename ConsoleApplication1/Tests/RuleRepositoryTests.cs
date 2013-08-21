@@ -13,7 +13,7 @@ namespace Flow.Console.Tests
             const string json = "{ Type: \"MaxValue\", Max: 20 }";
 
             // act
-            var rule = RulesRepository.GetRuleInstance(json);
+            var rule = JsonRuleFactory.GetRuleInstance(json);
 
             // assert
             Assert.IsType<MaxValue>(rule);
@@ -27,7 +27,7 @@ namespace Flow.Console.Tests
             const string json = "{ Type: \"MinValue\", Min: 1 }";
 
             // act
-            var rule = RulesRepository.GetRuleInstance(json);
+            var rule = JsonRuleFactory.GetRuleInstance(json);
 
             // assert
             Assert.IsType<MinValue>(rule);

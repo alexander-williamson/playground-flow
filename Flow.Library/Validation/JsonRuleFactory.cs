@@ -3,26 +3,10 @@ using System.Reflection;
 using Flow.Library.Validation.Rules;
 using Newtonsoft.Json;
 
-namespace Flow.Library
+namespace Flow.Library.Validation
 {
-    public class RulesRepository
+    public class JsonRuleFactory
     {
-        public static IValidate GetRule(int id)
-        {
-
-
-
-
-
-            switch (id)
-            {
-                case 1:
-
-                default:
-                    throw new InvalidCastException("Unable to find that item");
-            }
-        }
-
         public static IValidate GetRuleInstance(string json)
         {
             dynamic element = JsonConvert.DeserializeObject(json);
