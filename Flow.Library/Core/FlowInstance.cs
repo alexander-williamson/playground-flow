@@ -33,6 +33,8 @@ namespace Flow.Library.Core
         {
             foreach(var step in Steps)
             {
+                step.IsInitialized = true;
+                
                 var instance = step;
                 var matches = (from o in completedStepVersions where o.StepId == instance.Id && o.StepVersion == instance.VersionId select o).ToList();
                 if (matches.Any())

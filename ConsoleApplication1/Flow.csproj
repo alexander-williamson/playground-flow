@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\FlowInstanceResumeTests.cs" />
     <Compile Include="Tests\FlowTemplateRepositoryTests.cs" />
     <Compile Include="Tests\FormInstanceTests.cs" />
     <Compile Include="Tests\RuleRepositoryTests.cs" />
