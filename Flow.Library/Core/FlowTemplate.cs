@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Flow.Library.Steps;
 
 namespace Flow.Library.Core
@@ -12,7 +13,8 @@ namespace Flow.Library.Core
         public IEnumerable<StepBase> RequiredSteps { get; set; }
         public IEnumerable<Link> Nodes { get; set; }
         public IDictionary<string, object> Variables { get; set; }
-
+        public StepBase StartNode { get { return Steps.First(); } }
+    
         public FlowTemplate()
         {
             Id = 0;
