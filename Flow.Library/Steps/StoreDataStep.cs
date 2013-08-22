@@ -1,16 +1,12 @@
 using System;
 using System.IO;
+using Flow.Library.Core;
 using Flow.Library.Runners;
 
 namespace Flow.Library.Steps
 {
     public class StoreDataStep : StepBase
     {
-        public StoreDataStep(FlowInstance flow) : base(flow)
-        {
-            // do nothing
-            
-        }
         public override void Process(FlowInstance flow, IRunFlows runner)
         {
             const string path = @"C:\Temp\output.txt";

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class StringRequired : IValidate
+    public class StringRequired : IRule
     {
         public bool Validate(IDictionary<string, object> variables, string key)
         {

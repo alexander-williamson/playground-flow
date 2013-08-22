@@ -3,7 +3,7 @@ using Flow.Library;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class StringMaxLength : IValidate
+    public class StringMaxLength : IRule
     {
         public int MaxLength { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)

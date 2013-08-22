@@ -1,11 +1,16 @@
+using Flow.Library.Core;
 using Flow.Library.Runners;
+using Flow.Library.UI;
 
 namespace Flow.Library.Steps
 {
     public class StepBase
     {
-        protected FlowInstance Flow { get; set; }
+        // steps are versioned so you can work out where you've resumed from
         public int Id { get; set; }
+        public int VersionId { get; set; }
+
+        public string Type { get; set; }
         public string Name { get; set; }
         public int MinimumNodes { get; set; }
         public int MaximumNodes { get; set; }
@@ -13,22 +18,21 @@ namespace Flow.Library.Steps
         public bool IsComplete { get { return IsInitialized && IsProcessed && CanContinue; } }
         public bool IsInitialized { get; set; }
         public bool IsProcessed { get; set; }
-        public bool CanContinue { get; protected set; }
+        public virtual bool CanContinue { get; set; }
         public bool CanInitialise { get; set; }
-        public void Initialise()
-        {
-            IsInitialized = true;
-        }
+        public void Initialise() { IsInitialized = true; }
+
         public virtual void Process(FlowInstance flow, IRunFlows runner)
         {
             IsProcessed = true;
             CanContinue = true;
         }
-        public StepBase(FlowInstance flow)
+
+        public StepBase()
         {
-            Flow = flow;
             CanInitialise = true;
         }
+
         public override string ToString()
         {
             return "StepBase";

@@ -3,7 +3,7 @@ using Flow.Library;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class MinValue : IValidate
+    public class MinValue : IRule
     {
         public int Min { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)

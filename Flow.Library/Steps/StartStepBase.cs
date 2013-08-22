@@ -2,7 +2,7 @@ namespace Flow.Library.Steps
 {
     public class StartStepBase : StepBase
     {
-        public StartStepBase(FlowInstance flow) : base(flow)
+        public StartStepBase()
         {
             Id = int.MinValue;
             Name = "Start";

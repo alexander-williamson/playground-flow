@@ -1,4 +1,4 @@
-namespace Flow.Library
+namespace Flow.Library.Validation
 {
     public class BrokenRule
     {

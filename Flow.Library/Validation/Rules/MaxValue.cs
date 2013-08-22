@@ -3,7 +3,7 @@ using Flow.Library;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class MaxValue : IValidate
+    public class MaxValue : IRule
     {
         public int Max { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)

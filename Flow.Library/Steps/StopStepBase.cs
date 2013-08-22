@@ -2,7 +2,7 @@ namespace Flow.Library.Steps
 {
     public class StopStepBase : StepBase
     {
-        public StopStepBase(FlowInstance flow) : base(flow)
+        public StopStepBase()
         {
             Id = int.MaxValue;
             Name = "StopStepBase";

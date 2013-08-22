@@ -46,3 +46,7 @@ _ReSharper*/
 *.testsettings
 DeploymentWorking/
 Flow.suo
+Web/Web/bin/*
+*/bin/*
+ConsoleApplication1/bin/*
+ConsoleApplication1/bin/*

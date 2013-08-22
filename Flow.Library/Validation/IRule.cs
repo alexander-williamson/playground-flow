@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Flow.Library
+namespace Flow.Library.Validation
 {
-    public interface IValidate
+    public interface IRule
     {
         bool Validate(IDictionary<string, object> variables, string key);
     }

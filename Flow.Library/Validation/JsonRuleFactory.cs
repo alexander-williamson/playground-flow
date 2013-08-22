@@ -7,7 +7,7 @@ namespace Flow.Library.Validation
 {
     public class JsonRuleFactory
     {
-        public static IValidate GetRuleInstance(string json)
+        public static IRule GetRuleInstance(string json)
         {
             dynamic element = JsonConvert.DeserializeObject(json);
             String ruleTypeName = null;
@@ -45,7 +45,7 @@ namespace Flow.Library.Validation
             if (ruleType == null)
                 throw new InvalidCastException("Unable to find Rule Type: " + ruleTypeName);
 
-            var ruleinstance = (IValidate)Activator.CreateInstance(ruleType);
+            var ruleinstance = (IRule)Activator.CreateInstance(ruleType);
 
             foreach (var propertyElement in ruleinstance.GetType().GetProperties())
             {

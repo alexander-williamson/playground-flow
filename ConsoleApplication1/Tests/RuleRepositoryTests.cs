@@ -1,4 +1,5 @@
 ﻿using Flow.Library;
+using Flow.Library.Validation;
 using Flow.Library.Validation.Rules;
 using Xunit;
 

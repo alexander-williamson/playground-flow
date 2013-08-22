@@ -4,7 +4,7 @@ using Noesis.Javascript;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class JavascriptRule : IValidate
+    public class JavascriptRule : IRule
     {
         public const string ArgumentVariable = "argument";
         public const string FlowVariable = "flow";

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Flow.Library.Actions;
+using Flow.Library.Core;
 using Flow.Library.Steps;
 
 namespace Flow.Library.Runners
@@ -16,11 +18,16 @@ namespace Flow.Library.Runners
             Types.Add(typeof(StoreDataStep));
         }
 
+        public List<StepBase> NotCompleteSteps()
+        {
+            return (from o in FlowInstance.Steps where o.IsComplete == false select o).ToList();
+        }
+
         public new IAction ProcessSteps()
         {
             IAction result = null;
 
-            while (result == null && (from o in FlowInstance.Steps where o.IsComplete == false select o).Any())
+            while (result == null && NotCompleteSteps().Any())
             {
                 // a flow instance would have just been loaded from the database
                 // so it would know it's current state
