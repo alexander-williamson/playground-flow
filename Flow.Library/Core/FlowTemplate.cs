@@ -9,10 +9,10 @@ namespace Flow.Library.Core
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<StepBase> Steps { get; set; }
-        public IEnumerable<StepBase> RequiredSteps { get; set; }
-        public IEnumerable<Link> Nodes { get; set; }
-        public IDictionary<string, object> Variables { get; set; }
+        public List<StepBase> Steps { get; set; }
+        public List<StepBase> RequiredSteps { get; set; }
+        public List<Link> Nodes { get; set; }
+        public Dictionary<string, object> Variables { get; set; }
         public StepBase StartNode { get { return Steps.First(); } }
     
         public FlowTemplate()
@@ -21,7 +21,7 @@ namespace Flow.Library.Core
             Name = string.Empty;
             Steps = new List<StepBase>();
             RequiredSteps = new List<StepBase>();
-            Nodes = new BindingList<Link>();
+            Nodes = new List<Link>();
             Variables = new Dictionary<string, object>();
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Flow.Library.Validation;
 
-namespace Flow.Library
+namespace Flow.Library.UI
 {
     public interface IFormProvider
     {

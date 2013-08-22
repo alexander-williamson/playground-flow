@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Dynamic;
 using Flow.Library.Core;
+using Flow.Library.UI;
 using Flow.Library.Validation;
 
 namespace Flow.Library.Steps
@@ -9,6 +9,7 @@ namespace Flow.Library.Steps
     {
         public List<ValidationRule> Rules { get; set; }
         private Dictionary<string, object> Variables { get; set; }
+        public IFormTemplate FormTemplate { get; set; }
 
         public DataCollectionStep()
         {

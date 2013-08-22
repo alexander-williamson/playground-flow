@@ -70,6 +70,7 @@
     <Compile Include="Core\FlowState.cs" />
     <Compile Include="UI\FormProvider.cs" />
     <Compile Include="Data\Repositories\IFlowTemplateRepository.cs" />
+    <Compile Include="UI\FormTemplateBase.cs" />
     <Compile Include="Validation\IRule.cs" />
     <Compile Include="Core\Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

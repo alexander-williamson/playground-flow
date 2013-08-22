@@ -19,7 +19,7 @@ namespace Flow.Library.Data.Repositories
             return template;
         }
 
-        private IEnumerable<StepBase> GetSteps(int templateId)
+        private List<StepBase> GetSteps(int templateId)
         {
             var stepsResult = _flowTemplateRepository.GetFlowTemplateStepsForTemplate(templateId);
             var steps = new List<StepBase>();
