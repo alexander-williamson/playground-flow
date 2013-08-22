@@ -29,6 +29,7 @@ namespace Flow.Library.Core
         // Inform all the steps if they've been processed before or not, because they don't know
         // Ideally the steps will know if they have been processed, but they've just been loaded from the database
         //  so they have NO idea what's going on, poor chaps
+        // Steps where the version number = 0 are steps which are base steps so can be processed
         public void Resume(List<CompletedStep> completedStepVersions)
         {
             foreach(var step in Steps)
@@ -36,7 +37,7 @@ namespace Flow.Library.Core
                 step.IsInitialized = true;
                 
                 var instance = step;
-                var matches = (from o in completedStepVersions where o.StepId == instance.Id && o.StepVersion == instance.VersionId select o).ToList();
+                var matches = (from o in completedStepVersions where o.StepId == instance.Id && (o.StepVersion == 0 || o.StepVersion == instance.VersionId) select o).ToList();
                 if (matches.Any())
                     step.IsProcessed = true;
             }
