@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Submit</title>
+</head>
+<body>
+    <div>
+        <p>Form Values:</p>
+        @{
+            foreach (var o in Request.Form.AllKeys)
+            {
+                <p>
+                    Key:
+                    @o
+                    Value:
+                    @Request.Form[o]
+                </p>
+            }
+        }
+    </div>
+</body>
+</html>

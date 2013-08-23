@@ -32,28 +32,33 @@ namespace Flow.Library.Validation
             _brokenRules = new List<ValidationRule>();
         }
 
+        public void Validate()
+        {
+            _brokenRules.Clear();
+
+            // a list of variables that have rules defined for them
+            var runRulesOn = (from o in Rules select o.Key).Distinct().ToList();
+
+            // run the rules for each project
+            foreach (var propertyName in runRulesOn)
+            {
+                var key = propertyName;
+                var rulesForThisProperty = (from o in Rules where o.Key == key select o);
+                foreach (var rule in rulesForThisProperty)
+                {
+                    if (!rule.Validator.Validate(Variables, propertyName))
+                    {
+                        BrokenRules.Add(rule);
+                    }
+                }
+            }
+        }
+
         public bool IsValid
         {
             get
             {
-                _brokenRules.Clear();
-
-                // a list of variables that have rules defined for them
-                var runRulesOn = (from o in Rules select o.Key).Distinct().ToList();
-
-                // run the rules for each project
-                foreach (var propertyName in runRulesOn)
-                {
-                    var key = propertyName;
-                    var rulesForThisProperty = (from o in Rules where o.Key == key select o);
-                    foreach (var rule in rulesForThisProperty)
-                    {
-                        if (!rule.Validator.Validate(Variables, propertyName))
-                        {
-                            BrokenRules.Add(rule);
-                        }
-                    }
-                }
+                Validate();
                 return BrokenRules.Count == 0;
             }
         }

@@ -50,3 +50,13 @@ Web/Web/bin/*
 */bin/*
 ConsoleApplication1/bin/*
 ConsoleApplication1/bin/*
+ConsoleApplication1/bin/Debug/Flow.Console.exe
+ConsoleApplication1/bin/Debug/Flow.Console.exe
+ConsoleApplication1/bin/Debug/Flow.Console.pdb
+ConsoleApplication1/bin/Debug/Flow.Library.dll
+ConsoleApplication1/bin/Debug/Flow.Library.pdb
+ConsoleApplication1/obj/x86/Debug/Flow.Console.exe
+ConsoleApplication1/obj/x86/Debug/Flow.Console.pdb
+ConsoleApplication1/obj/x86/Debug/Flow.csprojResolveAssemblyReference.cache
+Flow.Library/bin/Debug/Flow.Library.dll
+Flow.Library/bin/Debug/Flow.Library.pdb
