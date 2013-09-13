@@ -1,0 +1,46 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Flow test canvas</title>
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.jsPlumb-1.5.2-min.js"></script>
+    <link rel="stylesheet" href="~/Content/themes/base/jquery.ui.all.css" />
+</head>
+    <body>
+        <div class="diagram-elements">
+            <div id="node0" class="window _jsPlumb_endpoint_anchor_ ui-draggable">One</div>
+            <div id="node1" class="window _jsPlumb_endpoint_anchor_ ui-draggable">Two</div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        var firstInstance;
+
+        $(document).ready(function () {
+
+            // setup jsPlumb
+            jsPlumb.Defaults.Container = $(".diagram-elements:first");
+
+            firstInstance = jsPlumb.getInstance();
+            firstInstance.importDefaults({
+                Connector: ["Bezier", { curviness: 150}],
+                Anchors: ["TopCenter", "BottomCenter"]
+            });
+
+            var e0 = jsPlumb.addEndpoint("node0");
+            var e1 = jsPlumb.addEndpoint("node1");
+            jsPlumb.connect({ source: e0, target: e1 });
+
+            //            firstInstance.connect({
+            //                source: "element1",
+            //                target: "element2",
+            //                scope: "someScope"
+            //            });
+        });
+        
+    </script>
+</html>
