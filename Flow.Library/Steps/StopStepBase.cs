@@ -7,7 +7,6 @@ namespace Flow.Library.Steps
             Id = int.MaxValue;
             Name = "StopStepBase";
             IsInitialized = true;
-            CanContinue = true;
         }
     }
 }

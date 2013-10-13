@@ -9,20 +9,7 @@ namespace Flow.Library.Steps
     public class DataCollectionStep : StepBase
     {
         // Rules can match anything in the whole flow
-        public List<ValidationRule> Rules { get; set; }
-        public List<ValidationRule> BrokenRules
-        {
-            get
-            {
-                if (Rules != null && Variables != null)
-                {
-                    var engine = new ValidationEngine(Rules, Variables);
-                    engine.Validate();
-                    return engine.BrokenRules;
-                }
-                return new List<ValidationRule>();
-            }
-        } 
+
 
         // the list of variables that this form needs
         // (this is so you can hide form only variables)
@@ -34,7 +21,6 @@ namespace Flow.Library.Steps
 
         public DataCollectionStep(List<ValidationRule> rules = null, Dictionary<string, object> requiredVariables = null)
         {
-            Rules = rules ?? new List<ValidationRule>();
             AvailableVariables = requiredVariables ?? new Dictionary<string, object>();
             Variables = AvailableVariables;
         }
@@ -52,7 +38,7 @@ namespace Flow.Library.Steps
         { 
             get
             {
-                var engine = new ValidationEngine(Rules, Variables);
+                var engine = new ValidationEngine(ExitRules, Variables);
                 return engine.IsValid;
             } 
         }

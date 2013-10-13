@@ -8,27 +8,16 @@ using Flow.Library.Steps;
 using Flow.Library.UI;
 using Flow.Library.Validation;
 using Flow.Library.Validation.Rules;
+using Flow.Library.Data.Repositories;
 
 namespace Web.Controllers
 {
     public class FlowController : Controller
     {
-        
-        public static FlowInstance GetFlow()
-        {
-            var template = new FlowTemplate();
-            template.Variables.Add("yourName", string.Empty);
-            template.Steps.Add(new DataCollectionStep
-            {
-                Rules = new List<ValidationRule> { new ValidationRule { Key = "yourName", Validator = new StringRequired() } }
-            });
-            template.Steps.Add(new StoreDataStep());
-            return new FlowInstance(template);;
-        }
 
         public ActionResult Index()
         {
-            var instance = GetFlow();
+            var instance = FlowRepository.GetFlow(0,0);
             var result = NextAction(instance);
             return RedirectToAction(result.GetType().Name);
         }
@@ -41,11 +30,11 @@ namespace Web.Controllers
 
         public ActionResult CollectData()
         {
-                        var instance = GetFlow();
+            var instance = FlowRepository.GetFlow(0,0);
             var runner = new WebApiFlowRunner(instance);
             runner.ProcessSteps();
 
-            var brokenRules = ((DataCollectionStep) runner.NotCompleteSteps().First()).BrokenRules;
+            var brokenRules = ((DataCollectionStep) runner.NotCompleteSteps().First()).BrokenExitRules(instance.Variables);
 
             var form = new FormTemplateBase(brokenRules);
             return new ContentResult { Content = form.Html };
@@ -55,7 +44,7 @@ namespace Web.Controllers
         {
 
             // get the runner up to the need for data
-            var instance = GetFlow(); // <-- new instance(!)
+            var instance = FlowRepository.GetFlow(0,0); // <-- new instance(!)
             var result = NextAction(instance); // <-- data collection step, hasn't been complete, will ask for variables
 
             // populate the flowinstance with variables that the datacollectionstep specifies
@@ -71,6 +60,27 @@ namespace Web.Controllers
 
             result = NextAction(instance);
 
+            return RedirectToAction(result.GetType().Name);
+        }
+
+        public ActionResult ShowInformationPage()
+        {
+            // get the current step
+            var instance = FlowRepository.GetFlow(0,0);
+            var result = NextAction(instance); // should be show information page step
+
+            // populate the flowinstance with variables that the datacollectionstep specifies
+            // if available
+            var variableNames = instance.Variables.Select(o => o.Key).ToList();
+            foreach (var variableName in variableNames)
+            {
+                var value = Request.Form[variableName];
+
+                if (value != null)
+                    instance.Variables[variableName] = value;
+            }
+
+            result = NextAction(instance);
             return RedirectToAction(result.GetType().Name);
         }
 

@@ -8,7 +8,6 @@ namespace Flow.Library.Steps
             Name = "Start";
             IsInitialized = true;
             IsProcessed = true;
-            CanContinue = true;
         }
     }
 }
