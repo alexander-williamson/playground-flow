@@ -13,34 +13,35 @@ namespace Web.Controllers
 {
     public class FlowController : Controller
     {
+        
         public static FlowInstance GetFlow()
         {
             var template = new FlowTemplate();
             template.Variables.Add("yourName", string.Empty);
             template.Steps.Add(new DataCollectionStep
             {
-                Rules =
-                    new List<ValidationRule> { new ValidationRule { Key = "yourName", Validator = new StringRequired() } }
+                Rules = new List<ValidationRule> { new ValidationRule { Key = "yourName", Validator = new StringRequired() } }
             });
+            template.Steps.Add(new StoreDataStep());
             return new FlowInstance(template);;
         }
 
         public ActionResult Index()
         {
-            var result = NextAction();
+            var instance = GetFlow();
+            var result = NextAction(instance);
             return RedirectToAction(result.GetType().Name);
         }
 
-        public IAction NextAction()
+        public IAction NextAction(FlowInstance instance)
         {
-            var instance = GetFlow();
             var runner = new WebApiFlowRunner(instance);
             return runner.ProcessSteps();
         }
 
         public ActionResult CollectData()
         {
-            var instance = GetFlow();
+                        var instance = GetFlow();
             var runner = new WebApiFlowRunner(instance);
             runner.ProcessSteps();
 
@@ -54,8 +55,8 @@ namespace Web.Controllers
         {
 
             // get the runner up to the need for data
-            var instance = GetFlow();
-            var result = NextAction();
+            var instance = GetFlow(); // <-- new instance(!)
+            var result = NextAction(instance); // <-- data collection step, hasn't been complete, will ask for variables
 
             // populate the flowinstance with variables that the datacollectionstep specifies
             // if available
@@ -68,7 +69,7 @@ namespace Web.Controllers
                     instance.Variables[variableName] = value;
             }
 
-            result = NextAction();
+            result = NextAction(instance);
 
             return RedirectToAction(result.GetType().Name);
         }
