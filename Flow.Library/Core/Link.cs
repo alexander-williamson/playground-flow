@@ -1,4 +1,4 @@
-namespace Flow.Library
+namespace Flow.Library.Core
 {
     public class Link
     {

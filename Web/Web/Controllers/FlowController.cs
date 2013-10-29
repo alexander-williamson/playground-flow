@@ -17,7 +17,7 @@ namespace Web.Controllers
 
         public ActionResult Index()
         {
-            var instance = FlowRepository.GetFlow(0,0);
+            var instance = ExampleFlowInstanceRepository.GetFlow(0,0);
             var result = NextAction(instance);
             return RedirectToAction(result.GetType().Name);
         }
@@ -30,7 +30,7 @@ namespace Web.Controllers
 
         public ActionResult CollectData()
         {
-            var instance = FlowRepository.GetFlow(0,0);
+            var instance = ExampleFlowInstanceRepository.GetFlow(0,0);
             var runner = new WebApiFlowRunner(instance);
             runner.ProcessSteps();
 
@@ -44,7 +44,7 @@ namespace Web.Controllers
         {
 
             // get the runner up to the need for data
-            var instance = FlowRepository.GetFlow(0,0); // <-- new instance(!)
+            var instance = ExampleFlowInstanceRepository.GetFlow(0,0); // <-- new instance(!)
             var result = NextAction(instance); // <-- data collection step, hasn't been complete, will ask for variables
 
             // populate the flowinstance with variables that the datacollectionstep specifies
@@ -66,7 +66,7 @@ namespace Web.Controllers
         public ActionResult ShowInformationPage()
         {
             // get the current step
-            var instance = FlowRepository.GetFlow(0,0);
+            var instance = ExampleFlowInstanceRepository.GetFlow(0,0);
             var result = NextAction(instance); // should be show information page step
 
             // populate the flowinstance with variables that the datacollectionstep specifies

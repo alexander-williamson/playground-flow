@@ -2,7 +2,6 @@ using Flow.Library.Validation;
 using System.Collections.Generic;
 using Flow.Library.Core;
 using Flow.Library.Runners;
-using Flow.Library.UI;
 
 namespace Flow.Library.Steps
 {
@@ -19,7 +18,6 @@ namespace Flow.Library.Steps
         // connections
         public int MinimumNodes { get; set; }
         public int MaximumNodes { get; set; }
-
 
         public bool IsComplete { get { return IsInitialized && IsProcessed && CanContinue; } }
         public bool IsProcessed { get; set; }

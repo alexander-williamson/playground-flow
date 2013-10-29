@@ -1,13 +1,14 @@
-﻿using Flow.Library.Data.Repositories;
+﻿using Flow.Library.Data;
+using Flow.Library.Data.Abstract;
 
 namespace Flow.Library.Core
 {
     public class FlowInstanceFactory
     {
         private readonly FlowTemplateFactory _factory;
-        private readonly IFlowInstanceRepostory _instanceRepostory;
+        private readonly IFlowInstanceRepository _instanceRepostory;
 
-        public FlowInstanceFactory(IFlowTemplateRepository templateRepository, IFlowInstanceRepostory instanceRepostory)
+        public FlowInstanceFactory(IFlowTemplateRepository templateRepository, IFlowInstanceRepository instanceRepostory)
         {
             _factory = new FlowTemplateFactory(templateRepository);
             _instanceRepostory = instanceRepostory;
