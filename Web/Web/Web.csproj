@@ -223,10 +223,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ConsoleApplication1\Flow.csproj">
-      <Project>{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}</Project>
-      <Name>Flow</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Flow.Library\Flow.Library.csproj">
       <Project>{69FFDADE-F00E-4903-AF27-B3E48D674C6D}</Project>
       <Name>Flow.Library</Name>

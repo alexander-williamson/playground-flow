@@ -47,7 +47,7 @@ namespace Flow.Console.Tests
         {
             // assemble
             var template = GetFlowTemplate();
-            ((DataCollectionStep)template.Steps.ToList()[1]).Rules.Add(new ValidationRule { Key = "Name", Validator = new StringRequired() });
+            ((DataCollectionStep)template.Steps.ToList()[1]).ExitRules.Add(new ValidationRule { Key = "Name", Validator = new StringRequired() });
 
             var instance = new FlowInstance(template);
             instance.Variables["Name"] = "Some name";
@@ -66,7 +66,7 @@ namespace Flow.Console.Tests
         {
             // assemble
             var template = GetFlowTemplate();
-            ((DataCollectionStep)template.Steps.ToList()[1]).Rules.Add(new ValidationRule { Key = "Name", Validator = new StringRequired() });
+            ((DataCollectionStep)template.Steps.ToList()[1]).ExitRules.Add(new ValidationRule { Key = "Name", Validator = new StringRequired() });
             var instance = new FlowInstance(template);
             var runner = new WebApiFlowRunner(instance);
 

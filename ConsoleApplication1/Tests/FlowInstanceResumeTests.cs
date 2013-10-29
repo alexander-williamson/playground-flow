@@ -32,10 +32,11 @@ namespace Flow.Console.Tests
             // assemble
             var template = GetFlowTemplate();
             var instance = new FlowInstance(template);
+            var variables = new Dictionary<string, object>();
 
             // act
             var listOfCompletedSteps = new List<CompletedStep> { new CompletedStep { StepId = 1, StepVersion = 11 } };
-            instance.Resume(listOfCompletedSteps);
+            instance.Resume(listOfCompletedSteps, variables);
 
             var completedSteps = instance.CompletedSteps();
             var todoSteps = instance.NextSteps();
@@ -61,11 +62,12 @@ namespace Flow.Console.Tests
         {
             // assemble
             var template = GetFlowTemplate();
+            var variables = new Dictionary<string, object>();
             var instance = new FlowInstance(template);
 
             // act
             var listOfCompletedSteps = new List<CompletedStep> { new CompletedStep { StepId = 0 }, new CompletedStep { StepId = 1, StepVersion = 11 } };
-            instance.Resume(listOfCompletedSteps);
+            instance.Resume(listOfCompletedSteps, variables);
 
             // assert
             var completedSteps = instance.CompletedSteps();

@@ -14,7 +14,6 @@ namespace Flow.Library.Core
     {
         public int Id { get; set; }
         public FlowTemplate Template { get; set; }
-        public FlowState CurrentState { get; set; }
         public Dictionary<string, object> Variables { get; set; }
         public List<StepBase> Steps { get; set; }
 
@@ -30,7 +29,7 @@ namespace Flow.Library.Core
         // Ideally the steps will know if they have been processed, but they've just been loaded from the database
         //  so they have NO idea what's going on, poor chaps
         // Steps where the version number = 0 are steps which are base steps so can be processed
-        public void Resume(List<CompletedStep> completedStepVersions)
+        public void Resume(List<CompletedStep> completedStepVersions, Dictionary<string, object> variables)
         {
             foreach(var step in Steps)
             {
@@ -41,6 +40,8 @@ namespace Flow.Library.Core
                 if (matches.Any())
                     step.IsProcessed = true;
             }
+
+            Variables = variables;
         }
 
         public List<StepBase> CompletedSteps()

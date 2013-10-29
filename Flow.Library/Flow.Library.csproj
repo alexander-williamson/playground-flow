@@ -55,6 +55,8 @@
     <Compile Include="Actions\NoAction.cs" />
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
+    <Compile Include="Core\DataManipulation.cs" />
+    <Compile Include="Data\Repositories\FlowRepository.cs" />
     <Compile Include="UI\Coordinate.cs" />
     <Compile Include="Core\FlowTemplateStep.cs" />
     <Compile Include="Core\FlowTemplateStepRule.cs" />
@@ -67,10 +69,10 @@
     <Compile Include="Core\FlowInstance.cs" />
     <Compile Include="Core\FlowTemplate.cs" />
     <Compile Include="Data\Sql\FlowTemplateSqlRepository.cs" />
-    <Compile Include="Core\FlowState.cs" />
     <Compile Include="UI\FormProvider.cs" />
     <Compile Include="Data\Repositories\IFlowTemplateRepository.cs" />
     <Compile Include="UI\FormTemplateBase.cs" />
+    <Compile Include="UI\HtmlExtensions.cs" />
     <Compile Include="Validation\IRule.cs" />
     <Compile Include="Core\Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
