@@ -57,10 +57,10 @@
     <Compile Include="Actions\UnhandlableAction.cs" />
     <Compile Include="Core\DataManipulation.cs" />
     <Compile Include="Data\Models\FlowInstanceDataModel.cs" />
+    <Compile Include="Data\Repositories\FlowInstanceSqlRepository.cs" />
     <Compile Include="Data\Repositories\ExampleFlowInstanceRepository.cs" />
     <Compile Include="Data\Abstract\IFlowInstanceRepository.cs" />
     <Compile Include="UI\Coordinate.cs" />
-    <Compile Include="Core\FlowTemplateStep.cs" />
     <Compile Include="Core\FlowTemplateStepRule.cs" />
     <Compile Include="Data\Models\FlowTemplateDataModel.cs" />
     <Compile Include="Data\Models\FlowTemplateStepDataModel.cs" />
