@@ -4,62 +4,25 @@ using Flow.Library.Steps;
 
 namespace Flow.Library.Core
 {
-    public class CompletedStep
-    {
-        public int StepId { get; set; }
-        public int StepVersion { get; set; } 
-    }
-    
     public class FlowInstance
     {
+        private readonly List<CompletedStep> _completedSteps; 
+        
         public int Id { get; set; }
         public FlowTemplate Template { get; set; }
         public Dictionary<string, object> Variables { get; set; }
-        public List<StepBase> Steps { get; set; }
+        public List<CompletedStep> CompletedSteps { get { return _completedSteps;  } }
 
-        public FlowInstance(FlowTemplate template)
+        public FlowInstance()
         {
-            Template = template;
-            Steps = template.Steps.ToList();
-            Variables = template.Variables.ToDictionary(k => k.Key, v => v.Value);
+            _completedSteps = new List<CompletedStep>();
         }
 
-        // Resume the worflow
-        // Inform all the steps if they've been processed before or not, because they don't know
-        // Ideally the steps will know if they have been processed, but they've just been loaded from the database
-        //  so they have NO idea what's going on, poor chaps
-        // Steps where the version number = 0 are steps which are base steps so can be processed
-        public void Resume(List<CompletedStep> completedStepVersions, Dictionary<string, object> variables)
+        public StepBase NextStep()
         {
-            foreach(var step in Steps)
-            {
-                step.IsInitialized = true;
-                
-                var instance = step;
-                var matches = (from o in completedStepVersions where o.StepId == instance.Id && (o.StepVersion == 0 || o.StepVersion == instance.VersionId) select o).ToList();
-                if (matches.Any())
-                    step.IsProcessed = true;
-            }
-
-            Variables = variables;
-        }
-
-        public List<StepBase> CompletedSteps()
-        {
-            return (from o in Steps where o.IsComplete select o).OrderBy(o => o.Id).ToList();
-        }
-
-        public List<StepBase> NextSteps()
-        {
-            // TODO: make this walk through all the steps in any possible node list
-            // note this is a basic implementation that just gets the next item (no branching)
-            var result = new List<StepBase>();
-            var items = (from o in Steps where o.IsComplete == false select o).OrderBy(o => o.Id);
-
-            if (items.Count() > 1)
-                result.Add(items.First());
-
-            return result;
+            var ids = (from o in CompletedSteps select o.StepId);
+            var notComplete = (from o in Template.Steps where !ids.Contains(o.Id) select o).ToList();
+            return notComplete.Any() ? notComplete.First() : null;
         }
     }
 }

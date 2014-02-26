@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using Flow.Library.Data.Models;
+using Flow.Library.Core;
 
 namespace Flow.Library.Data.Abstract
 {
     public interface IFlowTemplateRepository
     {
-        FlowTemplateDataModel GetFlowTemplate(int id);
-        IEnumerable<FlowTemplateDataModel> GetFlowTemplates();
-        FlowTemplateStepDataModel GetFlowTemplateStep(int id);
-        IEnumerable<FlowTemplateStepDataModel> GetFlowTemplateStepsForTemplate(int templateId);
-        FlowTemplateStepRuleDataModel GetFlowTemplateStepRule(int it);
-        IEnumerable<FlowTemplateStepRuleDataModel> GetFlowTemplateStepRulesForStep(int stepId);
+        FlowTemplate GetTemplate(int id);
+        IEnumerable<FlowTemplate> GetTemplates();
+        FlowTemplateStep GetTemplateStep(int id);
+        IEnumerable<FlowTemplateStep> GetTemplateStepsForTemplate(int templateId);
+        FlowTemplateStepRule GetTemplateStepRule(int it);
+        IEnumerable<FlowTemplateStepRule> GetTemplateStepRulesForStep(int stepId);
     }
 }

@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Flow.Library.Actions;
 using Flow.Library.Core;
 using Flow.Library.Runners;
 using Flow.Library.Steps;
 using Flow.Library.UI;
-using Flow.Library.Validation;
-using Flow.Library.Validation.Rules;
 using Flow.Library.Data.Repositories;
 
 namespace Web.Controllers
@@ -22,7 +19,7 @@ namespace Web.Controllers
             return RedirectToAction(result.GetType().Name);
         }
 
-        public IAction NextAction(FlowInstance instance)
+        public ActionBase NextAction(FlowInstance instance)
         {
             var runner = new WebApiFlowRunner(instance);
             return runner.ProcessSteps();

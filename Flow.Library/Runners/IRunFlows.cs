@@ -5,7 +5,7 @@ namespace Flow.Library.Runners
 {
     public interface IRunFlows
     {
-        IAction ProcessSteps();
+        ActionBase ProcessSteps();
         string Name { get; }
         bool CanProcess(Type type);
     }

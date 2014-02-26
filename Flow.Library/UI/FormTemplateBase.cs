@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 using Flow.Library.Validation;
 using Newtonsoft.Json;
-using Formatting = System.Xml.Formatting;
 
 namespace Flow.Library.UI
 {
-    public interface IFormTemplate
-    {
-        int Id { get; set; }
-        string Name { get; set; }
-        string Body { get; set; }
-        string Head { get; set; }
-        string Html { get; set; }
-    }
-
     public class FormTemplateBase : IFormTemplate
     {
         public int Id { get; set; }

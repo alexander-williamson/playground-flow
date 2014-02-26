@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web\Web.csproj", "{DC581325-4ED2-48D6-AE74-67F242C0AA0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Web", "Web\Web\Flow.Web.csproj", "{DC581325-4ED2-48D6-AE74-67F242C0AA0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Library", "Flow.Library\Flow.Library.csproj", "{69FFDADE-F00E-4903-AF27-B3E48D674C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow", "ConsoleApplication1\Flow.csproj", "{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Library.Tests", "Flow.Library.Tests\Flow.Library.Tests.csproj", "{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3192DFF1-050D-4FEE-AD3B-EEF1FE5EE1DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,5 +52,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA} = {3192DFF1-050D-4FEE-AD3B-EEF1FE5EE1DF}
 	EndGlobalSection
 EndGlobal

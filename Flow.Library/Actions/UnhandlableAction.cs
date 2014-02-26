@@ -1,9 +1,7 @@
-﻿using Flow.Library.Steps;
-
-namespace Flow.Library.Actions
+﻿namespace Flow.Library.Actions
 {
-    public class UnhandlableAction : IAction
+    public class UnhandlableAction : ActionBase
     {
-        public StepBase Step { get; set; }
+
     }
 }

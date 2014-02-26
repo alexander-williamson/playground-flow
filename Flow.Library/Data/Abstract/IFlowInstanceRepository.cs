@@ -1,9 +1,9 @@
-using Flow.Library.Data.Models;
+using Flow.Library.Core;
 
 namespace Flow.Library.Data.Abstract
 {
     public interface IFlowInstanceRepository
     {
-        FlowInstanceDataModel GetFlow(int id);
+        FlowInstance GetFlow(int id);
     }
 }

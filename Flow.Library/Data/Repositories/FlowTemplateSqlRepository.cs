@@ -2,8 +2,8 @@
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
+using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Data.Models;
 
 namespace Flow.Library.Data.Repositories
 {
@@ -11,52 +11,52 @@ namespace Flow.Library.Data.Repositories
     {
         private const string ConnectionString = "Data Source=.;Initial Catalog=Flow;Integrated Security=True";
 
-        public FlowTemplateDataModel GetFlowTemplate(int id)
+        public FlowTemplate GetTemplate(int id)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return connection.Query<FlowTemplateDataModel>("SELECT * FROM FlowTemplateDataModel WHERE Id = @Id", new { Id = id }).First();
+                return connection.Query<FlowTemplate>("SELECT * FROM FlowTemplate WHERE Id = @Id", new { Id = id }).First();
             }
         }
 
-        public IEnumerable<FlowTemplateDataModel> GetFlowTemplates()
+        public IEnumerable<FlowTemplate> GetTemplates()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return connection.Query<FlowTemplateDataModel>("SELECT * FROM FlowTemplateDataModel");
+                return connection.Query<FlowTemplate>("SELECT * FROM FlowTemplate");
             }
         }
 
-        public FlowTemplateStepDataModel GetFlowTemplateStep(int id)
+        public FlowTemplateStep GetTemplateStep(int id)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
 
-                return connection.Query<FlowTemplateStepDataModel>("SELECT * FROM FlowTemplateStep WHERE Id=@Id", new { Id = id }).First();
+                return connection.Query<FlowTemplateStep>("SELECT * FROM FlowTemplateStep WHERE Id=@Id", new { Id = id }).First();
             }
         }
 
-        public IEnumerable<FlowTemplateStepDataModel> GetFlowTemplateStepsForTemplate(int templateId)
+        public IEnumerable<FlowTemplateStep> GetTemplateStepsForTemplate(int templateId)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return connection.Query<FlowTemplateStepDataModel>("SELECT * FROM FlowTemplateStep WHERE FlowTemplateId = @FlowTemplateId", new { FlowTemplateId = templateId });
+                return connection.Query<FlowTemplateStep>("SELECT * FROM FlowTemplateStep WHERE FlowTemplateId = @FlowTemplateId", new { FlowTemplateId = templateId });
             }
         }
 
-        public FlowTemplateStepRuleDataModel GetFlowTemplateStepRule(int id)
+        public FlowTemplateStepRule GetTemplateStepRule(int id)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return connection.Query<FlowTemplateStepRuleDataModel>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { Id = id }).First();
+                return connection.Query<FlowTemplateStepRule>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { Id = id }).First();
             }
         }
 
-        public IEnumerable<FlowTemplateStepRuleDataModel> GetFlowTemplateStepRulesForStep(int flowTemplateStepId)
+        public IEnumerable<FlowTemplateStepRule> GetTemplateStepRulesForStep(int flowTemplateStepId)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                return connection.Query<FlowTemplateStepRuleDataModel>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { FlowTemplateStepId = flowTemplateStepId });
+                return connection.Query<FlowTemplateStepRule>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { FlowTemplateStepId = flowTemplateStepId });
             }
         }
     }

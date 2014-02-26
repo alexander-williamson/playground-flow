@@ -1,9 +1,7 @@
-using Flow.Library.Steps;
-
 namespace Flow.Library.Actions
 {
-    public class StoreData : IAction
+    public class StoreData : ActionBase
     {
-        public StepBase Step { get; set; }
+
     }
 }

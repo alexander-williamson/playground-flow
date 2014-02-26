@@ -12,7 +12,7 @@ namespace Flow.Library.Runners
     public class FlowRunner : IRunFlows
     {
         protected FlowInstance FlowInstance;
-        protected List<Type> Types = new[] { typeof(StepBase), typeof(StartStepBase), typeof(StopStepBase) }.ToList();
+        protected List<Type> Types = new[] { typeof(StepBase), typeof(StartStep), typeof(StopStep) }.ToList();
 
         public FlowRunner(FlowInstance instance)
         {
@@ -23,20 +23,16 @@ namespace Flow.Library.Runners
         // for example if we needed to show the form to someone, this base handler doesn't understand that
         // so this would have to be picked up by a different type of runner
         // for example a webapi handler would be able to process a collect data action
-        public virtual IAction ProcessSteps()
+        public virtual ActionBase ProcessSteps()
         {
-            var steps = (from o in FlowInstance.Steps where o.IsComplete == false select o).ToList();
-            while (steps.Any())
+            var stepInstance = FlowInstance.NextStep();
+            while(stepInstance != null)
             {
-                // a flow instance would have just been loaded from the database
-                // so it would know it's current state
-                steps = (from o in FlowInstance.Steps where o.IsComplete == false select o).ToList();
+                if (!CanProcess(stepInstance.GetType()))
+                    return new UnhandlableAction { Step = stepInstance };
 
-                var step = steps.First();
-                if (!CanProcess(step.GetType()))
-                    return new UnhandlableAction { Step = step };
-
-                step.Process(FlowInstance, this);
+                stepInstance.Process(FlowInstance, this);
+                stepInstance = FlowInstance.NextStep();
             }
             return new NoAction();
         }

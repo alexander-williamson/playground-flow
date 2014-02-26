@@ -51,21 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\CollectData.cs" />
-    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Actions\NoAction.cs" />
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
-    <Compile Include="Core\DataManipulation.cs" />
-    <Compile Include="Data\Models\FlowInstanceDataModel.cs" />
+    <Compile Include="Steps\CompletedStep.cs" />
+    <Compile Include="Core\IDataManipulation.cs" />
+    <Compile Include="Core\FlowTemplateStep.cs" />
     <Compile Include="Data\Repositories\FlowInstanceSqlRepository.cs" />
-    <Compile Include="Data\Repositories\ExampleFlowInstanceRepository.cs" />
+    <Compile Include="Data\Repositories\Mock.cs" />
     <Compile Include="Data\Abstract\IFlowInstanceRepository.cs" />
     <Compile Include="UI\Coordinate.cs" />
     <Compile Include="Core\FlowTemplateStepRule.cs" />
-    <Compile Include="Data\Models\FlowTemplateDataModel.cs" />
-    <Compile Include="Data\Models\FlowTemplateStepDataModel.cs" />
-    <Compile Include="Data\Models\FlowTemplateStepRuleDataModel.cs" />
-    <Compile Include="Data\Models\FlowTemplateVariableDataModel.cs" />
     <Compile Include="Core\FlowInstanceFactory.cs" />
     <Compile Include="Core\FlowTemplateFactory.cs" />
     <Compile Include="Core\FlowInstance.cs" />
@@ -75,6 +72,7 @@
     <Compile Include="Data\Abstract\IFlowTemplateRepository.cs" />
     <Compile Include="UI\FormTemplateBase.cs" />
     <Compile Include="UI\HtmlExtensions.cs" />
+    <Compile Include="UI\IFormTemplate.cs" />
     <Compile Include="Validation\IRule.cs" />
     <Compile Include="Core\Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,9 +81,9 @@
     <Compile Include="Runners\IRunFlows.cs" />
     <Compile Include="Runners\WebApiFlowRunner.cs" />
     <Compile Include="Steps\DataCollectionStep.cs" />
-    <Compile Include="Steps\StartStepBase.cs" />
+    <Compile Include="Steps\StartStep.cs" />
     <Compile Include="Steps\StepBase.cs" />
-    <Compile Include="Steps\StopStepBase.cs" />
+    <Compile Include="Steps\StopStep.cs" />
     <Compile Include="Steps\StoreDataStep.cs" />
     <Compile Include="Validation\ValidationRule.cs" />
     <Compile Include="Validation\BrokenRule.cs" />
