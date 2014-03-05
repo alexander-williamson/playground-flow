@@ -4,6 +4,6 @@ namespace Flow.Library.Actions
 {
     public abstract class ActionBase
     {
-        public StepBase Step { get; set; }
+        public IStep Step { get; set; }
     }
 }

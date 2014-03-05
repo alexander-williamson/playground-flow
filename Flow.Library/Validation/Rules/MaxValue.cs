@@ -2,8 +2,9 @@ using System.Collections.Generic;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class MaxValue : IRule
+    public class MaxValue : IValidationRule
     {
+        public string VariableKey { get; set; }
         public int Max { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)
         {

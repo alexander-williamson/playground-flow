@@ -2,8 +2,9 @@ using System.Collections.Generic;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class MinValue : IRule
+    public class MinValue : IValidationRule
     {
+        public string VariableKey { get; set; }
         public int Min { get; set; }
         public bool Validate(IDictionary<string, object> variables, string key)
         {

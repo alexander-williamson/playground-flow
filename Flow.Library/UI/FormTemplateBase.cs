@@ -12,11 +12,11 @@ namespace Flow.Library.UI
         public string Body { get; set; }
         public string Head { get; set; }
         public string Html { get; set; }
-        public List<ValidationRule> BrokenRules { get; set; } 
+        public List<IValidationRule> BrokenRules { get; set; }
 
-        public FormTemplateBase(List<ValidationRule> brokenRules)
+        public FormTemplateBase(List<IValidationRule> brokenRules)
         {
-            BrokenRules = brokenRules ?? new List<ValidationRule>(); ;
+            BrokenRules = brokenRules ?? new List<IValidationRule>(); ;
             Id = 0;
             Name = string.Empty;
             Head = GetHead();

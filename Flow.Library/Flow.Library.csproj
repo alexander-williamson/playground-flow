@@ -55,12 +55,14 @@
     <Compile Include="Actions\NoAction.cs" />
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
+    <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Steps\CompletedStep.cs" />
     <Compile Include="Core\IDataManipulation.cs" />
     <Compile Include="Core\FlowTemplateStep.cs" />
-    <Compile Include="Data\Repositories\FlowInstanceSqlRepository.cs" />
+    <Compile Include="Data\Repositories\FlowInstanceRepository.cs" />
     <Compile Include="Data\Repositories\Mock.cs" />
     <Compile Include="Data\Abstract\IFlowInstanceRepository.cs" />
+    <Compile Include="Steps\IStep.cs" />
     <Compile Include="UI\Coordinate.cs" />
     <Compile Include="Core\FlowTemplateStepRule.cs" />
     <Compile Include="Core\FlowInstanceFactory.cs" />
@@ -73,9 +75,9 @@
     <Compile Include="UI\FormTemplateBase.cs" />
     <Compile Include="UI\HtmlExtensions.cs" />
     <Compile Include="UI\IFormTemplate.cs" />
-    <Compile Include="Validation\IRule.cs" />
     <Compile Include="Core\Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\IValidationRule.cs" />
     <Compile Include="Validation\JsonRuleFactory.cs" />
     <Compile Include="Runners\FlowRunner.cs" />
     <Compile Include="Runners\IRunFlows.cs" />
@@ -85,7 +87,6 @@
     <Compile Include="Steps\StepBase.cs" />
     <Compile Include="Steps\StopStep.cs" />
     <Compile Include="Steps\StoreDataStep.cs" />
-    <Compile Include="Validation\ValidationRule.cs" />
     <Compile Include="Validation\BrokenRule.cs" />
     <Compile Include="Validation\RuleSet.cs" />
     <Compile Include="Validation\Rules\DefaultRule.cs" />

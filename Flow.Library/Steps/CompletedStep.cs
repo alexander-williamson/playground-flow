@@ -1,5 +1,8 @@
 namespace Flow.Library.Steps
 {
+    // collects information about a completed step
+    // when steps have been completed, their id and version # must be known
+    // so when flows and steps are restored, the steps are not re-run
     public class CompletedStep
     {
         private readonly int _stepId;

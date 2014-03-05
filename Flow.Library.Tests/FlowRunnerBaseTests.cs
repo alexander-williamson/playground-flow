@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FakeItEasy;
 using Flow.Library.Core;
 using Flow.Library.Runners;
 using Flow.Library.Steps;
@@ -10,7 +11,7 @@ namespace Flow.Library.Tests
     {
         private static FlowInstance GetMock()
         {
-            var steps = new List<StepBase> { new StartStep { Id = 1 }, new DataCollectionStep { Id = 2 }, new StopStep { Id = 3 } };
+            var steps = new List<IStep> { new StartStep { Id = 1 }, new DataCollectionStep { Id = 2 }, new StopStep { Id = 3 } };
             var template = new FlowTemplate { Steps = steps };
             var sut = new FlowInstance { Template = template };
             sut.CompletedSteps.Add(new CompletedStep(1,0));
@@ -53,5 +54,34 @@ namespace Flow.Library.Tests
             // assert
             Assert.False(sut.CanProcess(typeof(DataCollectionStep)));
         }
+
+        [Fact]
+        public void Should_support_added_type()
+        {
+            // assemble
+            var sut = new FlowRunner(null);
+            sut.Types.Add(typeof(int));
+
+            // assert
+            Assert.True(sut.CanProcess(typeof(int)));
+        }
+
+        [Fact]
+        public void Should_call_run_on_handleable_type()
+        {
+            // assemble
+            var fakeStep = A.Fake<IStep>();
+            A.CallTo(() => fakeStep.IsComplete).ReturnsNextFromSequence(true);
+            var sut = new FlowRunner(new FlowInstance {Template = new FlowTemplate {Steps = new List<IStep> {fakeStep}}});
+            sut.Types.Add(fakeStep.GetType());
+
+            // act
+            sut.ProcessSteps();
+
+            // assert
+            A.CallTo(() => fakeStep.Process(A<FlowInstance>._, A<IRunFlows>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeStep.IsComplete).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
     }
 }

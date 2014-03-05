@@ -9,3 +9,14 @@ D:\Projects\Validation\Flow.Library\bin\Debug\Newtonsoft.Json.xml
 D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.csprojResolveAssemblyReference.cache
 D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.dll
 D:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.pdb
+C:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.csprojResolveAssemblyReference.cache
+C:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.dll
+C:\Projects\Validation\Flow.Library\obj\Debug\Flow.Library.pdb
+C:\Projects\Validation\Flow.Library\bin\Debug\Flow.Library.dll
+C:\Projects\Validation\Flow.Library\bin\Debug\Flow.Library.pdb
+C:\Projects\Validation\Flow.Library\bin\Debug\Dapper.dll
+C:\Projects\Validation\Flow.Library\bin\Debug\Newtonsoft.Json.dll
+C:\Projects\Validation\Flow.Library\bin\Debug\Noesis.Javascript.dll
+C:\Projects\Validation\Flow.Library\bin\Debug\Dapper.pdb
+C:\Projects\Validation\Flow.Library\bin\Debug\Dapper.xml
+C:\Projects\Validation\Flow.Library\bin\Debug\Newtonsoft.Json.xml

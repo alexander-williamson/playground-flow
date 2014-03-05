@@ -5,20 +5,20 @@ namespace Flow.Library.Validation
 {
     public class ValidationEngine
     {
-        public List<ValidationRule> Rules { get; private set; }
+        public List<IValidationRule> Rules { get; private set; }
         public IDictionary<string, object> Variables { get; set; } 
 
-        private readonly List<ValidationRule> _brokenRules;
-        public List<ValidationRule> BrokenRules { get { return _brokenRules; } } 
+        private readonly List<IValidationRule> _brokenRules;
+        public List<IValidationRule> BrokenRules { get { return _brokenRules; } } 
 
-        public ValidationEngine(List<ValidationRule> rules, IDictionary<string, object> variables)
+        public ValidationEngine(List<IValidationRule> rules, IDictionary<string, object> variables)
         {
             Rules = rules;
             Variables = variables;
-            _brokenRules = new List<ValidationRule>();
+            _brokenRules = new List<IValidationRule>();
         }
 
-        public ValidationEngine(List<ValidationRule> rules, object objectToValidate)
+        public ValidationEngine(List<IValidationRule> rules, object objectToValidate)
         {
             Variables = new Dictionary<string, object>();
             foreach(var property in objectToValidate.GetType().GetProperties())
@@ -29,7 +29,7 @@ namespace Flow.Library.Validation
             }
 
             Rules = rules;
-            _brokenRules = new List<ValidationRule>();
+            _brokenRules = new List<IValidationRule>();
         }
 
         public void Validate()
@@ -37,16 +37,16 @@ namespace Flow.Library.Validation
             _brokenRules.Clear();
 
             // a list of variables that have rules defined for them
-            var runRulesOn = (from o in Rules select o.Key).Distinct().ToList();
+            var runRulesOn = (from o in Rules select o.VariableKey).Distinct().ToList();
 
             // run the rules for each project
             foreach (var propertyName in runRulesOn)
             {
                 var key = propertyName;
-                var rulesForThisProperty = (from o in Rules where o.Key == key select o);
+                var rulesForThisProperty = (from o in Rules where o.VariableKey == key select o);
                 foreach (var rule in rulesForThisProperty)
                 {
-                    if (!rule.Validator.Validate(Variables, propertyName))
+                    if (!rule.Validate(Variables, propertyName))
                     {
                         BrokenRules.Add(rule);
                     }

@@ -5,14 +5,12 @@ using Flow.Library.Runners;
 
 namespace Flow.Library.Steps
 {
-    public class StepBase
+    public class StepBase : IStep
     {
         // steps are versioned so you can work out where you've resumed from
         public int Id { get; set; }
         public int VersionId { get; set; }
 
-        // type info
-        public string Type { get; protected set; }
         public string Name { get; set; }
 
         // connections
@@ -57,8 +55,8 @@ namespace Flow.Library.Steps
         public void Initialise() { IsInitialized = true; }
 
         // Entry rules (rules that must be fulfilled before we can run this rule)
-        public List<ValidationRule> EntryRules { get; set; }
-        public List<ValidationRule> BrokenEntryRules(IDictionary<string, object> variables)
+        public List<IValidationRule> EntryRules { get; set; }
+        public List<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables)
         {
             if (EntryRules != null && variables != null)
             {
@@ -66,7 +64,7 @@ namespace Flow.Library.Steps
                 engine.Validate();
                 return engine.BrokenRules;
             }
-            return new List<ValidationRule>();
+            return new List<IValidationRule>();
         }
 
         // actions that can be performed during this step
@@ -74,8 +72,8 @@ namespace Flow.Library.Steps
         public List<IDataManipulation> DataManipulations { get; private set; }
 
         // exit rules that must be fulfilled before this step can be marked as complete
-        public List<ValidationRule> ExitRules { get; set; }
-        public List<ValidationRule> BrokenExitRules(IDictionary<string, object> variables)
+        public List<IValidationRule> ExitRules { get; set; }
+        public List<IValidationRule> BrokenExitRules(IDictionary<string, object> variables)
         {
             if (EntryRules != null && variables != null)
             {
@@ -83,7 +81,7 @@ namespace Flow.Library.Steps
                 engine.Validate();
                 return engine.BrokenRules;
             }
-            return new List<ValidationRule>();
+            return new List<IValidationRule>();
         }
 
         public virtual void Process(FlowInstance flow, IRunFlows runner)
@@ -94,14 +92,9 @@ namespace Flow.Library.Steps
         public StepBase()
         {
             CanInitialise = true;
-            EntryRules = new List<ValidationRule>();
+            EntryRules = new List<IValidationRule>();
             DataManipulations = new List<IDataManipulation>();
-            ExitRules = new List<ValidationRule>();
-        }
-
-        public override string ToString()
-        {
-            return "StepBase";
+            ExitRules = new List<IValidationRule>();
         }
     }
 }

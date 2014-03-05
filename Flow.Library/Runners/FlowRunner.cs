@@ -11,8 +11,8 @@ namespace Flow.Library.Runners
     // When the process next step is called, it looks at the flow instance, decides if it can run the next step
     public class FlowRunner : IRunFlows
     {
-        protected FlowInstance FlowInstance;
-        protected List<Type> Types = new[] { typeof(StepBase), typeof(StartStep), typeof(StopStep) }.ToList();
+        protected readonly FlowInstance FlowInstance;
+        public readonly List<Type> Types = new[] { typeof(StartStep), typeof(StopStep) }.ToList();
 
         public FlowRunner(FlowInstance instance)
         {
@@ -31,7 +31,12 @@ namespace Flow.Library.Runners
                 if (!CanProcess(stepInstance.GetType()))
                     return new UnhandlableAction { Step = stepInstance };
 
+                // process the flow
+                // move to completed if step thinks it is complete
                 stepInstance.Process(FlowInstance, this);
+                if(stepInstance.IsComplete)
+                    FlowInstance.CompletedSteps.Add(new CompletedStep(stepInstance.Id, stepInstance.VersionId));
+               
                 stepInstance = FlowInstance.NextStep();
             }
             return new NoAction();

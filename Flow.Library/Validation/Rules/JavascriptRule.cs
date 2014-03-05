@@ -4,12 +4,13 @@ using Noesis.Javascript;
 
 namespace Flow.Library.Validation.Rules
 {
-    public class JavascriptRule : IRule
+    public class JavascriptRule : IValidationRule
     {
         public const string ArgumentVariable = "argument";
         public const string FlowVariable = "flow";
         public const string ResultVariable = "result";
 
+        public string VariableKey { get; set; }
         public string Source { get; set; }
 
         public bool Validate(IDictionary<string, object> variables, string key)

@@ -15,7 +15,7 @@ namespace Flow.Library.Data.Repositories
             template.Variables.Add("yourName", string.Empty);
             template.Steps.Add(new DataCollectionStep
             {
-                ExitRules = new List<ValidationRule> { new ValidationRule { Key = "yourName", Validator = new StringRequired() } }
+                ExitRules = new List<IValidationRule> { new StringRequired { VariableKey = "yourName" } }
             });
             template.Steps.Add(new StoreDataStep());
             return new FlowInstance(); ;

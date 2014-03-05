@@ -7,11 +7,11 @@ namespace Flow.Library.Validation
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<ValidationRule> Rules { get; set; }
+        public List<IValidationRule> Rules { get; set; }
 
         public RuleSet()
         {
-            Rules = new List<ValidationRule>();
+            Rules = new List<IValidationRule>();
         }
     }
 }
