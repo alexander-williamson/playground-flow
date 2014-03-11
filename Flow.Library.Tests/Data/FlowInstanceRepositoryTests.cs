@@ -7,24 +7,16 @@ using Xunit;
 
 namespace Flow.Library.Tests.Data
 {
-    public class HelperFixture : IDisposable
+    public class FlowInstanceRepositoryTests : IDisposable
     {
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
+        
+        private readonly IFlowInstanceRepository _flowInstanceRepository;
 
-        public SqlTransaction Transaction
-        {
-            get { return _transaction; }
-        }
-
-        public SqlConnection Connection
-        {
-            get { return _connection; }
-        }
-
-        public HelperFixture()
+        public FlowInstanceRepositoryTests()
         {
             Console.WriteLine("SomeFixture ctor: This should only be run once");
             _connection = new SqlConnection(LocalConnectionString);
@@ -35,38 +27,13 @@ namespace Flow.Library.Tests.Data
                 command.ExecuteNonQuery();
             }
             _transaction.Save("insert");
-        }
-
-        public void Dispose()
-        {
-            Console.WriteLine("SomeFixture: Disposing SomeFixture");
-            _transaction.Rollback();
-            _connection.Close();
-        }
-    }
-
-
-    public class FlowInstanceRepositoryTests : IUseFixture<HelperFixture>, IDisposable
-    {
-        private IFlowInstanceRepository _flowInstanceRepository;
-        private SqlTransaction _transaction;
-        private SqlConnection _connection;
-
-        public void SetFixture(HelperFixture data)
-        {
-            _transaction = data.Transaction;
-            _connection = data.Connection;
             _flowInstanceRepository = new FlowInstanceRepository(_connection, _transaction);
         }
 
-        public FlowInstanceRepositoryTests()
-        {
-            // required for xunit
-        }
-
         public void Dispose()
         {
-            Console.WriteLine("Disposing");
+            _transaction.Rollback();
+            _connection.Close();
         }
 
         [Fact]
