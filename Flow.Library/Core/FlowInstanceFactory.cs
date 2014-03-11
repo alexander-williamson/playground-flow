@@ -15,7 +15,7 @@ namespace Flow.Library.Core
 
         public FlowInstance Create(int templateId)
         {
-            var template = _templateRepository.GetTemplate(templateId);
+            var template = _templateRepository.Get(templateId);
             var instance = new FlowInstance {Template = template, Variables = template.Variables};
             return instance;
         }
@@ -23,7 +23,7 @@ namespace Flow.Library.Core
         public FlowInstance Restore(int flowId)
         {
             var instance = _instanceRepository.Get(flowId);
-            var template = _templateRepository.GetTemplate(instance.Template.Id);
+            var template = _templateRepository.Get(instance.Template.Id);
             instance.Template = template;
 
             foreach (var variable in template.Variables)

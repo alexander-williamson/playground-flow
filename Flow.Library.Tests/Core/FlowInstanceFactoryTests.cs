@@ -16,7 +16,7 @@ namespace Flow.Library.Tests.Core
             // assemble
             const string templateName = @"Example Template";
             var templateRepository = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate { Id = 2, Name = templateName });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Name = templateName });
             
             // act
             var sut = new FlowInstanceFactory(templateRepository, null);
@@ -34,7 +34,7 @@ namespace Flow.Library.Tests.Core
             const string templateName = @"Example Template";
             var templateRepository = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep> {new StartStep(), new StopStep()};
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate
                                                                                      {
                                                                                          Id = 2, 
                                                                                          Name = templateName, 
@@ -58,7 +58,7 @@ namespace Flow.Library.Tests.Core
             var templateRepository = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var vars = new Dictionary<string, object> {{"Example VariableKey 1", "Example Value 1"}, {"Example VariableKey 2", 2}};
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = vars });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = vars });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, null);
@@ -87,7 +87,7 @@ namespace Flow.Library.Tests.Core
             var templateRepository = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var initialVariables = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);
@@ -117,7 +117,7 @@ namespace Flow.Library.Tests.Core
             var templateRepository = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var templateVars = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = templateVars });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = templateVars });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);
@@ -147,7 +147,7 @@ namespace Flow.Library.Tests.Core
             var templateRepository = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var initialVariables = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.GetTemplate(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);

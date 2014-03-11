@@ -10,9 +10,9 @@ namespace Flow.Library.Core
             _flowTemplateRepository = flowTemplateRepository;
         }
 
-        public FlowTemplate GetTemplate(int id)
+        public FlowTemplate Get(int id)
         {
-            var template = _flowTemplateRepository.GetTemplate(id);
+            var template = _flowTemplateRepository.Get(id);
             return template;
         }
     }

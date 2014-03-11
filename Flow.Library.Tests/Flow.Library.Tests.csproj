@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\FlowTemplateRepositoryTests.cs" />
     <Compile Include="Steps\DataCollectionStepTests.cs" />
     <Compile Include="Data\FlowInstanceRepositoryTests.cs" />
     <Compile Include="Core\FlowInstanceFactoryTests.cs" />

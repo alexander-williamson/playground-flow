@@ -13,10 +13,10 @@ namespace Flow.Library.Tests.Core
         public void Should_return_correct_flow()
         {
             var repo = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => repo.GetTemplate(A<int>._)).Returns(new FlowTemplate {Id = 2, Name = "Example Template"});
+            A.CallTo(() => repo.Get(A<int>._)).Returns(new FlowTemplate {Id = 2, Name = "Example Template"});
             var instance = new FlowTemplateFactory(repo);
 
-            var result = instance.GetTemplate(2);
+            var result = instance.Get(2);
 
             Assert.Equal(2, result.Id);
             Assert.Equal("Example Template", result.Name);
@@ -27,11 +27,11 @@ namespace Flow.Library.Tests.Core
         {
             var repo = A.Fake<IFlowTemplateRepository>();
             var steps = new List<IStep>(new List<IStep> { new StartStep(), new DataCollectionStep(), new StopStep() } );
-            A.CallTo(() => repo.GetTemplate(A<int>._)).Returns(
+            A.CallTo(() => repo.Get(A<int>._)).Returns(
             new FlowTemplate { Id = 2, Name = "Example Template", Steps = steps });
             var instance = new FlowTemplateFactory(repo);
 
-            var result = instance.GetTemplate(2);
+            var result = instance.Get(2);
 
             Assert.Equal(3, result.Steps.Count);
         }
@@ -41,11 +41,11 @@ namespace Flow.Library.Tests.Core
         {
             var repo = A.Fake<IFlowTemplateRepository>();
             var vars = new Dictionary<string, object> {{"Var1", null}, {"Var2", "Initial Value"}};
-            A.CallTo(() => repo.GetTemplate(A<int>._)).Returns(
+            A.CallTo(() => repo.Get(A<int>._)).Returns(
             new FlowTemplate { Id = 2, Name = "Example Template", Variables = vars });
             var instance = new FlowTemplateFactory(repo);
 
-            var result = instance.GetTemplate(2);
+            var result = instance.Get(2);
 
             Assert.Equal(2, result.Variables.Count);
             Assert.Null(result.Variables["Var1"]);
@@ -56,11 +56,11 @@ namespace Flow.Library.Tests.Core
         public void Should_return_null_if_no_matching_template_with_id()
         {
             var repo = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => repo.GetTemplate(A<int>._)).Returns(null);
+            A.CallTo(() => repo.Get(A<int>._)).Returns(null);
             var vars = new Dictionary<string, object> { { "Var1", null }, { "Var2", "Initial Value" } };
             var instance = new FlowTemplateFactory(repo);
 
-            Assert.Null(instance.GetTemplate(2));
+            Assert.Null(instance.Get(2));
         }
     }
 }

@@ -9,48 +9,52 @@ namespace Flow.Library.Data.Repositories
 {
     public class FlowTemplateSqlRepository : IFlowTemplateRepository
     {
-        private readonly IDbConnection _dbConnection;
+        private readonly IDbConnection _connection;
+        private readonly IDbTransaction _transaction;
 
-        public FlowTemplateSqlRepository(IDbConnection dbConnection)
+        public FlowTemplateSqlRepository(IDbConnection connection, IDbTransaction transaction)
         {
-            _dbConnection = dbConnection;
+            _connection = connection;
+            _transaction = transaction;
         }
 
-        public FlowTemplate GetTemplate(int id)
+        public IEnumerable<FlowTemplate> Get()
         {
-            _dbConnection.Open();
-            return _dbConnection.Query<FlowTemplate>("SELECT * FROM FlowTemplate WHERE Id = @Id", new { Id = id }).First();
+            if(_connection.State == ConnectionState.Closed) 
+                _connection.Open();
+
+            return _connection.Query<FlowTemplate>("SELECT * FROM FlowTemplate", null, _transaction);
         }
 
-        public IEnumerable<FlowTemplate> GetTemplates()
+        public FlowTemplate Get(int id)
         {
-            _dbConnection.Open();
-            return _dbConnection.Query<FlowTemplate>("SELECT * FROM FlowTemplate");
+            if (_connection.State == ConnectionState.Closed) 
+                _connection.Open();
+
+            var result = _connection.Query<FlowTemplate>("SELECT * FROM FlowTemplate WHERE Id = @Id", new { Id = id }, _transaction).ToArray();
+            return result.First();
         }
 
-        public FlowTemplateStep GetTemplateStep(int id)
+        public int Add(FlowTemplate instance)
         {
-            _dbConnection.Open();
-            return _dbConnection.Query<FlowTemplateStep>("SELECT * FROM FlowTemplateStep WHERE Id=@Id", new { Id = id }).First();
+            if(_connection.State == ConnectionState.Closed) 
+                _connection.Open();
+
+            var id = _connection.Query<int>("SELECT TOP 1 Id FROM FlowTemplate ORDER BY Id DESC", null, _transaction).First();
+            instance.Id = ++id;
+            _connection.Execute("INSERT INTO FlowTemplate (Id, Name) VALUES (@id, @name)", instance, _transaction);
+            return _connection.Query<int>("SELECT TOP 1 Id FROM FlowTemplate ORDER BY Id DESC", null, _transaction).First();
+
         }
 
-        public IEnumerable<FlowTemplateStep> GetTemplateStepsForTemplate(int templateId)
+        public bool Update(int id, FlowTemplate instance)
         {
-            _dbConnection.Open();
-            return _dbConnection.Query<FlowTemplateStep>("SELECT * FROM FlowTemplateStep WHERE FlowTemplateId = @FlowTemplateId", new { FlowTemplateId = templateId });
+            throw new System.NotImplementedException();
         }
 
-        public FlowTemplateStepRule GetTemplateStepRule(int id)
+        public bool Delete(int id)
         {
-            _dbConnection.Open();
-           return _dbConnection.Query<FlowTemplateStepRule>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { Id = id }).First();
-        }
-
-        public IEnumerable<FlowTemplateStepRule> GetTemplateStepRulesForStep(int flowTemplateStepId)
-        {
-            _dbConnection.Open();
-            return _dbConnection.Query<FlowTemplateStepRule>("SELECT * FROM FlowTemplateStepRule WHERE FlowTemplateStepId = @FlowTemplateStepId", new { FlowTemplateStepId = flowTemplateStepId });
+            throw new System.NotImplementedException();
         }
     }
-
 }
