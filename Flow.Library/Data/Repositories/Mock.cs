@@ -1,4 +1,5 @@
-﻿using Flow.Library.Core;
+﻿using System.Data;
+using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
@@ -9,7 +10,7 @@ namespace Flow.Library.Data.Repositories
 {
     public class MockFlowInstanceRepository : IFlowInstanceRepository
     {
-        public FlowInstance Get(int id)
+        public FlowInstance Get(int id, IDbTransaction transaction)
         {
             var template = new FlowTemplate();
             template.Variables.Add("yourName", string.Empty);
@@ -21,7 +22,7 @@ namespace Flow.Library.Data.Repositories
             return new FlowInstance(); ;
         }
 
-        public int Add(FlowInstance instance)
+        public int Add(FlowInstance instance, IDbTransaction transaction)
         {
             throw new System.NotImplementedException();
         }

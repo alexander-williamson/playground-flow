@@ -9,26 +9,24 @@ namespace Flow.Library.Data.Repositories
     public class FlowInstanceRepository : IFlowInstanceRepository
     {
         private readonly IDbConnection _dbConnection;
-        private readonly IDbTransaction _transaction;
 
         public FlowInstanceRepository(IDbConnection dbConnection, IDbTransaction transaction)
         {
             _dbConnection = dbConnection;
-            _transaction = transaction;
         }
 
-        public FlowInstance Get(int id)
+        public FlowInstance Get(int id, IDbTransaction transaction = null)
         {
-            var flow = _dbConnection.Query<FlowInstance>("SELECT TOP 1 * FROM FlowInstance WHERE Id=@id ", new { id }, _transaction).First();
+            var flow = _dbConnection.Query<FlowInstance>("SELECT TOP 1 * FROM FlowInstance WHERE Id=@id ", new { id }, transaction).First();
             return flow;
         }
 
-        public int Add(FlowInstance instance)
+        public int Add(FlowInstance instance, IDbTransaction transaction = null)
         {
-            var id = _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY Id DESC", null, _transaction).First();
+            var id = _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY Id DESC", null, transaction).First();
             id++;
-            _dbConnection.Execute("INSERT INTO FlowInstance (Id) VALUES (@id)", new { id }, _transaction);
-            return _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY FlowInstance.Id DESC", null, _transaction).First();
+            _dbConnection.Execute("INSERT INTO FlowInstance (Id) VALUES (@id)", new { id }, transaction);
+            return _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY FlowInstance.Id DESC", null, transaction).First();
         }
     }
 }

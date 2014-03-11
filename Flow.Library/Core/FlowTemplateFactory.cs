@@ -1,4 +1,5 @@
-﻿using Flow.Library.Data.Abstract;
+﻿using System.Data;
+using Flow.Library.Data.Abstract;
 
 namespace Flow.Library.Core
 {
@@ -10,9 +11,9 @@ namespace Flow.Library.Core
             _flowTemplateRepository = flowTemplateRepository;
         }
 
-        public FlowTemplate Get(int id)
+        public FlowTemplate Get(int id, IDbTransaction transaction = null)
         {
-            var template = _flowTemplateRepository.Get(id);
+            var template = _flowTemplateRepository.Get(id, transaction);
             return template;
         }
     }

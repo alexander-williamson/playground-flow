@@ -40,7 +40,7 @@ namespace Flow.Library.Tests.Data
         public void Should_return_flow_from_database()
         {
             // assemble
-            var sut = _flowInstanceRepository.Get(1);
+            var sut = _flowInstanceRepository.Get(1, _transaction);
 
             // assert
             Assert.Equal(1, sut.Id);
@@ -51,7 +51,7 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_insert_flow_into_database()
         {
-            var sut = _flowInstanceRepository.Add(new FlowInstance());
+            var sut = _flowInstanceRepository.Add(new FlowInstance(), _transaction);
 
             Assert.Equal(2, sut);
         }
