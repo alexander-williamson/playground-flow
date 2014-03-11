@@ -5,7 +5,7 @@ using Flow.Library.Validation;
 using Flow.Library.Validation.Rules;
 using Xunit;
 
-namespace Flow.Library.Tests
+namespace Flow.Library.Tests.Steps
 {
     public class DataCollectionStepTests
     {

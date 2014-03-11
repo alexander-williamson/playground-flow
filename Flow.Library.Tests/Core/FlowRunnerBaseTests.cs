@@ -5,7 +5,7 @@ using Flow.Library.Runners;
 using Flow.Library.Steps;
 using Xunit;
 
-namespace Flow.Library.Tests
+namespace Flow.Library.Tests.Core
 {
     public class FlowRunnerBaseTests
     {

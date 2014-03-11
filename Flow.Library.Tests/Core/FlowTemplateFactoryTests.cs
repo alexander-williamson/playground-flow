@@ -1,13 +1,11 @@
-﻿
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using FakeItEasy;
 using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Xunit;
 
-namespace Flow.Library.Tests
+namespace Flow.Library.Tests.Core
 {
     public class FlowTemplateFactoryTests
     {

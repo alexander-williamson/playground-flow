@@ -6,7 +6,7 @@ using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Xunit;
 
-namespace Flow.Library.Tests
+namespace Flow.Library.Tests.Core
 {
     public class FlowInstanceFactoryTests
     {

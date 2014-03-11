@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Flow.Library.Data.Repositories
 {
-    public class ExampleFlowInstanceRepository : IFlowInstanceRepository
+    public class MockFlowInstanceRepository : IFlowInstanceRepository
     {
         public FlowInstance GetFlow(int id)
         {
