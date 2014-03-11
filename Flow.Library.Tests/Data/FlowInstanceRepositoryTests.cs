@@ -56,5 +56,11 @@ namespace Flow.Library.Tests.Data
             Assert.Equal(2, sut);
         }
 
+        [Fact]
+        public void Should_throw_exception_if_cannot_find_item()
+        {
+            Assert.Throws<InvalidOperationException>(() => _flowInstanceRepository.Get(20));
+        }
+
     }
 }

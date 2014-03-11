@@ -19,7 +19,7 @@ namespace Flow.Library.Data.Repositories
 
         public FlowInstance Get(int id)
         {
-            var flow =  _dbConnection.Query<FlowInstance>("SELECT TOP 1 * FROM FlowInstance", new { Id = id }, _transaction).First();
+            var flow = _dbConnection.Query<FlowInstance>("SELECT TOP 1 * FROM FlowInstance WHERE Id=@id ", new { id }, _transaction).First();
             return flow;
         }
 
@@ -27,7 +27,7 @@ namespace Flow.Library.Data.Repositories
         {
             var id = _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY Id DESC", null, _transaction).First();
             id++;
-            _dbConnection.Execute("INSERT INTO FlowInstance (Id) VALUES (@Id)", new { Id = id }, _transaction);
+            _dbConnection.Execute("INSERT INTO FlowInstance (Id) VALUES (@id)", new { id }, _transaction);
             return _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY FlowInstance.Id DESC", null, _transaction).First();
         }
     }
