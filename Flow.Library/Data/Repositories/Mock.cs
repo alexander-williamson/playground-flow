@@ -9,7 +9,7 @@ namespace Flow.Library.Data.Repositories
 {
     public class MockFlowInstanceRepository : IFlowInstanceRepository
     {
-        public FlowInstance GetFlow(int id)
+        public FlowInstance Get(int id)
         {
             var template = new FlowTemplate();
             template.Variables.Add("yourName", string.Empty);
@@ -19,6 +19,11 @@ namespace Flow.Library.Data.Repositories
             });
             template.Steps.Add(new StoreDataStep());
             return new FlowInstance(); ;
+        }
+
+        public int Add(FlowInstance instance)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

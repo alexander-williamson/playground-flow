@@ -9,7 +9,6 @@ namespace Flow.Library.Data.Repositories
 {
     public class FlowTemplateSqlRepository : IFlowTemplateRepository
     {
-        private const string ConnectionString = "Data Source=.;Initial Catalog=Flow;Integrated Security=True";
         private readonly IDbConnection _dbConnection;
 
         public FlowTemplateSqlRepository(IDbConnection dbConnection)

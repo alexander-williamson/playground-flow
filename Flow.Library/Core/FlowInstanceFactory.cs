@@ -22,7 +22,7 @@ namespace Flow.Library.Core
 
         public FlowInstance Restore(int flowId)
         {
-            var instance = _instanceRepository.GetFlow(flowId);
+            var instance = _instanceRepository.Get(flowId);
             var template = _templateRepository.GetTemplate(instance.Template.Id);
             instance.Template = template;
 

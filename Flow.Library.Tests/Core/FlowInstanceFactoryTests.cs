@@ -77,7 +77,7 @@ namespace Flow.Library.Tests.Core
         {
             // assemble
             var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.GetFlow(A<int>._))
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> {{"Variable1", "Restored Value 1"}},
@@ -107,7 +107,7 @@ namespace Flow.Library.Tests.Core
         {
             // assemble
             var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.GetFlow(A<int>._))
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> { { "Variable1", "Restored Value 1" } },
@@ -137,7 +137,7 @@ namespace Flow.Library.Tests.Core
         {
             // assemble
             var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.GetFlow(A<int>._))
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> { { "Variable1", "Restored Value 1" } },

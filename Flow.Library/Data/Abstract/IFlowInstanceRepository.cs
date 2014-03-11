@@ -4,6 +4,7 @@ namespace Flow.Library.Data.Abstract
 {
     public interface IFlowInstanceRepository
     {
-        FlowInstance GetFlow(int id);
+        FlowInstance Get(int id);
+        int Add(FlowInstance instance);
     }
 }
