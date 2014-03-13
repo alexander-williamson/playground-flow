@@ -1,6 +1,6 @@
-namespace Flow.Library
+namespace Flow.Library.Data
 {
-    partial class FlowDatabaseClassesDataContext
+    partial class FlowDataContext
     {
     }
 }

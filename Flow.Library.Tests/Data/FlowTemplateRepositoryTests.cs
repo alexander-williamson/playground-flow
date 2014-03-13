@@ -2,6 +2,8 @@
 using System.Data.SqlClient;
 using System.Linq;
 using Flow.Library.Data;
+using Flow.Library.Data.Abstract;
+using Flow.Library.Data.Repositories;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
@@ -15,7 +17,7 @@ namespace Flow.Library.Tests.Data
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
         
         private readonly IRepository<FlowTemplate> _repository;
-        private readonly FlowDatabaseClassesDataContext _context;
+        private readonly FlowDataContext _context;
 
         public FlowTemplateRepositoryTests()
         {
@@ -27,7 +29,7 @@ namespace Flow.Library.Tests.Data
                 command.ExecuteNonQuery();
             }
             _transaction.Save("insert");
-            _context = new FlowDatabaseClassesDataContext(_connection);
+            _context = new FlowDataContext(_connection);
             _context.Transaction = _transaction;
             _repository = new FlowTemplateRepository(_context);
         }

@@ -2,7 +2,7 @@
 using System.Data;
 using Dapper;
 
-namespace Flow.Library.Data
+namespace Flow.Library.Data.Abstract
 {
     public interface IDataContext
     {

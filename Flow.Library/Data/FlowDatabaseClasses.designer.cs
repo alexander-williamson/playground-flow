@@ -22,7 +22,7 @@ namespace Flow.Library.Data
 	using System;
 	
 	
-	public partial class FlowDatabaseClassesDataContext : System.Data.Linq.DataContext
+	public partial class FlowDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
@@ -32,27 +32,30 @@ namespace Flow.Library.Data
     partial void InsertFlowTemplate(FlowTemplate instance);
     partial void UpdateFlowTemplate(FlowTemplate instance);
     partial void DeleteFlowTemplate(FlowTemplate instance);
+    partial void InsertFlowInstance(FlowInstance instance);
+    partial void UpdateFlowInstance(FlowInstance instance);
+    partial void DeleteFlowInstance(FlowInstance instance);
     #endregion
 		
-		public FlowDatabaseClassesDataContext(string connection) : 
+		public FlowDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FlowDatabaseClassesDataContext(System.Data.IDbConnection connection) : 
+		public FlowDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FlowDatabaseClassesDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public FlowDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FlowDatabaseClassesDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public FlowDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -63,6 +66,14 @@ namespace Flow.Library.Data
 			get
 			{
 				return this.GetTable<FlowTemplate>();
+			}
+		}
+		
+		public System.Data.Linq.Table<FlowInstance> FlowInstances
+		{
+			get
+			{
+				return this.GetTable<FlowInstance>();
 			}
 		}
 	}
@@ -128,6 +139,68 @@ namespace Flow.Library.Data
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="")]
+	public partial class FlowInstance : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    #endregion
+		
+		public FlowInstance()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
 				}
 			}
 		}

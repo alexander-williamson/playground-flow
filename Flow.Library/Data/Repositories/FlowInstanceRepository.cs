@@ -1,32 +1,47 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
-using Dapper;
 
 namespace Flow.Library.Data.Repositories
 {
-    public class FlowInstanceRepository : IFlowInstanceRepository
+    public class FlowInstanceRepository : IRepository<Core.FlowInstance>
     {
-        private readonly IDbConnection _dbConnection;
-
-        public FlowInstanceRepository(IDbConnection dbConnection, IDbTransaction transaction)
+        private readonly FlowDataContext _context;
+        public FlowInstanceRepository(FlowDataContext context)
         {
-            _dbConnection = dbConnection;
+            _context = context;
         }
 
-        public FlowInstance Get(int id, IDbTransaction transaction = null)
+        public IEnumerable<Core.FlowInstance> Get()
         {
-            var flow = _dbConnection.Query<FlowInstance>("SELECT TOP 1 * FROM FlowInstance WHERE Id=@id ", new { id }, transaction).First();
-            return flow;
+            return _context.FlowInstances.Select(o => new Core.FlowInstance { Id = o.Id });
         }
 
-        public int Add(FlowInstance instance, IDbTransaction transaction = null)
+        public Core.FlowInstance Get(int id)
         {
-            var id = _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY Id DESC", null, transaction).First();
-            id++;
-            _dbConnection.Execute("INSERT INTO FlowInstance (Id) VALUES (@id)", new { id }, transaction);
-            return _dbConnection.Query<int>("SELECT TOP 1 Id FROM FlowInstance ORDER BY FlowInstance.Id DESC", null, transaction).First();
+            return _context.FlowInstances.Where(o => o.Id == id).Select(o => new Core.FlowInstance {Id = o.Id}).First();
+        }
+
+        public void Add(Core.FlowInstance instance)
+        {
+            _context.FlowInstances.InsertOnSubmit(new FlowInstance {Id = instance.Id});
+        }
+
+        public void Update(int id, Core.FlowInstance instance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            var item =  _context.FlowInstances.First(o => o.Id == id);
+            _context.FlowInstances.DeleteOnSubmit(item);
+        }
+
+        public void Save()
+        {
+            _context.SubmitChanges();
         }
     }
 }

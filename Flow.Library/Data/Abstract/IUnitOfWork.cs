@@ -1,6 +1,6 @@
 ﻿using Flow.Library.Core;
 
-namespace Flow.Library.Data
+namespace Flow.Library.Data.Abstract
 {
     public interface IUnitOfWork
     {

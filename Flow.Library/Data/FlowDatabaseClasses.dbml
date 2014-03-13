@@ -5,4 +5,9 @@
       <Column Name="Name" Type="System.String" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="" Member="FlowInstances">
+    <Type Name="FlowInstance">
+      <Column Name="Id" Type="System.Int32" IsPrimaryKey="true" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>

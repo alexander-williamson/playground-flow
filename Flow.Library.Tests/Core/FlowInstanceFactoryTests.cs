@@ -16,8 +16,8 @@ namespace Flow.Library.Tests.Core
         {
             // assemble
             const string templateName = @"Example Template";
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate { Id = 2, Name = templateName });
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Name = templateName });
             
             // act
             var sut = new FlowInstanceFactory(templateRepository, null);
@@ -33,9 +33,9 @@ namespace Flow.Library.Tests.Core
         {
             // assemble
             const string templateName = @"Example Template";
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep> {new StartStep(), new StopStep()};
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate
                                                                                      {
                                                                                          Id = 2, 
                                                                                          Name = templateName, 
@@ -56,10 +56,10 @@ namespace Flow.Library.Tests.Core
         public void Should_create_new_object_with_correct_variables()
         {
             // assemble
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var vars = new Dictionary<string, object> {{"Example VariableKey 1", "Example Value 1"}, {"Example VariableKey 2", 2}};
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = vars });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = vars });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, null);
@@ -77,18 +77,18 @@ namespace Flow.Library.Tests.Core
         public void Should_restore_variables_from_repository_after_template()
         {
             // assemble
-            var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.Get(A<int>._, A<IDbTransaction>._))
+            var instanceRepository = A.Fake<IRepository<FlowInstance>>();
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> {{"Variable1", "Restored Value 1"}},
                     Template = new FlowTemplate { Id = 2 }
                 });
 
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var initialVariables = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);
@@ -107,18 +107,18 @@ namespace Flow.Library.Tests.Core
         public void Should_restore_template_from_repository()
         {
             // assemble
-            var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.Get(A<int>._, A<IDbTransaction>._))
+            var instanceRepository = A.Fake<IRepository<FlowInstance>>();
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> { { "Variable1", "Restored Value 1" } },
                     Template = new FlowTemplate { Id = 2 }
                 });
 
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var templateVars = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = templateVars });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = templateVars });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);
@@ -137,18 +137,18 @@ namespace Flow.Library.Tests.Core
         public void Should_restore_template_variables_from_repository()
         {
             // assemble
-            var instanceRepository = A.Fake<IFlowInstanceRepository>();
-            A.CallTo(() => instanceRepository.Get(A<int>._, A<IDbTransaction>._))
+            var instanceRepository = A.Fake<IRepository<FlowInstance>>();
+            A.CallTo(() => instanceRepository.Get(A<int>._))
                 .Returns(new FlowInstance
                 {
                     Variables = new Dictionary<string, object> { { "Variable1", "Restored Value 1" } },
                     Template = new FlowTemplate { Id = 2 }
                 });
 
-            var templateRepository = A.Fake<IFlowTemplateRepository>();
+            var templateRepository = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep> { new StartStep(), new StopStep() };
             var initialVariables = new Dictionary<string, object> { { "Variable1", "Initial Value 1" }, { "Example VariableKey 2", 2 } };
-            A.CallTo(() => templateRepository.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
+            A.CallTo(() => templateRepository.Get(A<int>._)).Returns(new FlowTemplate { Id = 2, Steps = steps, Variables = initialVariables });
 
             // act
             var instance = new FlowInstanceFactory(templateRepository, instanceRepository);

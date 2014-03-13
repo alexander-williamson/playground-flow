@@ -13,8 +13,8 @@ namespace Flow.Library.Tests.Core
         [Fact]
         public void Should_return_correct_flow()
         {
-            var repo = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => repo.Get(A<int>._, A<IDbTransaction>._)).Returns(new FlowTemplate {Id = 2, Name = "Example Template"});
+            var repo = A.Fake<IRepository<FlowTemplate>>();
+            A.CallTo(() => repo.Get(A<int>._)).Returns(new FlowTemplate {Id = 2, Name = "Example Template"});
             var instance = new FlowTemplateFactory(repo);
 
             var result = instance.Get(2);
@@ -26,9 +26,9 @@ namespace Flow.Library.Tests.Core
         [Fact]
         public void Should_return_correct_steps()
         {
-            var repo = A.Fake<IFlowTemplateRepository>();
+            var repo = A.Fake<IRepository<FlowTemplate>>();
             var steps = new List<IStep>(new List<IStep> { new StartStep(), new DataCollectionStep(), new StopStep() } );
-            A.CallTo(() => repo.Get(A<int>._, A<IDbTransaction>._)).Returns(
+            A.CallTo(() => repo.Get(A<int>._)).Returns(
             new FlowTemplate { Id = 2, Name = "Example Template", Steps = steps });
             var instance = new FlowTemplateFactory(repo);
 
@@ -40,9 +40,9 @@ namespace Flow.Library.Tests.Core
         [Fact]
         public void Should_return_correct_variables()
         {
-            var repo = A.Fake<IFlowTemplateRepository>();
+            var repo = A.Fake<IRepository<FlowTemplate>>();
             var vars = new Dictionary<string, object> {{"Var1", null}, {"Var2", "Initial Value"}};
-            A.CallTo(() => repo.Get(A<int>._, A<IDbTransaction>._)).Returns(
+            A.CallTo(() => repo.Get(A<int>._)).Returns(
             new FlowTemplate { Id = 2, Name = "Example Template", Variables = vars });
             var instance = new FlowTemplateFactory(repo);
 
@@ -56,8 +56,8 @@ namespace Flow.Library.Tests.Core
         [Fact]
         public void Should_return_null_if_no_matching_template_with_id()
         {
-            var repo = A.Fake<IFlowTemplateRepository>();
-            A.CallTo(() => repo.Get(A<int>._, A<IDbTransaction>._)).Returns(null);
+            var repo = A.Fake<IRepository<FlowTemplate>>();
+            A.CallTo(() => repo.Get(A<int>._)).Returns(null);
             var vars = new Dictionary<string, object> { { "Var1", null }, { "Var2", "Initial Value" } };
             var instance = new FlowTemplateFactory(repo);
 

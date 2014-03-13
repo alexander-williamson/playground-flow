@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Flow.Library.Core;
+using System.Linq;
+using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
 using Xunit;
+using FlowInstance = Flow.Library.Core.FlowInstance;
 
 namespace Flow.Library.Tests.Data
 {
@@ -14,7 +16,8 @@ namespace Flow.Library.Tests.Data
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
         
-        private readonly IFlowInstanceRepository _flowInstanceRepository;
+        private readonly IRepository<FlowInstance> _flowInstanceRepository;
+        private readonly FlowDataContext _context;
 
         public FlowInstanceRepositoryTests()
         {
@@ -27,7 +30,9 @@ namespace Flow.Library.Tests.Data
                 command.ExecuteNonQuery();
             }
             _transaction.Save("insert");
-            _flowInstanceRepository = new FlowInstanceRepository(_connection, _transaction);
+            _context = new FlowDataContext(_connection);
+            _context.Transaction = _transaction;
+            _flowInstanceRepository = new FlowInstanceRepository(_context);
         }
 
         public void Dispose()
@@ -40,7 +45,7 @@ namespace Flow.Library.Tests.Data
         public void Should_return_flow_from_database()
         {
             // assemble
-            var sut = _flowInstanceRepository.Get(1, _transaction);
+            var sut = _flowInstanceRepository.Get(1);
 
             // assert
             Assert.Equal(1, sut.Id);
@@ -51,9 +56,10 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_insert_flow_into_database()
         {
-            var sut = _flowInstanceRepository.Add(new FlowInstance(), _transaction);
+            _flowInstanceRepository.Add(new FlowInstance());
+            _flowInstanceRepository.Save();
 
-            Assert.Equal(2, sut);
+            Assert.Equal(2, _context.FlowInstances.Count());
         }
 
         [Fact]

@@ -1,4 +1,4 @@
-﻿namespace Flow.Library.Data
+﻿namespace Flow.Library.Data.Abstract
 {
     public class SqlUnitOfWork : IUnitOfWork
     {

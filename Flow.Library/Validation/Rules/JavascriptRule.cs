@@ -36,7 +36,7 @@ namespace Flow.Library.Validation.Rules
                     return result != null && (bool)result;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
