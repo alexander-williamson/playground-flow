@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using Flow.Library.Core;
-using Flow.Library.Data.Abstract;
-using Flow.Library.Data.Repositories;
+using Flow.Library.Data;
 using Xunit;
+using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Flow.Library.Tests.Data
 {
@@ -15,7 +14,8 @@ namespace Flow.Library.Tests.Data
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
         
-        private readonly IFlowTemplateRepository _repository;
+        private readonly IRepository<FlowTemplate> _repository;
+        private readonly FlowDatabaseClassesDataContext _context;
 
         public FlowTemplateRepositoryTests()
         {
@@ -27,7 +27,9 @@ namespace Flow.Library.Tests.Data
                 command.ExecuteNonQuery();
             }
             _transaction.Save("insert");
-            _repository = new FlowTemplateSqlRepository(_connection);
+            _context = new FlowDatabaseClassesDataContext(_connection);
+            _context.Transaction = _transaction;
+            _repository = new FlowTemplateRepository(_context);
         }
 
         public void Dispose()
@@ -39,7 +41,7 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_correct_amount_of_items_from_database()
         {
-            var sut = _repository.Get(_transaction);
+            var sut = _repository.Get();
 
             Assert.Equal(1, sut.Count());
         }
@@ -47,7 +49,7 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_template()
         {
-            var sut = _repository.Get(1, _transaction);
+            var sut = _repository.Get(1);
 
             Assert.Equal(1, sut.Id);
             Assert.Equal("Example Template 1", sut.Name);
@@ -56,24 +58,24 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_thrown_exception_if_template_not_exists()
         {
-            Assert.Throws<InvalidOperationException>(() => _repository.Get(-1, _transaction));
+            Assert.Throws<InvalidOperationException>(() => _repository.Get(-1));
         }
 
         [Fact]
         public void Should_return_id_when_inserting_template()
         {
-            var sut = _repository.Add(
-                new FlowTemplate {Name = "Example Template 2"},
-                _transaction);
-            Assert.Equal(2, sut);
+            _repository.Add(new FlowTemplate {Name = "Example Template 2"});
+            _repository.Save();
+            Assert.Equal(2, _context.FlowTemplates.Count());
         }
 
         [Fact]
         public void Should_update_row_with_new_data()
         {
-            _repository.Update(1, new FlowTemplate {Id = 2, Name = "Updated"}, _transaction);
+            _repository.Update(1, new FlowTemplate {Id = 2, Name = "Updated"});
+            _repository.Save();
 
-            var sut = _repository.Get(1, _transaction);
+            var sut = _context.FlowTemplates.First();
 
             Assert.Equal("Updated", sut.Name);
             Assert.Equal(1, sut.Id);
@@ -88,8 +90,9 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_remove_row_from_database()
         {
-            _repository.Delete(1, _transaction);
-            Assert.Equal(0, _repository.Get(_transaction).Count(o => o.Id == 1));
+            _repository.Delete(1);
+            _repository.Save();
+            Assert.Equal(0, _context.FlowTemplates.Count());
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Flow.Library.Core
             _flowTemplateRepository = flowTemplateRepository;
         }
 
-        public FlowTemplate Get(int id, IDbTransaction transaction = null)
+        public Core.FlowTemplate Get(int id, IDbTransaction transaction = null)
         {
             var template = _flowTemplateRepository.Get(id, transaction);
             return template;

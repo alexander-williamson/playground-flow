@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="FlowDatabaseClasses">
+  <DataContextMoniker Name="/FlowDatabaseClassesDataContext" />
+  <nestedChildShapes>
+    <classShape Id="a349b43d-feda-40a3-b69c-b33d4f9076d9" absoluteBounds="0.5, 0.5, 2, 1.1939925130208331">
+      <DataClassMoniker Name="/FlowDatabaseClassesDataContext/FlowTemplate" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4437fe75-6c13-487a-9f15-faa54fbf56c7" absoluteBounds="0.51499999999999968, 0.96, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

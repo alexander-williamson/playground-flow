@@ -10,19 +10,19 @@ namespace Flow.Library.Data.Repositories
 {
     public class MockFlowInstanceRepository : IFlowInstanceRepository
     {
-        public FlowInstance Get(int id, IDbTransaction transaction)
+        public Core.FlowInstance Get(int id, IDbTransaction transaction)
         {
-            var template = new FlowTemplate();
+            var template = new Core.FlowTemplate();
             template.Variables.Add("yourName", string.Empty);
             template.Steps.Add(new DataCollectionStep
             {
                 ExitRules = new List<IValidationRule> { new StringRequired { VariableKey = "yourName" } }
             });
             template.Steps.Add(new StoreDataStep());
-            return new FlowInstance(); ;
+            return new Core.FlowInstance(); ;
         }
 
-        public int Add(FlowInstance instance, IDbTransaction transaction)
+        public int Add(Core.FlowInstance instance, IDbTransaction transaction)
         {
             throw new System.NotImplementedException();
         }

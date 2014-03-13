@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,19 @@
     <Compile Include="Actions\NoAction.cs" />
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
+    <Compile Include="Data\FlowDatabaseClasses.cs">
+      <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FlowDatabaseClasses.designer.cs">
+      <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Data\FlowTemplateRepository.cs" />
     <Compile Include="Data\IDataContext.cs" />
+    <Compile Include="Data\IRepository.cs" />
+    <Compile Include="Data\IUnitOfWork.cs" />
+    <Compile Include="Data\SqlUnitOfWork.cs" />
     <Compile Include="Steps\CompletedStep.cs" />
     <Compile Include="Core\IDataManipulation.cs" />
     <Compile Include="Core\FlowTemplateStep.cs" />
@@ -98,7 +111,20 @@
     <Compile Include="Validation\ValidationEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\FlowDatabaseClasses.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>FlowDatabaseClasses.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\FlowDatabaseClasses.dbml.layout">
+      <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
