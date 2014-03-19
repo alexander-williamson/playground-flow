@@ -64,6 +64,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Data\FlowTemplateService.cs" />
     <Compile Include="Data\Repositories\FlowTemplateRepository.cs" />
     <Compile Include="Data\Abstract\IDataContext.cs" />
     <Compile Include="Data\Abstract\IRepository.cs" />
