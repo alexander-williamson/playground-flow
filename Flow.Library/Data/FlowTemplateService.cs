@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Flow.Library.Data.Abstract;
+using Flow.Library.Validation;
 
 namespace Flow.Library.Data
 {
@@ -20,6 +21,9 @@ namespace Flow.Library.Data
 
         public static int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template)
         {
+            if (string.IsNullOrWhiteSpace(template.Name))
+                throw new ValidationException("Template Name missing");
+
             var id = unitOfWork.FlowTemplates.Get().Any() ? unitOfWork.FlowTemplates.Get().Select(o => o.Id).Last() : 0;
             template.Id = ++id;
             unitOfWork.FlowTemplates.Add(template);

@@ -4,6 +4,7 @@ using FakeItEasy;
 using Flow.Library.Core;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
+using Flow.Library.Validation;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
@@ -55,6 +56,12 @@ namespace Flow.Library.Tests.Data
 
             // assert
             Assert.Equal(2, _flowTeplateRepositoryList.Last().Id);
+        }
+
+        [Fact]
+        public void Should_throw_validation_error_if_name_missing()
+        {
+            Assert.Throws<ValidationException>(() => FlowTemplateService.Add(_unitofwork, new FlowTemplate()));
         }
 
     }
