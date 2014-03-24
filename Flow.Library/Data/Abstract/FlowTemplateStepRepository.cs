@@ -38,12 +38,14 @@ namespace Flow.Library.Data.Abstract
         public void Add(IFlowTemplateStep instance)
         {
             var newId = _context.FlowTemplateSteps.Max(o => o.Id) + 1;
-            _context.FlowTemplateSteps.InsertOnSubmit(new FlowTemplateStep
+            var data = new FlowTemplateStep
             {
                 FlowTemplateId = instance.FlowTemplateId,
                 Id = newId,
                 Name = instance.Name
-            });
+            };
+            _context.FlowTemplateSteps.InsertOnSubmit(data);
+            instance.Id = newId;
         }
 
         public void Update(int id, IFlowTemplateStep instance)

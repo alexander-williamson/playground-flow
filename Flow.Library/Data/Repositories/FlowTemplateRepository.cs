@@ -27,6 +27,7 @@ namespace Flow.Library.Data.Repositories
         {
             var newId = _context.FlowTemplates.Max(o => o.Id) + 1;
             _context.FlowTemplates.InsertOnSubmit(new FlowTemplate { Id = newId, Name = instance.Name });
+            instance.Id = newId;
         }
         public void Update(int id, Core.FlowTemplate instance)
         {
