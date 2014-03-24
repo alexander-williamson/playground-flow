@@ -5,7 +5,7 @@ using Flow.Library.Runners;
 
 namespace Flow.Library.Steps
 {
-    public class StepBase : IStep
+    public class StepBase : IRunnableStep
     {
         // steps are versioned so you can work out where you've resumed from
         public int Id { get; set; }
@@ -96,5 +96,7 @@ namespace Flow.Library.Steps
             DataManipulations = new List<IDataManipulation>();
             ExitRules = new List<IValidationRule>();
         }
+
+        public bool IsDirty { get; set; }
     }
 }

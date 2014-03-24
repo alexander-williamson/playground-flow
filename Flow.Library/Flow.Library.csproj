@@ -56,6 +56,8 @@
     <Compile Include="Actions\NoAction.cs" />
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
+    <Compile Include="Core\ITrackDirty.cs" />
+    <Compile Include="Data\Abstract\FlowTemplateStepRepository.cs" />
     <Compile Include="Data\FlowDatabaseClasses.cs">
       <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
     </Compile>
@@ -106,6 +108,7 @@
     <Compile Include="Validation\Rules\StringMaxLength.cs" />
     <Compile Include="Validation\Rules\StringRequired.cs" />
     <Compile Include="Validation\ValidationEngine.cs" />
+    <Compile Include="Validation\ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\FlowDatabaseClasses.dbml">

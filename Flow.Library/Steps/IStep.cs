@@ -5,14 +5,19 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Steps
 {
-    public interface IStep
+
+    public interface IStep : ITrackDirty
     {
         int Id { get; set; }
         int VersionId { get; set; }
+        string Name { get; set; }
+        
+        List<IValidationRule> EntryRules { get; set; }
+        List<IValidationRule> ExitRules { get; set; }
+    }
 
-        int MinimumNodes { get; set; }
-        int MaximumNodes { get; set; }
-
+    public interface IRunnableStep : IStep
+    {
         bool IsComplete { get; }
         bool IsProcessed { get; set; }
         bool CanContinue { get; }
@@ -21,11 +26,9 @@ namespace Flow.Library.Steps
         void Initialise();
 
         // Entry rules (rules that must be fulfilled before we can run this rule)
-        List<IValidationRule> EntryRules { get; set; }
         List<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables);
 
         // exit rules that must be fulfilled before this step can be marked as complete
-        List<IValidationRule> ExitRules { get; set; }
         List<IValidationRule> BrokenExitRules(IDictionary<string, object> variables);
 
         void Process(FlowInstance flow, IRunFlows runner);

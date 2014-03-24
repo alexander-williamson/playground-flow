@@ -1,18 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="FlowDatabaseClasses">
-  <DataContextMoniker Name="/FlowDatabaseClassesDataContext" />
+  <DataContextMoniker Name="/FlowDataContext" />
   <nestedChildShapes>
     <classShape Id="a349b43d-feda-40a3-b69c-b33d4f9076d9" absoluteBounds="0.5, 0.5, 2, 1.1939925130208331">
-      <DataClassMoniker Name="/FlowDatabaseClassesDataContext/FlowTemplate" />
+      <DataClassMoniker Name="/FlowDataContext/FlowTemplate" />
       <nestedChildShapes>
         <elementListCompartment Id="4437fe75-6c13-487a-9f15-faa54fbf56c7" absoluteBounds="0.51499999999999968, 0.96, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="8cf2f666-a81e-4456-8b71-9d0b9e9ac548" absoluteBounds="0.5, 1.875, 2, 1.0016910807291666">
-      <DataClassMoniker Name="/FlowDatabaseClassesDataContext/FlowInstance" />
+    <classShape Id="8cf2f666-a81e-4456-8b71-9d0b9e9ac548" absoluteBounds="2.875, 0.5, 2, 1.0016910807291666">
+      <DataClassMoniker Name="/FlowDataContext/FlowInstance" />
       <nestedChildShapes>
-        <elementListCompartment Id="0db253df-557f-482d-88f5-a296cfd9750e" absoluteBounds="0.515, 2.335, 1.9700000000000002, 0.44169108072916663" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="0db253df-557f-482d-88f5-a296cfd9750e" absoluteBounds="2.8899999999999997, 0.96, 1.9700000000000002, 0.44169108072916663" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="62c4e2d0-6740-4daf-944c-dcd699141daa" absoluteBounds="0.5, 2.125, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/FlowDataContext/FlowTemplateStep" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5d014401-a3a4-43ad-a8a6-5c3c59872437" absoluteBounds="0.51500000000000012, 2.585, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.5 : 1.69399251302083); (1.5 : 2.125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/FlowDataContext/FlowTemplate/FlowTemplate_FlowTemplateStep" />
+      <nodes>
+        <classShapeMoniker Id="a349b43d-feda-40a3-b69c-b33d4f9076d9" />
+        <classShapeMoniker Id="62c4e2d0-6740-4daf-944c-dcd699141daa" />
+      </nodes>
+    </associationConnector>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

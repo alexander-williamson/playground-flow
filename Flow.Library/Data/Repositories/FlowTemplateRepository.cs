@@ -20,11 +20,13 @@ namespace Flow.Library.Data.Repositories
         }
         public Core.FlowTemplate Get(int id)
         {
-            return _context.FlowTemplates.Where(o => o.Id == id).Select(o => new Core.FlowTemplate { Id = o.Id, Name = o.Name }).First();
+            var items = _context.FlowTemplates.Where(o => o.Id == id);
+            return items.Any() ? items.Select(o => new Core.FlowTemplate {Id = o.Id, Name = o.Name}).First() : null;
         }
         public void Add(Core.FlowTemplate instance)
         {
-            _context.FlowTemplates.InsertOnSubmit(new FlowTemplate { Id = instance.Id, Name = instance.Name });
+            var newId = _context.FlowTemplates.Max(o => o.Id) + 1;
+            _context.FlowTemplates.InsertOnSubmit(new FlowTemplate { Id = newId, Name = instance.Name });
         }
         public void Update(int id, Core.FlowTemplate instance)
         {

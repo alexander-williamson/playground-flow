@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Data\FlowTemplateRepositoryTests.cs" />
     <Compile Include="Data\FlowTemplateServiceTests.cs" />
+    <Compile Include="Data\FlowTemplateStepRepositoryTests.cs" />
     <Compile Include="Steps\DataCollectionStepTests.cs" />
     <Compile Include="Data\FlowInstanceRepositoryTests.cs" />
     <Compile Include="Core\FlowInstanceFactoryTests.cs" />

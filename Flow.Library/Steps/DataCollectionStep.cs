@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Flow.Library.Core;
 using Flow.Library.UI;
 using Flow.Library.Validation;
@@ -22,8 +20,6 @@ namespace Flow.Library.Steps
         public DataCollectionStep(List<IValidationRule> rules = null) //, Dictionary<string, object> requiredVariables = null)
         {
             ExitRules = rules ?? new List<IValidationRule>(); 
-            //AvailableVariables = requiredVariables ?? new Dictionary<string, object>();
-            //Variables = AvailableVariables;
         }
 
         public override void Process(FlowInstance flow, Runners.IRunFlows runner)

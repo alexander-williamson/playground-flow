@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using Flow.Library.Steps;
+using Flow.Library.Validation;
 
 namespace Flow.Library.Data.Abstract
 {
@@ -16,9 +18,9 @@ namespace Flow.Library.Data.Abstract
 
         public IRepository<Core.FlowTemplate> FlowTemplates { get; set; }
 
-        public IRepository<Core.FlowTemplateStep> FlowTemplateSteps { get; set; }
+        public IRepository<IFlowTemplateStep> FlowTemplateSteps { get; set; }
 
-        public IRepository<Core.FlowTemplateStepRule> FlowTemplateStepRules { get; set; }
+        public IRepository<IValidationRule> FlowTemplateStepRules { get; set; }
 
         public void Commit()
         {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FakeItEasy;
 using Flow.Library.Core;
 using Flow.Library.Runners;
@@ -70,7 +71,7 @@ namespace Flow.Library.Tests.Core
         public void Should_call_run_on_handleable_type()
         {
             // assemble
-            var fakeStep = A.Fake<IStep>();
+            var fakeStep = A.Fake<IRunnableStep>();
             A.CallTo(() => fakeStep.IsComplete).ReturnsNextFromSequence(true);
             var sut = new FlowRunner(new FlowInstance {Template = new FlowTemplate {Steps = new List<IStep> {fakeStep}}});
             sut.Types.Add(fakeStep.GetType());

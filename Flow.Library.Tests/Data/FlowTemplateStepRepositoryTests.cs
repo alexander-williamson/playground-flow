@@ -3,23 +3,22 @@ using System.Data.SqlClient;
 using System.Linq;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Data.Repositories;
 using Xunit;
-using FlowTemplate = Flow.Library.Core.FlowTemplate;
+using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
 namespace Flow.Library.Tests.Data
 {
-    public class FlowTemplateRepositoryTests : IDisposable
+    public class FlowTemplateStepRepositoryTests : IDisposable
     {
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
         
-        private readonly IRepository<FlowTemplate> _repository;
+        private readonly IRepository<IFlowTemplateStep> _repository;
         private readonly FlowDataContext _context;
 
-        public FlowTemplateRepositoryTests()
+        public FlowTemplateStepRepositoryTests()
         {
             _connection = new SqlConnection(LocalConnectionString);
             _connection.Open();
@@ -28,9 +27,14 @@ namespace Flow.Library.Tests.Data
             {
                 command.ExecuteNonQuery();
             }
+            using (var command = new SqlCommand(@"INSERT INTO FlowTemplateStep (Id, FlowTemplateId, StepTypeId, Name) VALUES (1, 1, 1, 'Example Step 1'), (2, 1, 1, 'Example Step 2');", _connection, _transaction))
+            {
+                command.ExecuteNonQuery();
+            }
+
             _transaction.Save("insert");
             _context = new FlowDataContext(_connection) {Transaction = _transaction};
-            _repository = new FlowTemplateRepository(_context);
+            _repository = new FlowTemplateStepRepository(_context);
         }
 
         public void Dispose()
@@ -42,53 +46,56 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_correct_amount_of_items_from_database()
         {
-            var sut = _repository.Get();
+            var sut = _repository.Get().ToArray();
 
-            Assert.Equal(1, sut.Count());
+            Assert.Equal(2, sut.Count());
+            Assert.Equal(2, sut[1].Id);
+            Assert.Equal("Example Step 2", sut[1].Name);
         }
 
         [Fact]
-        public void Should_return_template()
+        public void Should_return_template_steps()
         {
-            var sut = _repository.Get(1);
+            var sut = _repository.Get(2);
 
-            Assert.Equal(1, sut.Id);
-            Assert.Equal("Example Template 1", sut.Name);
+            Assert.Equal(2, sut.Id);
+            Assert.Equal("Example Step 2", sut.Name);
         }
 
         [Fact]
-        public void Should_return_null_if_template_not_exists()
+        public void Should_return_null_if_template_step_does_not_exist()
         {
             Assert.Null(_repository.Get(-1));
         }
 
         [Fact]
-        public void Should_set_id_when_inserting_template()
+        public void Should_set_id_when_inserting_template_step()
         {
-            var instance = new FlowTemplate {Name = "Example Template 2"};
+            var instance = new FlowTemplateStep { Name = "Example Template 2"};
 
             _repository.Add(instance);
             _repository.Save();
 
-            Assert.Equal(2, instance.Id);
+            Assert.Equal(3, instance.Id);
         }
 
         [Fact]
         public void Should_update_row_with_new_data()
         {
-            _repository.Update(1, new FlowTemplate {Id = 2, Name = "Updated"});
+            _repository.Update(2, new FlowTemplateStep { Name = "Updated", FlowTemplateId = 1 });
             _repository.Save();
 
-            var sut = _context.FlowTemplates.First();
+            var r = _context.FlowTemplateSteps;
+            var sut = r.Where(o => o.Id == 2).ToList().Last();
 
             Assert.Equal("Updated", sut.Name);
-            Assert.Equal(1, sut.Id);
+            Assert.Equal(2, sut.Id);
         }
 
         [Fact]
         public void Should_throw_exception_when_updating_if_row_does_not_exist()
         {
-            Assert.Throws<InvalidOperationException>(() => _repository.Update(-1, new FlowTemplate {Name = "Updated "}));
+            Assert.Throws<InvalidOperationException>(() => _repository.Update(-1, new FlowTemplateStep {Name = "Updated "}));
         }
 
         [Fact]
@@ -96,7 +103,7 @@ namespace Flow.Library.Tests.Data
         {
             _repository.Delete(1);
             _repository.Save();
-            Assert.Equal(0, _context.FlowTemplates.Count());
+            Assert.Equal(1, _context.FlowTemplates.Count());
         }
-    }
+    } 
 }

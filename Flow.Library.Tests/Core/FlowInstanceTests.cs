@@ -82,8 +82,8 @@ namespace Flow.Library.Tests.Core
         [Fact]
         public void Should_not_run_completed_step_based_on_completed_steps()
         {
-            var fakeStep = A.Fake<IStep>();
-            var template = new FlowTemplate { Steps = new [] { fakeStep }.ToList() };
+            var fakeStep = A.Fake<IRunnableStep>();
+            var template = new FlowTemplate { Steps = new List<IStep> { fakeStep }.ToList() };
             var sut = new FlowInstance { Template = template };
             sut.CompletedSteps.Add(new CompletedStep(1, 0));
 
