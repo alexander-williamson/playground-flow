@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flow.Library.Data.Abstract;
+using Flow.Library.Data.Repositories;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
 
@@ -39,7 +40,7 @@ namespace Flow.Library.Data
 
             foreach (var step in template.Steps)
             {
-                var stepInstance = (IFlowTemplateStep) step;
+                var stepInstance = new Core.FlowTemplateStep(step);
                 stepInstance.FlowTemplateId = id;
                 unitOfWork.FlowTemplateSteps.Add(stepInstance);
             }

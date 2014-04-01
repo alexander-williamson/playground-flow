@@ -12,6 +12,8 @@
     <AssemblyName>Flow.Library</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,7 +59,7 @@
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
     <Compile Include="Core\ITrackDirty.cs" />
-    <Compile Include="Data\Abstract\FlowTemplateStepRepository.cs" />
+    <Compile Include="Data\Repositories\FlowTemplateStepRepository.cs" />
     <Compile Include="Data\FlowDatabaseClasses.cs">
       <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
     </Compile>
@@ -72,6 +74,7 @@
     <Compile Include="Data\Abstract\IRepository.cs" />
     <Compile Include="Data\Abstract\IUnitOfWork.cs" />
     <Compile Include="Data\Abstract\SqlUnitOfWork.cs" />
+    <Compile Include="Data\Abstract\IFlowTemplateStep.cs" />
     <Compile Include="Steps\CompletedStep.cs" />
     <Compile Include="Core\IDataManipulation.cs" />
     <Compile Include="Core\FlowTemplateStep.cs" />
@@ -134,6 +137,7 @@
     if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
     xcopy /s /y "$(SolutionDir)packages\Noesis.Javascript.0.7.1.0\NativeBinaries\net40\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

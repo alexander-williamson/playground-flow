@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Web", "Web\Web\Flow.Web.csproj", "{DC581325-4ED2-48D6-AE74-67F242C0AA0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Library", "Flow.Library\Flow.Library.csproj", "{69FFDADE-F00E-4903-AF27-B3E48D674C6D}"
@@ -8,6 +10,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Library.Tests", "Flow.Library.Tests\Flow.Library.Tests.csproj", "{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3192DFF1-050D-4FEE-AD3B-EEF1FE5EE1DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow.Web.Tests", "Flow.Web.Tests\Flow.Web.Tests.csproj", "{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9A5AD57F-B883-4700-919D-40844AF95515}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,11 +60,22 @@ Global
 		{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}.Release|x86.ActiveCfg = Release|x86
 		{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA}.Release|x86.Build.0 = Release|x86
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{328ECAB2-ACAE-4FC0-909A-FE2C2A40E9CA} = {3192DFF1-050D-4FEE-AD3B-EEF1FE5EE1DF}
+		{EA2AFD93-D6AA-420F-AB16-19FF6FC334F6} = {3192DFF1-050D-4FEE-AD3B-EEF1FE5EE1DF}
 	EndGlobalSection
 EndGlobal

@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Flow.Library.Steps;
+using Flow.Library.Data.Abstract;
 using Flow.Library.Validation;
 
-namespace Flow.Library.Data.Abstract
+namespace Flow.Library.Data.Repositories
 {
-    public interface IFlowTemplateStep : IStep
-    {
-        int FlowTemplateId { get; set; }
-    }
-
     public class FlowTemplateStepRepository : IRepository<IFlowTemplateStep>
     {
         private readonly FlowDataContext _context;
