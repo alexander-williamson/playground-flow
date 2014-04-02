@@ -48,7 +48,7 @@ namespace Web.Controllers
             return result;
         }
 
-        [NullResponseIs404Attribute]
+        [NullResponseIs404]
         public FlowTemplate Get(int id)
         {
             return FlowTemplateService.GetFlowTemplate(_unitOfWork, id);

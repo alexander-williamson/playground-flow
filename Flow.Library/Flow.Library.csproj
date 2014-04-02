@@ -71,7 +71,6 @@
     <Compile Include="Actions\StoreData.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
     <Compile Include="Core\ITrackDirty.cs" />
-    <Compile Include="Data\NullResponseIs404Attribute.cs" />
     <Compile Include="Data\Repositories\FlowTemplateStepRepository.cs" />
     <Compile Include="Data\FlowDatabaseClasses.cs">
       <DependentUpon>FlowDatabaseClasses.dbml</DependentUpon>
