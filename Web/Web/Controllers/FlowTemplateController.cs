@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Web.Http;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
+using Flow.Library.Steps;
+using Flow.Library.Validation;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Web.Controllers
@@ -9,17 +13,42 @@ namespace Web.Controllers
     public class FlowTemplateController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly SqlConnection _connection;
+        private const string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=Flow;Integrated Security=True";
 
         public FlowTemplateController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<FlowTemplate> Get()
+        public FlowTemplateController()
         {
-            return FlowTemplateService.GetFlowTemplates(_unitOfWork);
+            _connection = new SqlConnection(ConnectionString);
+            _connection.Open();
+            _unitOfWork = new SqlUnitOfWork(_connection);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (_connection != null)
+            {
+                _connection.Dispose();
+            }
+        }
+
+        ~FlowTemplateController()
+        {
+            Dispose(false);
+        }
+
+        public IEnumerable<FlowTemplate> Get()
+        {
+            var result = FlowTemplateService.GetFlowTemplates(_unitOfWork).ToList();
+            return result;
+        }
+
+        [NullResponseIs404Attribute]
         public FlowTemplate Get(int id)
         {
             return FlowTemplateService.GetFlowTemplate(_unitOfWork, id);

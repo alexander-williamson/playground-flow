@@ -1,3 +1,4 @@
+using System.Linq;
 using Flow.Library.Validation;
 using System.Collections.Generic;
 using Flow.Library.Core;
@@ -34,10 +35,10 @@ namespace Flow.Library.Steps
                 if (!IsProcessed)
                     return false;
 
-                if (EntryRules.Count > 0)
+                if (EntryRules.Any())
                     return false;
 
-                if (ExitRules.Count > 0)
+                if (ExitRules.Any())
                     return false;
 
                 return true;                    
@@ -55,8 +56,8 @@ namespace Flow.Library.Steps
         public void Initialise() { IsInitialized = true; }
 
         // Entry rules (rules that must be fulfilled before we can run this rule)
-        public List<IValidationRule> EntryRules { get; set; }
-        public List<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables)
+        public IEnumerable<IValidationRule> EntryRules { get; set; }
+        public IList<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables)
         {
             if (EntryRules != null && variables != null)
             {
@@ -69,11 +70,11 @@ namespace Flow.Library.Steps
 
         // actions that can be performed during this step
         // this will only run after the entry rules have been validated
-        public List<IDataManipulation> DataManipulations { get; private set; }
+        public IList<IDataManipulation> DataManipulations { get; private set; }
 
         // exit rules that must be fulfilled before this step can be marked as complete
-        public List<IValidationRule> ExitRules { get; set; }
-        public List<IValidationRule> BrokenExitRules(IDictionary<string, object> variables)
+        public IEnumerable<IValidationRule> ExitRules { get; set; }
+        public IList<IValidationRule> BrokenExitRules(IDictionary<string, object> variables)
         {
             if (EntryRules != null && variables != null)
             {

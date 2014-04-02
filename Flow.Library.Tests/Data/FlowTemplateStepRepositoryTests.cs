@@ -40,8 +40,21 @@ namespace Flow.Library.Tests.Data
 
         public void Dispose()
         {
-            _transaction.Rollback();
-            _connection.Close();
+            Dispose(true);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _transaction.Rollback();
+                _connection.Close();
+            }
+        }
+
+        ~FlowTemplateStepRepositoryTests()
+        {
+            Dispose(false);
         }
 
         [Fact]
@@ -52,6 +65,7 @@ namespace Flow.Library.Tests.Data
             Assert.Equal(2, sut.Count());
             Assert.Equal(2, sut[1].Id);
             Assert.Equal("Example Step 2", sut[1].Name);
+            Assert.Equal(1, sut[1].FlowTemplateId);
         }
 
         [Fact]
@@ -61,6 +75,7 @@ namespace Flow.Library.Tests.Data
 
             Assert.Equal(2, sut.Id);
             Assert.Equal("Example Step 2", sut.Name);
+            Assert.Equal(1, sut.FlowTemplateId);
         }
 
         [Fact]

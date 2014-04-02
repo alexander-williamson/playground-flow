@@ -13,19 +13,19 @@ namespace Flow.Web.Tests
     public class FlowTemplateControllerTests
     {
 
-        private readonly FlowTemplateController sut;
+        private readonly FlowTemplateController _sut;
         private readonly IUnitOfWork _unitOfWork;
 
         public FlowTemplateControllerTests()
         {
             _unitOfWork = A.Fake<IUnitOfWork>();
-            sut = new FlowTemplateController(_unitOfWork);
+            _sut = new FlowTemplateController(_unitOfWork);
         }
 
         [Fact]
         public void Should_add_template()
         {
-            sut.Post(new FlowTemplate {Id = 1, Name = "Test 1"});
+            _sut.Post(new FlowTemplate {Id = 1, Name = "Test 1"});
 
             A.CallTo(() => _unitOfWork.FlowTemplates.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -34,14 +34,14 @@ namespace Flow.Web.Tests
         public void Should_return_success_on_template_post()
         {
             A.CallTo(() => _unitOfWork.FlowTemplates.Get()).Returns(new List<FlowTemplate> { new FlowTemplate { Id = 2 } });
-            var result = sut.Post(new FlowTemplate { Id = 1, Name = "Test 1" });
+            var result = _sut.Post(new FlowTemplate { Id = 1, Name = "Test 1" });
             Assert.Equal(3, result);
         }
 
         [Fact]
         public void Should_throw_validation_error_if_name_missing()
         {
-            Assert.Throws<ValidationException>(() => sut.Post(new FlowTemplate()));
+            Assert.Throws<ValidationException>(() => _sut.Post(new FlowTemplate()));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Flow.Web.Tests
             var instance = new FlowTemplate {Name = "Example Step"};
             instance.Steps = new List<IStep> {new StartStep(), new DataCollectionStep(), new StopStep()};
 
-            sut.Post(instance);
+            _sut.Post(instance);
 
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Times(3));
         }
@@ -60,7 +60,7 @@ namespace Flow.Web.Tests
         {
             A.CallTo(() => _unitOfWork.FlowTemplates.Get(2)).Returns(new FlowTemplate {Id = 2, Name = "Template 2"});
 
-            var result = sut.Get(2);
+            var result = _sut.Get(2);
 
             Assert.Equal(2, result.Id);
             Assert.Equal("Template 2", result.Name);
@@ -80,8 +80,9 @@ namespace Flow.Web.Tests
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Get()).Returns(steps);
             A.CallTo(() => _unitOfWork.FlowTemplates.Get(1)).Returns(new FlowTemplate { Id = 1, Name = "Template 1" });
 
-            var result = sut.Get(1);
+            var result = _sut.Get(1);
             Assert.Equal(3, result.Steps.Count);
         }
+
     }
 }

@@ -71,15 +71,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\FlowTemplateRepositoryTests.cs" />
-    <Compile Include="Data\FlowTemplateServiceTests.cs" />
-    <Compile Include="Data\FlowTemplateStepRepositoryTests.cs" />
-    <Compile Include="Steps\DataCollectionStepTests.cs" />
-    <Compile Include="Data\FlowInstanceRepositoryTests.cs" />
     <Compile Include="Core\FlowInstanceFactoryTests.cs" />
     <Compile Include="Core\FlowInstanceTests.cs" />
     <Compile Include="Core\FlowRunnerBaseTests.cs" />
     <Compile Include="Core\FlowTemplateFactoryTests.cs" />
+    <Compile Include="Data\FlowInstanceRepositoryTests.cs" />
+    <Compile Include="Data\FlowTemplateRepositoryTests.cs" />
+    <Compile Include="Data\FlowTemplateServiceTests.cs" />
+    <Compile Include="Data\FlowTemplateStepRepositoryTests.cs" />
+    <Compile Include="Steps\DataCollectionStepTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +127,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

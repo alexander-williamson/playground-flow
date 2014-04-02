@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Data.Repositories;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
 
@@ -16,8 +15,15 @@ namespace Flow.Library.Data
             foreach (var template in templates)
             {
                 var id = template.Id;
-                var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id);
-                template.Steps.AddRange(steps);
+                var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
+                
+                if(template.Steps == null)
+                    template.Steps = new List<IStep>();
+
+                foreach (var step in steps)
+                {
+                    template.Steps.Add(step);
+                }
             }
             return templates;
         }
@@ -25,7 +31,18 @@ namespace Flow.Library.Data
         public static Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id)
         {
             var result = unitOfWork.FlowTemplates.Get(id);
-            result.Steps.AddRange(unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id));
+            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id);
+
+            if (result != null && result.Steps == null)
+            {
+                result.Steps = new List<IStep>();
+
+                foreach (var step in steps)
+                {
+                    result.Steps.Add(step);
+                }
+            }
+
             return result;
         }
 
@@ -38,11 +55,14 @@ namespace Flow.Library.Data
             template.Id = ++id;
             unitOfWork.FlowTemplates.Add(template);
 
-            foreach (var step in template.Steps)
+            if (template.Steps != null && template.Steps.Any())
             {
-                var stepInstance = new Core.FlowTemplateStep(step);
-                stepInstance.FlowTemplateId = id;
-                unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                foreach (var step in template.Steps)
+                {
+                    var stepInstance = new Core.FlowTemplateStep(step);
+                    stepInstance.FlowTemplateId = id;
+                    unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                }
             }
 
             unitOfWork.Commit();
@@ -58,19 +78,23 @@ namespace Flow.Library.Data
             }
 
             unitOfWork.FlowTemplates.Update(template.Id, template);
-            foreach (var step in template.Steps)
+            if (template.Steps != null && template.Steps.Any())
             {
-                var stepInstance = (IFlowTemplateStep) step;
-                stepInstance.FlowTemplateId = template.Id;
-                if (step.IsDirty)
+                foreach (var step in template.Steps)
                 {
-                    unitOfWork.FlowTemplateSteps.Update(step.Id, stepInstance);
-                }
-                else
-                {
-                    unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                    var stepInstance = (IFlowTemplateStep) step;
+                    stepInstance.FlowTemplateId = template.Id;
+                    if (step.IsDirty)
+                    {
+                        unitOfWork.FlowTemplateSteps.Update(step.Id, stepInstance);
+                    }
+                    else
+                    {
+                        unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                    }
                 }
             }
+
             unitOfWork.Commit();
         }
 

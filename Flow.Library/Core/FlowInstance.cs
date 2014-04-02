@@ -8,7 +8,7 @@ namespace Flow.Library.Core
     {
         public int Id { get; set; }
         public FlowTemplate Template { get; set; }
-        public Dictionary<string, object> Variables { get; set; }
+        public IDictionary<string, object> Variables { get; set; }
         public List<CompletedStep> CompletedSteps { get; set; }
 
         public FlowInstance()

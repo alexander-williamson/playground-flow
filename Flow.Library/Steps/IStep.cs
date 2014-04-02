@@ -12,8 +12,8 @@ namespace Flow.Library.Steps
         int VersionId { get; set; }
         string Name { get; set; }
         
-        List<IValidationRule> EntryRules { get; set; }
-        List<IValidationRule> ExitRules { get; set; }
+        //IEnumerable<IValidationRule> EntryRules { get; set; }
+        //IEnumerable<IValidationRule> ExitRules { get; set; }
     }
 
     public interface IRunnableStep : IStep
@@ -26,10 +26,10 @@ namespace Flow.Library.Steps
         void Initialise();
 
         // Entry rules (rules that must be fulfilled before we can run this rule)
-        List<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables);
+        IList<IValidationRule> BrokenEntryRules(IDictionary<string, object> variables);
 
         // exit rules that must be fulfilled before this step can be marked as complete
-        List<IValidationRule> BrokenExitRules(IDictionary<string, object> variables);
+        IList<IValidationRule> BrokenExitRules(IDictionary<string, object> variables);
 
         void Process(FlowInstance flow, IRunFlows runner);
     }

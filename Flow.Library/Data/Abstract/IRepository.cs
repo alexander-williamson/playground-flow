@@ -2,7 +2,7 @@
 
 namespace Flow.Library.Data.Abstract
 {
-    public interface IRepository<T> where T : class 
+    public interface IRepository<T> where T : class
     {
         IEnumerable<T> Get();
         T Get(int id);
@@ -11,4 +11,5 @@ namespace Flow.Library.Data.Abstract
         void Delete(int id);
         void Save();
     }
+
 }

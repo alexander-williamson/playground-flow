@@ -3,7 +3,6 @@ using System.Linq;
 using FakeItEasy;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Data.Repositories;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Xunit;
@@ -29,6 +28,11 @@ namespace Flow.Library.Tests.Data
             A.CallTo(() => _unitofwork.FlowTemplates).Returns(templateRepo);
         }
 
+        public List<IStep> FlowTemplateSteps
+        {
+            get { return _flowTemplateSteps; }
+        }
+
         [Fact]
         public void Should_add_template_using_iunit_of_work()
         {
@@ -44,6 +48,7 @@ namespace Flow.Library.Tests.Data
         public void Should_add_child_steps()
         {
             var instance = new FlowTemplate {Name = "Example"};
+            instance.Steps = new List<IStep>();
             instance.Steps.Add(A.Fake<IFlowTemplateStep>());
             instance.Steps.Add(A.Fake<IFlowTemplateStep>());
             instance.Steps.Add(A.Fake<IFlowTemplateStep>());
@@ -135,6 +140,7 @@ namespace Flow.Library.Tests.Data
         public void Should_add_flow_steps_when_updating_template()
         {
             var instance = new FlowTemplate { Name = "First Value", Id = 2 };
+            instance.Steps = new List<IStep>();
             instance.Steps.Add(A.Fake<IFlowTemplateStep>());
             instance.Steps.Add(A.Fake<IFlowTemplateStep>());
 
@@ -149,6 +155,7 @@ namespace Flow.Library.Tests.Data
             var instance = new FlowTemplate { Name = "First Value", Id = 2 };
             var mock = A.Fake<IFlowTemplateStep>();
             A.CallTo(() => mock.IsDirty).Returns(true);
+            instance.Steps = new List<IStep>();
             instance.Steps.Add(mock);
             instance.Steps.Add(mock);
 

@@ -35,8 +35,21 @@ namespace Flow.Library.Tests.Data
 
         public void Dispose()
         {
-            _transaction.Rollback();
-            _connection.Close();
+            Dispose(true);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _transaction.Rollback();
+                _connection.Close();
+            }
+        }
+
+        ~FlowTemplateRepositoryTests()
+        {
+            Dispose(false);
         }
 
         [Fact]

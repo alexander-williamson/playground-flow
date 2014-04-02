@@ -9,16 +9,16 @@ namespace Flow.Library.Validation
         public IDictionary<string, object> Variables { get; set; } 
 
         private readonly List<IValidationRule> _brokenRules;
-        public List<IValidationRule> BrokenRules { get { return _brokenRules; } } 
+        public List<IValidationRule> BrokenRules { get { return _brokenRules; } }
 
-        public ValidationEngine(List<IValidationRule> rules, IDictionary<string, object> variables)
+        public ValidationEngine(IEnumerable<IValidationRule> rules, IDictionary<string, object> variables)
         {
-            Rules = rules;
+            Rules = rules.ToList();
             Variables = variables;
             _brokenRules = new List<IValidationRule>();
         }
 
-        public ValidationEngine(List<IValidationRule> rules, object objectToValidate)
+        public ValidationEngine(IEnumerable<IValidationRule> rules, object objectToValidate)
         {
             Variables = new Dictionary<string, object>();
             foreach(var property in objectToValidate.GetType().GetProperties())
@@ -28,7 +28,7 @@ namespace Flow.Library.Validation
                 Variables.Add(key, value);
             }
 
-            Rules = rules;
+            Rules = rules.ToList();
             _brokenRules = new List<IValidationRule>();
         }
 
