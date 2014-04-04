@@ -23,10 +23,9 @@ namespace Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            //var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
-            GlobalConfiguration.Configuration.Formatters.XmlFormatter.UseXmlSerializer = true;
+            AutoMapperConfig.Configure();
+            
+            //GlobalConfiguration.Configuration.Formatters.XmlFormatter.UseXmlSerializer = true;
 
             _container = new WindsorContainer().Install(FromAssembly.This());
             var controllerFactory = new WindsorControllerFactory(_container.Kernel);

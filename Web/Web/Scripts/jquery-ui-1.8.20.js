@@ -6430,7 +6430,7 @@ $.extend( $.ui.autocomplete, {
  * as long as you're okay with migrating your code later on. We can help with that, too.
  *
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * Dual licensed under the MIT or GPL VersionId 2 licenses.
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Menu

@@ -1,0 +1,18 @@
+﻿@using System.Linq
+@model Web.Models.FlowTemplateIndexViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Flow Templates</h2>
+<p>@Html.ActionLink("New Flow Template", "Add", "FlowTemplate", new { Action = "POST" })</p>
+<p>Found @Model.Templates.Count() Flow Templates</p>
+<ul>
+    @foreach (var template in @Model.Templates)
+    {
+        <li>
+            @template.Name
+        </li>
+    }
+</ul>

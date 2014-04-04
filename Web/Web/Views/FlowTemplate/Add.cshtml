@@ -1,0 +1,18 @@
+﻿@model Web.Models.FlowTemplateAddModel
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add Flow Template</h2>
+@using (var form = @Html.BeginForm("Add", "FlowTemplate"))
+{
+    @Html.ValidationSummary(false)
+    <p>
+        @Html.LabelFor(o => o.Name)
+        @Html.TextBoxFor(o => o.Name)
+    </p>
+    <p>
+        <input type="submit" value="Add" />
+    </p>
+}

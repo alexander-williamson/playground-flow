@@ -23,7 +23,9 @@ namespace Flow.Library.Validation
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("Validation Exception: ");
-                sb.AppendFormat("{0} broken rules", _brokenRules.Length);
+                var word = _brokenRules.Length == 1 ? "rule" : "rules";
+                sb.AppendFormat("{0} broken {1}: ", _brokenRules.Length, word);
+                sb.AppendLine();
                 for(var i = 0; i < _brokenRules.Length; i++)
                 {
                     sb.AppendFormat("{0} : {1}", i, _brokenRules[i]);

@@ -7,9 +7,18 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Data
 {
-    public class FlowTemplateService
+    public interface IFlowTemplateService
     {
-        public static IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
+        IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork);
+        Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id);
+        int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template);
+        void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template);
+        void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template);
+    }
+
+    public class FlowTemplateService : IFlowTemplateService
+    {
+        public IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
         {
             var templates = unitOfWork.FlowTemplates.Get().ToList();
             foreach (var template in templates)
@@ -28,7 +37,7 @@ namespace Flow.Library.Data
             return templates;
         }
 
-        public static Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id)
+        public Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id)
         {
             var result = unitOfWork.FlowTemplates.Get(id);
             var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id);
@@ -46,7 +55,7 @@ namespace Flow.Library.Data
             return result;
         }
 
-        public static int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template)
+        public int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template)
         {
             if (string.IsNullOrWhiteSpace(template.Name))
                 throw new ValidationException("Template Name missing");
@@ -59,8 +68,7 @@ namespace Flow.Library.Data
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = new Core.FlowTemplateStep(step);
-                    stepInstance.FlowTemplateId = id;
+                    var stepInstance = new Core.FlowTemplateStep(step) {FlowTemplateId = id};
                     unitOfWork.FlowTemplateSteps.Add(stepInstance);
                 }
             }
@@ -69,7 +77,7 @@ namespace Flow.Library.Data
             return id;
         }
 
-        public static void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template)
+        public void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template)
         {
             var existing = unitOfWork.FlowTemplates.Get(template.Id);
             if (existing == null)
@@ -98,7 +106,7 @@ namespace Flow.Library.Data
             unitOfWork.Commit();
         }
 
-        public static void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template)
+        public void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template)
         {
             unitOfWork.FlowTemplates.Delete(template.Id);
             unitOfWork.Commit();

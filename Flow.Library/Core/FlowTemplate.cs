@@ -11,5 +11,4 @@ namespace Flow.Library.Core
         public List<Link> Nodes { get; set; }
         public Dictionary<string, object> Variables { get; set; }
     }
-
 }

@@ -1,31 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Data.SqlClient;
+using System.Web.Mvc;
+using AutoMapper;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Steps;
-using Flow.Library.Validation;
-using FlowTemplate = Flow.Library.Core.FlowTemplate;
+using Web.Models;
 
 namespace Web.Controllers
 {
-    public class FlowTemplateController : ApiController
+    public class FlowTemplateController : Controller
     {
+        private readonly IFlowTemplateService _flowTemplateService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly SqlConnection _connection;
         private const string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=Flow;Integrated Security=True";
-
-        public FlowTemplateController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
 
         public FlowTemplateController()
         {
             _connection = new SqlConnection(ConnectionString);
             _connection.Open();
             _unitOfWork = new SqlUnitOfWork(_connection);
+            _flowTemplateService =  new FlowTemplateService();
         }
 
         protected override void Dispose(bool disposing)
@@ -42,33 +36,26 @@ namespace Web.Controllers
             Dispose(false);
         }
 
-        public IEnumerable<FlowTemplate> Get()
+        public ActionResult Index()
         {
-            var result = FlowTemplateService.GetFlowTemplates(_unitOfWork).ToList();
-            return result;
+            var model = new FlowTemplateIndexViewModel();
+            model.Templates = _flowTemplateService.GetFlowTemplates(_unitOfWork);
+            return View(model);
         }
 
-        [NullResponseIs404]
-        public FlowTemplate Get(int id)
+        [HttpGet]
+        public ActionResult Add()
         {
-            return FlowTemplateService.GetFlowTemplate(_unitOfWork, id);
+            return View();
         }
 
-        public int Post(FlowTemplate template)
+        [HttpPost]
+        public ActionResult Add(Dto.FlowTemplate template)
         {
-            var instance = template;
-            var id = FlowTemplateService.Add(_unitOfWork, instance);
-            return id;
+            var flowTemplate = Mapper.Map<Flow.Library.Core.FlowTemplate>(template);
+            var id = _flowTemplateService.Add(_unitOfWork, flowTemplate);
+            return RedirectToAction("Index", "FlowTemplateController", new {Success = true, Id = id});
         }
 
-        public void Put(FlowTemplate template)
-        {
-            FlowTemplateService.Update(_unitOfWork, template);
-        }
-
-        public void Delete(int id)
-        {
-            FlowTemplateService.Delete(_unitOfWork, new FlowTemplate {Id = 1});
-        }
     }
 }

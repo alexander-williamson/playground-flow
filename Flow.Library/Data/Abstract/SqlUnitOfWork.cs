@@ -6,6 +6,7 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Data.Abstract
 {
+    // TODO Test Saving part of commit
     public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
         private IDbConnection _connection;
@@ -28,6 +29,9 @@ namespace Flow.Library.Data.Abstract
 
         public void Commit()
         {
+            FlowTemplates.Save();
+            FlowTemplateSteps.Save();
+            //FlowTemplateStepRules.Save();
             _transaction.Commit();
         }
 

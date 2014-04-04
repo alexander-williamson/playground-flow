@@ -3,9 +3,9 @@ using FakeItEasy;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
-using Web.Controllers;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
+using FlowTemplateController = Web.Controllers.Api.FlowTemplateController;
 using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
 namespace Flow.Web.Tests
