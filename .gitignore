@@ -80,3 +80,5 @@ ConsoleApplication1/obj/x86/Debug/Flow.csprojResolveAssemblyReference.cache
 ConsoleApplication1/obj/x86/Debug/Flow.Console.exe
 ConsoleApplication1/obj/x86/Debug/Flow.Console.pdb
 ConsoleApplication1/obj/x86/Debug/Flow.csprojResolveAssemblyReference.cache
+*/bin/*
+*/obj/*
