@@ -119,6 +119,8 @@ namespace Flow.Library.Data
 
         public void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template)
         {
+            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == template.Id);
+            steps.ToList().ForEach(o => unitOfWork.FlowTemplateSteps.Delete(o.Id));
             unitOfWork.FlowTemplates.Delete(template.Id);
             unitOfWork.Commit();
         }

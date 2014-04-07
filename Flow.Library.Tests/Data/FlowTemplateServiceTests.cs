@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FakeItEasy;
+using Flow.Library.Core;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
@@ -13,26 +14,21 @@ namespace Flow.Library.Tests.Data
     public class FlowTemplateServiceTests
     {
         private readonly IUnitOfWork _unitofwork;
-        private readonly List<FlowTemplate> _flowTeplateRepositoryList;
+        private readonly List<FlowTemplate> _flowTemplates;
         private readonly List<IStep> _flowTemplateSteps;
         private readonly IFlowTemplateService _flowTemplateService;
 
         public FlowTemplateServiceTests()
         {
             var templateRepo = A.Fake<IRepository<FlowTemplate>>();
-            _flowTeplateRepositoryList = new List<FlowTemplate>();
+            _flowTemplates = new List<FlowTemplate>();
             _flowTemplateSteps = new List<IStep>();
             _flowTemplateService = new FlowTemplateService();
 
-            A.CallTo(() => templateRepo.Get()).Returns(_flowTeplateRepositoryList);
-            A.CallTo(() => templateRepo.Add(A<FlowTemplate>._)).Invokes((FlowTemplate o) => _flowTeplateRepositoryList.Add(o));
+            A.CallTo(() => templateRepo.Get()).Returns(_flowTemplates);
+            A.CallTo(() => templateRepo.Add(A<FlowTemplate>._)).Invokes((FlowTemplate o) => _flowTemplates.Add(o));
             _unitofwork = A.Fake<IUnitOfWork>();
             A.CallTo(() => _unitofwork.FlowTemplates).Returns(templateRepo);
-        }
-
-        public List<IStep> FlowTemplateSteps
-        {
-            get { return _flowTemplateSteps; }
         }
 
         [Fact]
@@ -43,7 +39,7 @@ namespace Flow.Library.Tests.Data
 
             // assert
             A.CallTo(() => _unitofwork.FlowTemplates.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal("Example Flow", _flowTeplateRepositoryList.First().Name);
+            Assert.Equal("Example Flow", _flowTemplates.First().Name);
         }
 
         [Fact]
@@ -70,8 +66,8 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_flows()
         {
-            _flowTeplateRepositoryList.Add(new FlowTemplate {Id = 1});
-            _flowTeplateRepositoryList.Add(new FlowTemplate {Id = 2});
+            _flowTemplates.Add(new FlowTemplate {Id = 1});
+            _flowTemplates.Add(new FlowTemplate {Id = 2});
 
             var result = _flowTemplateService.GetFlowTemplates(_unitofwork);
 
@@ -81,8 +77,8 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_steps_with_flows()
         {
-            _flowTeplateRepositoryList.Add(new FlowTemplate { Id = 1 });
-            _flowTeplateRepositoryList.Add(new FlowTemplate { Id = 2 });
+            _flowTemplates.Add(new FlowTemplate { Id = 1 });
+            _flowTemplates.Add(new FlowTemplate { Id = 2 });
 
             var fake = A.Fake<IFlowTemplateStep>();
             A.CallTo(() => fake.FlowTemplateId).ReturnsNextFromSequence(new [] { 1, 1, 1, 1, 2, 2 });
@@ -186,13 +182,32 @@ namespace Flow.Library.Tests.Data
         }
 
         [Fact]
-        public void Should_throw_exception_if_flow_doesnt_exist_when_deleting()
+        public void Should_delete_child_steps()
+        {
+            // Arrange
+            A.CallTo(() => _unitofwork.FlowTemplateSteps.Get()).Returns(new List<IFlowTemplateStep>
+            {
+                new Library.Core.FlowTemplateStep {Id = 20, FlowTemplateId = 2 }
+            });
+            
+            // Act
+            var instance = new FlowTemplate { Id = 2 };
+            _flowTemplateService.Delete(_unitofwork, instance);
+
+            // Assert
+            A.CallTo(() => _unitofwork.FlowTemplates.Delete(2)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _unitofwork.FlowTemplateSteps.Delete(20)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Delete_should_not_throw_exception_if_no_match()
         {
             var instance = new FlowTemplate { Name = "First Value", Id = 2 };
             var uow = A.Fake<IUnitOfWork>();
             A.CallTo(() => uow.FlowTemplates.Get(A<int>._)).Returns(null);
 
-            Assert.Throws<ValidationException>(() => _flowTemplateService.Update(uow, instance));
+            Assert.DoesNotThrow(() => _flowTemplateService.Delete(uow, instance));
         }
+
     }
 }

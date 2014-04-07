@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Http;
 using FakeItEasy;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
@@ -248,8 +249,8 @@ namespace Flow.Web.Tests
         [Fact]
         public void Put_existing_template_step_should_update_template_step()
         {
-            var database = A.Fake<IUnitOfWork>();
             // Assemble
+            var database = A.Fake<IUnitOfWork>();
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1 });
             A.CallTo(() => database.FlowTemplateSteps.Get(0)).Returns(null);
             A.CallTo(() => database.FlowTemplateSteps.Get(10))
@@ -278,8 +279,8 @@ namespace Flow.Web.Tests
         [Fact]
         public void Put_should_throw_exception_if_flow_template_step_does_not_exist_when_id_set()
         {
-            var database = A.Fake<IUnitOfWork>();
             // Assemble
+            var database = A.Fake<IUnitOfWork>();
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 1});
             A.CallTo(() => database.FlowTemplateSteps.Get(A<int>._)).Returns(null);
             var controller = new FlowTemplateController(database);
@@ -298,8 +299,8 @@ namespace Flow.Web.Tests
         [Fact]
         public void Put_should_throw_exception_if_flow_template_does_not_exist()
         {
-            var database = A.Fake<IUnitOfWork>();
             // Assemble
+            var database = A.Fake<IUnitOfWork>();
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
 
             // Act
@@ -309,5 +310,41 @@ namespace Flow.Web.Tests
             Assert.Throws<ValidationException>(() => controller.Put(new FlowTemplateDto {Id = 1, Name = "Example"}));
         }
 
+        [Fact]
+        public void Delete_should_return_not_found_if_not_exists()
+        {
+            // Assemble
+            var database = A.Fake<IUnitOfWork>();
+            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
+
+            // Act
+            var controller = new FlowTemplateController(database);
+
+            // Assert
+            Assert.Throws<HttpResponseException>(() => controller.Delete(100));
+        }
+
+        [Fact]
+        public void Delete_should_request_item_to_be_deleted_from_repository()
+        {
+            var database = A.Fake<IUnitOfWork>();
+            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 1, Name = "Example"});
+            A.CallTo(() => database.FlowTemplateSteps.Get()).Returns(new List<FlowTemplateStep>
+            {
+                new FlowTemplateStep {Id = 10, FlowTemplateId = 1},
+                new FlowTemplateStep {Id = 20, FlowTemplateId = 1},
+                new FlowTemplateStep {Id = 30, FlowTemplateId = 1}
+            });
+
+            // Act
+            var controller = new FlowTemplateController(database);
+            controller.Delete(1);
+
+            // Assert
+            A.CallTo(() => database.FlowTemplates.Delete(1)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => database.FlowTemplateSteps.Delete(10)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => database.FlowTemplateSteps.Delete(20)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => database.FlowTemplateSteps.Delete(30)).MustHaveHappened(Repeated.Exactly.Once);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Security.Permissions;
 using System.Web.Http;
 using AutoMapper;
@@ -132,7 +133,10 @@ namespace Flow.Web.Controllers.Api
 
         public void Delete(int id)
         {
-            _flowTemplateService.Delete(_unitOfWork, new FlowTemplate { Id = 1 });
+            if(_unitOfWork.FlowTemplates.Get(id) == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            _flowTemplateService.Delete(_unitOfWork, new FlowTemplate { Id = id });
         }
 
         public IEnumerable<FlowTemplateDto> Get()
