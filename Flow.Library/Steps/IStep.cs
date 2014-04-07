@@ -11,9 +11,8 @@ namespace Flow.Library.Steps
         int Id { get; set; }
         int VersionId { get; set; }
         string Name { get; set; }
-        
-        //IEnumerable<IValidationRule> EntryRules { get; set; }
-        //IEnumerable<IValidationRule> ExitRules { get; set; }
+        IEnumerable<IValidationRule> EntryRules { get; set; }
+        IEnumerable<IValidationRule> ExitRules { get; set; }
     }
 
     public interface IRunnableStep : IStep

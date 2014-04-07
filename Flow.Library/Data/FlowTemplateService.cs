@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using Flow.Library.Data.Abstract;
@@ -68,7 +69,16 @@ namespace Flow.Library.Data
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = new Core.FlowTemplateStep(step) {FlowTemplateId = id};
+                    var stepInstance = new Core.FlowTemplateStep(step) {FlowTemplateId = id };
+                    
+                    // todo should not need a list
+                    // todo needs an extension point
+
+                    if (step.GetType() == typeof(StartStep)) { stepInstance.StepTypeId = 0; }
+                    if (step.GetType() == typeof(StopStep)) { stepInstance.StepTypeId = 1; }
+                    if (step.GetType() == typeof(CollectDataStep)) { stepInstance.StepTypeId = 2; }
+                    if (step.GetType() == typeof(StoreDataStep)) { stepInstance.StepTypeId = 3; }
+
                     unitOfWork.FlowTemplateSteps.Add(stepInstance);
                 }
             }

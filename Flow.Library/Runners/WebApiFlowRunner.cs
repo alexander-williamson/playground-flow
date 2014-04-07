@@ -14,7 +14,7 @@
 //        }
 //        public WebApiFlowRunner(FlowInstance instance) : base(instance)
 //        {
-//            Types.Add(typeof(DataCollectionStep));
+//            Types.Add(typeof(CollectDataStep));
 //            Types.Add(typeof(StoreDataStep));
 //        }
 
@@ -37,7 +37,7 @@
 //                if (!CanProcess(step.GetType()))
 //                    return new UnhandlableAction { Step = step };
 
-//                if (step.GetType() == typeof(DataCollectionStep))
+//                if (step.GetType() == typeof(CollectDataStep))
 //                {
 //                    result = HandleDataCollectionStep(step);
 //                }
@@ -63,7 +63,7 @@
 
 //        private ActionBase HandleDataCollectionStep(StepBase step)
 //        {
-//            var dataCollectionStep = (DataCollectionStep)step;
+//            var dataCollectionStep = (CollectDataStep)step;
 
 //            if (!dataCollectionStep.IsInitialized)
 //                dataCollectionStep.Initialise();
@@ -73,7 +73,7 @@
 
 //            // TODO: fix annoying cast
 //            if (!dataCollectionStep.CanContinue)
-//                return new CollectData { Step = step };
+//                return new CollectDataAction { Step = step };
 
 //            return null;
 //        }
@@ -89,7 +89,7 @@
 //                storeDataStep.Process(FlowInstance, this);
 
 //            if (!storeDataStep.CanContinue)
-//                return new StoreData {Step = step};
+//                return new StoreDataAction {Step = step};
 
 //            return null;
 //        }

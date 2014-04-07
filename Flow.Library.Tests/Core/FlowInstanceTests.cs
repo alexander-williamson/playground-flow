@@ -12,7 +12,7 @@ namespace Flow.Library.Tests.Core
     {
         private static FlowInstance GetMock()
         {
-            var steps = new List<IStep> { new StartStep { Id = 1 }, new DataCollectionStep { Id = 2 }, new StopStep { Id = 3 } };
+            var steps = new List<IStep> { new StartStep { Id = 1 }, new CollectDataStep { Id = 2 }, new StopStep { Id = 3 } };
             var template = new FlowTemplate { Steps = steps };
             var sut = new FlowInstance { Template = template };
             sut.CompletedSteps.Add(new CompletedStep(1, 0));
@@ -44,14 +44,14 @@ namespace Flow.Library.Tests.Core
 
             // assert
             Assert.NotNull(result);
-            Assert.IsType<DataCollectionStep>(result);
+            Assert.IsType<CollectDataStep>(result);
         }
 
         [Fact]
         public void Should_return_first_step_if_no_steps_are_completed()
         {
             // arrange
-            var steps = new List<IStep> { new StartStep { Id = 1 }, new DataCollectionStep { Id = 2 }, new StopStep { Id = 3 } };
+            var steps = new List<IStep> { new StartStep { Id = 1 }, new CollectDataStep { Id = 2 }, new StopStep { Id = 3 } };
             var template = new FlowTemplate { Steps = steps };
             var sut = new FlowInstance { Template = template };
 

@@ -17,7 +17,7 @@ namespace Flow.Library.Data.Repositories
 
         public IEnumerable<IFlowTemplateStep> Get()
         {
-            return _context.FlowTemplateSteps.Select(o => new Core.FlowTemplateStep {Id = o.Id, Name = o.Name, FlowTemplateId = o.FlowTemplateId});
+            return _context.FlowTemplateSteps.Select(o => new Core.FlowTemplateStep {Id = o.Id, Name = o.Name, FlowTemplateId = o.FlowTemplateId, StepTypeId = o.StepTypeId});
         }
 
         public IFlowTemplateStep Get(int id)
@@ -27,7 +27,7 @@ namespace Flow.Library.Data.Repositories
             {
                 return null;
             }
-            return items.Select(o => new Core.FlowTemplateStep {Id = o.Id, Name = o.Name, FlowTemplateId = o.FlowTemplateId}).First();
+            return items.Select(o => new Core.FlowTemplateStep {Id = o.Id, Name = o.Name, FlowTemplateId = o.FlowTemplateId, StepTypeId = o.StepTypeId}).First();
         }
 
         public void Add(IFlowTemplateStep instance)
@@ -37,7 +37,8 @@ namespace Flow.Library.Data.Repositories
             {
                 FlowTemplateId = instance.FlowTemplateId,
                 Id = newId,
-                Name = instance.Name
+                Name = instance.Name,
+                StepTypeId = instance.StepTypeId
             };
             _context.FlowTemplateSteps.InsertOnSubmit(data);
             instance.Id = newId;

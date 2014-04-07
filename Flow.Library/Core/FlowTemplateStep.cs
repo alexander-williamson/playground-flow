@@ -14,6 +14,7 @@ namespace Flow.Library.Core
         public IEnumerable<IValidationRule> ExitRules { get; set; }
         public bool IsDirty { get; set; }
         public int FlowTemplateId { get; set; }
+        public int StepTypeId { get; set; }
 
         public FlowTemplateStep(IStep step)
         {

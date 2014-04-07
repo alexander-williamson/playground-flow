@@ -28,7 +28,7 @@ namespace Flow.Library.Tests.Core
         public void Should_return_correct_steps()
         {
             var repo = A.Fake<IRepository<FlowTemplate>>();
-            var steps = new List<IStep>(new List<IStep> { new StartStep(), new DataCollectionStep(), new StopStep() } );
+            var steps = new List<IStep>(new List<IStep> { new StartStep(), new CollectDataStep(), new StopStep() } );
             A.CallTo(() => repo.Get(A<int>._)).Returns(
             new FlowTemplate { Id = 2, Name = "Example Template", Steps = steps });
             var instance = new FlowTemplateFactory(repo);

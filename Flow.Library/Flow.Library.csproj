@@ -65,10 +65,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\CollectData.cs" />
+    <Compile Include="Actions\CollectDataAction.cs" />
     <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Actions\NoAction.cs" />
-    <Compile Include="Actions\StoreData.cs" />
+    <Compile Include="Actions\StoreDataAction.cs" />
     <Compile Include="Actions\UnhandlableAction.cs" />
     <Compile Include="Core\ITrackDirty.cs" />
     <Compile Include="Data\Repositories\FlowTemplateStepRepository.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Runners\FlowRunner.cs" />
     <Compile Include="Runners\IRunFlows.cs" />
     <Compile Include="Runners\WebApiFlowRunner.cs" />
-    <Compile Include="Steps\DataCollectionStep.cs" />
+    <Compile Include="Steps\CollectDataStep.cs" />
     <Compile Include="Steps\StartStep.cs" />
     <Compile Include="Steps\StepBase.cs" />
     <Compile Include="Steps\StopStep.cs" />

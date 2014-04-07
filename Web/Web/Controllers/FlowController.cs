@@ -25,13 +25,13 @@
 //            return runner.ProcessSteps();
 //        }
 
-//        public ActionResult CollectData()
+//        public ActionResult CollectDataAction()
 //        {
 //            var instance = ExampleFlowInstanceRepository.GetFlow(0,0);
 //            var runner = new WebApiFlowRunner(instance);
 //            runner.ProcessSteps();
 
-//            var brokenRules = ((DataCollectionStep) runner.NotCompleteSteps().First()).BrokenExitRules(instance.Variables);
+//            var brokenRules = ((CollectDataStep) runner.NotCompleteSteps().First()).BrokenExitRules(instance.Variables);
 
 //            var form = new FormTemplateBase(brokenRules);
 //            return new ContentResult { Content = form.Html };

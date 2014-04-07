@@ -13,7 +13,7 @@ namespace Flow.Library.Tests.Steps
         public void Should_return_false_if_not_processed()
         {
             // assemble
-            var sut = new DataCollectionStep();
+            var sut = new CollectDataStep();
 
             // assert
             Assert.False(sut.CanContinue);
@@ -24,7 +24,7 @@ namespace Flow.Library.Tests.Steps
         public void Should_return_true_when_no_rules_to_validate_and_processed()
         {
             // assemble
-            var sut = new DataCollectionStep();
+            var sut = new CollectDataStep();
 
             // act
             sut.Process(new FlowInstance(), null);
@@ -38,7 +38,7 @@ namespace Flow.Library.Tests.Steps
         public void Should_require_data_collection_if_exit_rule_invalid()
         {
             // assemble
-            var sut = new DataCollectionStep(new List<IValidationRule>(new[] {new StringRequired()}));
+            var sut = new CollectDataStep(new List<IValidationRule>(new[] {new StringRequired()}));
 
             // act
             sut.Process(new FlowInstance(), null);
@@ -53,7 +53,7 @@ namespace Flow.Library.Tests.Steps
         {
             // assemble
             var flow = new FlowInstance();
-            var sut = new DataCollectionStep(new List<IValidationRule>(new[] { new StringRequired{ VariableKey = "Variable1"} }));
+            var sut = new CollectDataStep(new List<IValidationRule>(new[] { new StringRequired{ VariableKey = "Variable1"} }));
 
             // act
             sut.Process(flow, null);
@@ -70,7 +70,7 @@ namespace Flow.Library.Tests.Steps
         {
             // assemble
             var flow = new FlowInstance();
-            var sut = new DataCollectionStep(new List<IValidationRule>(new[] { new StringRequired { VariableKey = "Variable1" } }));
+            var sut = new CollectDataStep(new List<IValidationRule>(new[] { new StringRequired { VariableKey = "Variable1" } }));
 
             // act
             sut.Process(flow, null);

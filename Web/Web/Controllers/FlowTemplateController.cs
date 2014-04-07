@@ -50,9 +50,9 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(Dto.FlowTemplate template)
+        public ActionResult Add(Dto.FlowTemplateDto templateDto)
         {
-            var flowTemplate = Mapper.Map<Flow.Library.Core.FlowTemplate>(template);
+            var flowTemplate = Mapper.Map<Flow.Library.Core.FlowTemplate>(templateDto);
             var id = _flowTemplateService.Add(_unitOfWork, flowTemplate);
             return RedirectToAction("Index", "FlowTemplateController", new {Success = true, Id = id});
         }

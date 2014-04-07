@@ -28,7 +28,7 @@ namespace Flow.Library.Tests.Data
             {
                 command.ExecuteNonQuery();
             }
-            using (var command = new SqlCommand(@"INSERT INTO FlowTemplateStep (Id, FlowTemplateId, StepTypeId, Name) VALUES (1, 1, 1, 'Example Step 1'), (2, 1, 1, 'Example Step 2');", _connection, _transaction))
+            using (var command = new SqlCommand(@"INSERT INTO FlowTemplateStep (Id, FlowTemplateId, StepTypeId, Name) VALUES (1, 1, 1, 'Example StartStep 1'), (2, 1, 2, 'Example StopStep 2'), (3, 1, 3, 'Example CollectDataStep 3'), (4, 1, 4, 'Example StoreDataStep 4');", _connection, _transaction))
             {
                 command.ExecuteNonQuery();
             }
@@ -62,9 +62,9 @@ namespace Flow.Library.Tests.Data
         {
             var sut = _repository.Get().ToArray();
 
-            Assert.Equal(2, sut.Count());
+            Assert.Equal(4, sut.Count());
             Assert.Equal(2, sut[1].Id);
-            Assert.Equal("Example Step 2", sut[1].Name);
+            Assert.Equal("Example StopStep 2", sut[1].Name);
             Assert.Equal(1, sut[1].FlowTemplateId);
         }
 
@@ -74,7 +74,7 @@ namespace Flow.Library.Tests.Data
             var sut = _repository.Get(2);
 
             Assert.Equal(2, sut.Id);
-            Assert.Equal("Example Step 2", sut.Name);
+            Assert.Equal("Example StopStep 2", sut.Name);
             Assert.Equal(1, sut.FlowTemplateId);
         }
 
@@ -92,7 +92,7 @@ namespace Flow.Library.Tests.Data
             _repository.Add(instance);
             _repository.Save();
 
-            Assert.Equal(3, instance.Id);
+            Assert.Equal(5, instance.Id);
         }
 
         [Fact]
@@ -115,11 +115,67 @@ namespace Flow.Library.Tests.Data
         }
 
         [Fact]
-        public void Should_remove_row_from_database()
+        public void Should_remove_row_from_database_when_Step_deleted()
         {
             _repository.Delete(1);
             _repository.Save();
             Assert.Equal(1, _context.FlowTemplates.Count());
+        }
+
+        [Fact]
+        public void Should_return_correct_StartStep_for_single_step()
+        {
+            var result = _repository.Get(1);
+            Assert.Equal(1, result.StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_StopStep_for_single_step()
+        {
+            var result = _repository.Get(2);
+            Assert.Equal(2, result.StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_CollectDataStep_for_single_step()
+        {
+            var result = _repository.Get(3);
+            Assert.Equal(3, result.StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_StoreDataStep_for_single_step()
+        {
+            var result = _repository.Get(4);
+            Assert.Equal(4, result.StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_StartStep()
+        {
+            var result = _repository.Get().ToList();
+            Assert.Equal(1, result[0].StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_StopStep()
+        {
+            var result = _repository.Get().ToList();
+            Assert.Equal(2, result[1].StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_CollectDataStep()
+        {
+            var result = _repository.Get().ToList();
+            Assert.Equal(3, result[2].StepTypeId);
+        }
+
+        [Fact]
+        public void Should_return_correct_StoreDataStep()
+        {
+            var result = _repository.Get().ToList();
+            Assert.Equal(4, result[3].StepTypeId);
         }
     } 
 }
