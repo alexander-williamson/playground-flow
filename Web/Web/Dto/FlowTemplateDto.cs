@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Web.Dto
+namespace Flow.Web.Dto
 {
     public class FlowTemplateDto
     {
@@ -18,7 +18,7 @@ namespace Web.Dto
     {
         public int Id { get; set; }
         public int VersionId { get; set; }
-        public string Type { get; set; }
+        public string StepTypeName { get; set; }
         public string Name { get; set; }
         public List<ValidationRuleDto> EntryRules { get; set; }
         public List<ValidationRuleDto> ExitRules { get; set; }

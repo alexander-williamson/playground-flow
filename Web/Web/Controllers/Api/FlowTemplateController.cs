@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Permissions;
 using System.Web.Http;
 using AutoMapper;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
-using Web.Dto;
+using Flow.Library.Validation;
+using Flow.Web.Dto;
+using Web;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
-namespace Web.Controllers.Api
+namespace Flow.Web.Controllers.Api
 {
     
     public class FlowTemplateController : ApiController
@@ -80,7 +83,7 @@ namespace Web.Controllers.Api
 
         protected static IStep Map(FlowTemplateStepDto dto)
         {
-            switch (dto.Type)
+            switch (dto.StepTypeName)
             {
                 case "StartStep":
                     return Mapper.Map<StartStep>(dto);
@@ -91,13 +94,40 @@ namespace Web.Controllers.Api
                 case "StoreDataStep":
                     return Mapper.Map<StoreDataStep>(dto);
             }
-            throw new NotSupportedException("Unsupported Step Type provided");
+            throw new NotSupportedException("Unsupported Step StepTypeName provided");
         }
 
-        public void Put(FlowTemplateDto flowTemplateDtoDto)
+        public void Put(FlowTemplateDto flowTemplateDto)
         {
-            var template = Mapper.Map<FlowTemplate>(flowTemplateDtoDto);
-            _flowTemplateService.Update(_unitOfWork, template);
+
+            var steps = new List<IStep>();
+            if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
+            {
+                //steps = flowTemplateDto.Steps.Select(Map).ToList();
+                foreach (var step in flowTemplateDto.Steps)
+                {
+                    var mappedStep = Map(step);
+                    if (step.Id > 0)
+                    {
+                        var match = _unitOfWork.FlowTemplateSteps.Get(mappedStep.Id);
+                        if (match == null)
+                        {
+                            throw new ValidationException(String.Format("Step with Id {0} does not exist. Cannot update step.", step.Id));
+                        }
+                        mappedStep.IsDirty = true;
+                    }
+                    steps.Add(mappedStep);
+                }
+            }
+
+            var templateResult = new FlowTemplate
+            {
+                Id = flowTemplateDto.Id,
+                Name = flowTemplateDto.Name,
+                Steps = steps,
+            };
+
+            _flowTemplateService.Update(_unitOfWork, templateResult);
         }
 
         public void Delete(int id)

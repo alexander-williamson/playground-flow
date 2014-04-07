@@ -6,7 +6,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Flow.Library.Data.Abstract;
 
-namespace Web
+namespace Flow.Web
 {
     public class WindsorInstaller : IWindsorInstaller
     {

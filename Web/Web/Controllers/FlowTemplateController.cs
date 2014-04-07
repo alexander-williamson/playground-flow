@@ -3,9 +3,9 @@ using System.Web.Mvc;
 using AutoMapper;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
-using Web.Models;
+using Flow.Web.Models;
 
-namespace Web.Controllers
+namespace Flow.Web.Controllers
 {
     public class FlowTemplateController : Controller
     {
@@ -50,7 +50,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(Dto.FlowTemplateDto templateDto)
+        public ActionResult Add(global::Flow.Web.Dto.FlowTemplateDto templateDto)
         {
             var flowTemplate = Mapper.Map<Flow.Library.Core.FlowTemplate>(templateDto);
             var id = _flowTemplateService.Add(_unitOfWork, flowTemplate);

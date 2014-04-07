@@ -100,8 +100,9 @@ namespace Flow.Library.Data
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = (IFlowTemplateStep) step;
+                    var stepInstance = new Core.FlowTemplateStep();
                     stepInstance.FlowTemplateId = template.Id;
+
                     if (step.IsDirty)
                     {
                         unitOfWork.FlowTemplateSteps.Update(step.Id, stepInstance);

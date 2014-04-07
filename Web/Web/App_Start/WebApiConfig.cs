@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Web
+namespace Flow.Web
 {
     public static class WebApiConfig
     {

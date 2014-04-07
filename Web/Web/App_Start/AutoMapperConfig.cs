@@ -2,9 +2,9 @@
 using AutoMapper;
 using Flow.Library.Core;
 using Flow.Library.Steps;
-using Web.Dto;
+using Flow.Web.Dto;
 
-namespace Web
+namespace Flow.Web
 {
     public class AutoMapperConfig
     {
@@ -13,7 +13,7 @@ namespace Web
         {
             Mapper.CreateMap<FlowTemplate, FlowTemplateDto>();
             Mapper.CreateMap<FlowTemplateStep, FlowTemplateStepDto>()
-                .ForMember(o => o.Type, d => d.MapFrom(o => GetStepTypeName(o.StepTypeId)));
+                .ForMember(o => o.StepTypeName, d => d.MapFrom(o => GetStepTypeName(o.StepTypeId)));
 
             Mapper.CreateMap<FlowTemplateStepRule, ValidationRuleDto>();
 

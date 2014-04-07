@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Flow.Library.Core;
 
-namespace Web.Models
+namespace Flow.Web.Models
 {
     public class FlowTemplateIndexViewModel
     {
