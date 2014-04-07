@@ -196,9 +196,9 @@ namespace Flow.Web.Tests
                 var steps = new List<IFlowTemplateStep>
                 {
                     // TODO fix inheritance here
-                    new FlowTemplateStep(new StartStep { Id = 1, Name = "Start Step 1", }) { FlowTemplateId = 1 },
-                    new FlowTemplateStep(new CollectDataStep { Id = 2, Name = "Collect Data 1"}) { FlowTemplateId = 1 },
-                    new FlowTemplateStep(new StopStep { Id = 3, Name = "Steop Step 3"}) { FlowTemplateId = 1 }
+                    new FlowTemplateStep(new StartStep { Id = 1, Name = "Start Step 1", }) { FlowTemplateId = 1, StepTypeId = 1},
+                    new FlowTemplateStep(new CollectDataStep { Id = 2, Name = "Collect Data 1"}) { FlowTemplateId = 1, StepTypeId = 3},
+                    new FlowTemplateStep(new StopStep { Id = 3, Name = "Steop Step 3"}) { FlowTemplateId = 1, StepTypeId = 2}
                 };
 
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Get()).Returns(steps);

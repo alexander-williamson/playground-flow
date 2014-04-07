@@ -13,7 +13,7 @@ namespace Web
         {
             Mapper.CreateMap<FlowTemplate, FlowTemplateDto>();
             Mapper.CreateMap<FlowTemplateStep, FlowTemplateStepDto>()
-                .ForMember(o => o.Type, d => d.MapFrom(o => GetTypeName(o.StepTypeId)));
+                .ForMember(o => o.Type, d => d.MapFrom(o => GetStepTypeName(o.StepTypeId)));
 
             Mapper.CreateMap<FlowTemplateStepRule, ValidationRuleDto>();
 
@@ -27,7 +27,7 @@ namespace Web
         }
 
         // TODO move to better location
-        public static string GetTypeName(int id)
+        public static string GetStepTypeName(int id)
         {
             switch (id)
             {
@@ -40,7 +40,7 @@ namespace Web
                 case 4:
                     return "StoreDataStep";
                 default:
-                    throw new NotSupportedException("Unknown id");
+                    throw new NotSupportedException("Unable to map to StepTypeName. Unknown id.");
             }
         }
     }
