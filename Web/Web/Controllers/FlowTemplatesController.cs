@@ -7,14 +7,14 @@ using Flow.Web.Models;
 
 namespace Flow.Web.Controllers
 {
-    public class FlowTemplateController : Controller
+    public class FlowTemplatesController : Controller
     {
         private readonly IFlowTemplateService _flowTemplateService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly SqlConnection _connection;
         private const string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=Flow;Integrated Security=True";
 
-        public FlowTemplateController()
+        public FlowTemplatesController()
         {
             _connection = new SqlConnection(ConnectionString);
             _connection.Open();
@@ -31,7 +31,7 @@ namespace Flow.Web.Controllers
             }
         }
 
-        ~FlowTemplateController()
+        ~FlowTemplatesController()
         {
             Dispose(false);
         }
