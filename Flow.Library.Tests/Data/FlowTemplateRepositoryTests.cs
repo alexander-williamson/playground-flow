@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
+using FakeItEasy;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
@@ -84,6 +85,21 @@ namespace Flow.Library.Tests.Data
             _repository.Save();
 
             Assert.Equal(2, instance.Id);
+        }
+
+        [Fact]
+        public void Should_set_first_id_to_1()
+        {
+            var instance = new FlowTemplate { Name = "Example Template 2" };
+            using (var command = new SqlCommand(@"DELETE FROM FlowTemplate", _connection, _transaction))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            _repository.Add(instance);
+            _repository.Save();
+
+            Assert.Equal(1, instance.Id);
         }
 
         [Fact]
