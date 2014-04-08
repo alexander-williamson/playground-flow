@@ -3,8 +3,10 @@ using System.Data.SqlClient;
 using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Releasers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Castle.Windsor.Diagnostics;
 using Flow.Library.Configuration;
 using Flow.Library.Data.Abstract;
 using Flow.Web.Configuration;
@@ -34,6 +36,8 @@ namespace Flow.Web
 
             container.Register(Component.For<IUnitOfWork>()
                 .ImplementedBy<SqlUnitOfWork>());
+
+            SetupWindsorPerformanceCounters(container, container.Resolve<IConfiguration>());
         }
 
         private static IDbConnection GetConnection(IConfiguration configuration)
@@ -41,6 +45,14 @@ namespace Flow.Web
             var connection = new SqlConnection(configuration.ConnectionString);
             connection.Open();
             return connection;
+        }
+
+        private static void SetupWindsorPerformanceCounters(IWindsorContainer container, IConfiguration configuration)
+        {
+            if (!configuration.CollectCastleWindsorPerformanceCounters) return;
+            var diagnostic = LifecycledComponentsReleasePolicy.GetTrackedComponentsDiagnostic(container.Kernel);
+            var counter = LifecycledComponentsReleasePolicy.GetTrackedComponentsPerformanceCounter(new PerformanceMetricsFactory());
+            container.Kernel.ReleasePolicy = new LifecycledComponentsReleasePolicy(diagnostic, counter);
         }
 
     }
