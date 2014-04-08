@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Listing all Flow Templates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Flow Templates</h2>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/knockout-2.1.0.js"></script>
+<script src="~/Scripts/flow.Models.js"></script>
+
+<ul class="template-list" data-bind="foreach: Templates">
+    <li>
+        <span data-bind="text: Id">Id</span>
+        <span data-bind="text: Name">Name</span>
+    </li>
+</ul>
+
+<script type="text/javascript">
+    var PageModel = new FlowTemplateIndexModel();
+    ko.applyBindings(PageModel, document.getElementsByClassName("template-list")[0]);
+</script>

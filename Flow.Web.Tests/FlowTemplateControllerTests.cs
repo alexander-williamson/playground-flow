@@ -5,24 +5,24 @@ using FakeItEasy;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
+using Flow.Web.Controllers.Api;
 using Flow.Web.Dto;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
-using FlowTemplateController = Flow.Web.Controllers.Api.FlowTemplateController;
 using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
 namespace Flow.Web.Tests
 {
     public class FlowTemplateControllerTests
     {
-        private readonly FlowTemplateController _sut;
+        private readonly FlowTemplatesController _sut;
         private readonly IUnitOfWork _unitOfWork;
 
         public FlowTemplateControllerTests()
         {
             AutoMapperConfig.Configure();
             _unitOfWork = A.Fake<IUnitOfWork>();
-            _sut = new FlowTemplateController(_unitOfWork);
+            _sut = new FlowTemplatesController(_unitOfWork);
         }
 
         [Fact]
@@ -232,7 +232,7 @@ namespace Flow.Web.Tests
             var database = A.Fake<IUnitOfWork>();
             A.CallTo(() => database.FlowTemplateSteps.Get(A<int>._)).Returns(null);
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1 });
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
 
             // Act
             controller.Put(new FlowTemplateDto
@@ -263,7 +263,7 @@ namespace Flow.Web.Tests
                 });
 
             // Act
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
             controller.Put(new FlowTemplateDto
             {
                 Id = 1,
@@ -283,7 +283,7 @@ namespace Flow.Web.Tests
             var database = A.Fake<IUnitOfWork>();
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 1});
             A.CallTo(() => database.FlowTemplateSteps.Get(A<int>._)).Returns(null);
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
 
             // Assert
             Assert.Throws<ValidationException>(() => controller.Put(new FlowTemplateDto
@@ -304,7 +304,7 @@ namespace Flow.Web.Tests
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
 
             // Act
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
 
             // Assert
             Assert.Throws<ValidationException>(() => controller.Put(new FlowTemplateDto {Id = 1, Name = "Example"}));
@@ -318,7 +318,7 @@ namespace Flow.Web.Tests
             A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
 
             // Act
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
             
             // Assert
             Assert.Throws<HttpResponseException>(() => controller.Delete(100));
@@ -337,7 +337,7 @@ namespace Flow.Web.Tests
             });
 
             // Act
-            var controller = new FlowTemplateController(database);
+            var controller = new FlowTemplatesController(database);
             controller.Delete(1);
 
             // Assert

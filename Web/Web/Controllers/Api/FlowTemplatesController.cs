@@ -13,18 +13,18 @@ using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Flow.Web.Controllers.Api
 {
-    public class FlowTemplateController : ApiController
+    public class FlowTemplatesController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly FlowTemplateService _flowTemplateService;
 
-        public FlowTemplateController(IUnitOfWork unitOfWork)
+        public FlowTemplatesController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _flowTemplateService = new FlowTemplateService();
         }
 
-        ~FlowTemplateController()
+        ~FlowTemplatesController()
         {
             Dispose(false);
         }
