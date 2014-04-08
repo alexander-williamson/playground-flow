@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Caching;
 using System.Web.Http;
+using System.Web.Mvc;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
@@ -133,12 +134,13 @@ namespace Flow.Web.Controllers.Api
             _flowTemplateService.Update(_unitOfWork, templateResult);
         }
 
-        public void Delete(int id)
+        public HttpStatusCodeResult Delete(int id)
         {
             if(_unitOfWork.FlowTemplates.Get(id) == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             _flowTemplateService.Delete(_unitOfWork, new FlowTemplate { Id = id });
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         public IEnumerable<FlowTemplateDto> Get()

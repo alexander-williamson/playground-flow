@@ -436,13 +436,26 @@ namespace Flow.Web.Tests
 
             // Act
             var controller = new FlowTemplatesController(database);
-            controller.Delete(1);
 
             // Assert
             A.CallTo(() => database.FlowTemplates.Delete(1)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => database.FlowTemplateSteps.Delete(10)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => database.FlowTemplateSteps.Delete(20)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => database.FlowTemplateSteps.Delete(30)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Successful_delete_should_return_200()
+        {
+            var database = A.Fake<IUnitOfWork>();
+            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1, Name = "Example" });
+
+            // Act
+            var controller = new FlowTemplatesController(database);
+            var result = controller.Delete(1);
+
+            // Assert
+            Assert.Equal(200, result.StatusCode);
         }
     }
 }
