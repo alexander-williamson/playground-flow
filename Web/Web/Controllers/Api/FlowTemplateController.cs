@@ -19,31 +19,12 @@ namespace Flow.Web.Controllers.Api
     public class FlowTemplateController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SqlConnection _connection;
         private readonly FlowTemplateService _flowTemplateService;
 
         public FlowTemplateController(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
-            IConfiguration configuration1 = configuration;
             _flowTemplateService = new FlowTemplateService();
-        }
-
-        public FlowTemplateController(IConfiguration configuration)
-        {
-            _connection = new SqlConnection(configuration.ConnectionString);
-            _connection.Open();
-            _unitOfWork = new SqlUnitOfWork(_connection);
-            _flowTemplateService = new FlowTemplateService();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (_connection != null)
-            {
-                _connection.Dispose();
-            }
         }
 
         ~FlowTemplateController()

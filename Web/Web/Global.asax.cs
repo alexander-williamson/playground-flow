@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -16,6 +17,15 @@ namespace Flow.Web
 
         protected void Application_Start()
         {
+            // windsor for web controllers
+            _container = new WindsorContainer().Install(FromAssembly.This());
+            var controllerFactory = new WindsorControllerFactory(_container.Kernel);
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+
+            // windsor for webapi controllers
+            GlobalConfiguration.Configuration.Services.Replace(
+                typeof(IHttpControllerActivator), new WindsorActivator(_container));
+            
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -25,9 +35,6 @@ namespace Flow.Web
             
             //GlobalConfiguration.Configuration.Formatters.XmlFormatter.UseXmlSerializer = true;
 
-            _container = new WindsorContainer().Install(FromAssembly.This());
-            var controllerFactory = new WindsorControllerFactory(_container.Kernel);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
 
         protected void Application_End()
