@@ -14,7 +14,10 @@ var FlowTemplateIndexModel = function () {
     var self = this;
     self.Templates = ko.observableArray();
     self.Delete = function (template) {
-        $.ajax("/api/FlowTemplates/" + template.Id, new { "method": "DELETE" }).success(function() {
+        $.ajax({
+            url: "/api/FlowTemplates/" + template.Id,
+            type: "DELETE"
+        }).success(function() {
             self.Templates.remove(template);
         }).error(function() {
             console.log("Unable to delete template " + template.Id);
@@ -22,15 +25,26 @@ var FlowTemplateIndexModel = function () {
     };
     self.Add = function(template) {
         var data = ko.toJSON(template);
-        $.ajax("/api/FlowTemplates/", new { "data": data, "method": "POST" }).success(function() {
-            self.Templates.add(template);
-        }).error(function() {
-            console.log("Unable to add template " + template.Id);
+        $.ajax({
+            url: "/api/FlowTemplates/",
+            data: data, 
+            type: "POST",
+            contentType: "application/json",
+        }).success(function (e) {
+            template.Id = e.Id;
+            self.Templates.push(template);
+        }).error(function(err) {
+            console.log("Unable to add template " + err);
         });
     };
     self.Update = function(template) {
         var data = ko.toJSON(template);
-        $.ajax("/api/FlowTemplates/" + template.Id, new { "data": data, "method": "PUT" }).success(function () {
+        $.ajax({
+            url: "/api/FlowTemplates/" + template.Id, 
+            data: data,
+            type: "PUT",
+            contentType: "application/json"
+        }).success(function () {
 
             for (var i = 0; i < self.Templates.length; i++) {
                 if (self.Templates[i].Id == template.Id) {

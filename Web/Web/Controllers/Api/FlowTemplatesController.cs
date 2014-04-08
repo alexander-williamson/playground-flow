@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Web.Caching;
 using System.Web.Http;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
@@ -13,6 +16,28 @@ using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Flow.Web.Controllers.Api
 {
+    public class CustomHttpResponseMessage : HttpResponseMessage
+    {
+        private readonly MediaTypeFormatter _mediaType;
+
+        public CustomHttpResponseMessage(MediaTypeFormatter mediaType, object value)
+        {
+            _mediaType = mediaType;
+            Value = value;
+        }
+
+        private object _value;
+        public object Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                Content = new ObjectContent(Value.GetType(), Value, _mediaType);
+            }
+        }
+    }
+
     public class FlowTemplatesController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -40,7 +65,7 @@ namespace Flow.Web.Controllers.Api
             return mappedDtoFlowTemplate;
         }
 
-        public int Post(FlowTemplateDto flowTemplateDto)
+        public HttpResponseMessage Post(FlowTemplateDto flowTemplateDto)
         {
             var steps = new List<IStep>();
             if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
@@ -56,7 +81,7 @@ namespace Flow.Web.Controllers.Api
             };
 
             var id = _flowTemplateService.Add(_unitOfWork, template);
-            return id;
+            return Request.CreateResponse(HttpStatusCode.Created, new {Id = id});
         }
 
         protected static IStep Map(FlowTemplateStepDto dto)

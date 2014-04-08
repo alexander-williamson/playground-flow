@@ -15,7 +15,24 @@
     </li>
 </ul>
 
+<div id="template-add-form">
+    <p>
+        Name: <br /> <input type="text" value="" name="Name"/>
+    </p>
+    <p>
+        <input type="submit" name="submit" value="Add FlowTemplate"/>
+    </p>
+</div>
+
 <script type="text/javascript">
     var PageModel = new FlowTemplateIndexModel();
     ko.applyBindings(PageModel, document.getElementsByClassName("template-list")[0]);
+</script>
+
+<script type="text/javascript">
+    $("#template-add-form input[type=submit]").click(function () {
+        var newFlowTemplateModel = new FlowTemplateModel();
+        newFlowTemplateModel.Name = $(this).parent().siblings().find("input[name=Name]").val();
+        PageModel.Add(newFlowTemplateModel);
+    })
 </script>
