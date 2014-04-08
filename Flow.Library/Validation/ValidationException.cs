@@ -1,8 +1,10 @@
 using System;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Flow.Library.Validation
 {
+    [Serializable]
     public class ValidationException : Exception
     {
         private readonly string[] _brokenRules;
@@ -33,6 +35,11 @@ namespace Flow.Library.Validation
                 sb.AppendFormat("");
                 return sb.ToString();
             }
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 }

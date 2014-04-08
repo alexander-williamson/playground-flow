@@ -19,9 +19,9 @@ namespace Flow.Web
         {
             container.Register(Classes.FromThisAssembly()
                 .BasedOn<IController>()
-                .LifestyleTransient());
+                .LifestylePerWebRequest());
 
-            container.Register(Classes.FromThisAssembly().BasedOn<IHttpController>().LifestyleTransient());
+            container.Register(Classes.FromThisAssembly().BasedOn<IHttpController>().LifestylePerWebRequest());
 
             container.Register(
                 Component.For<IConfigurationProvider>()
@@ -35,7 +35,7 @@ namespace Flow.Web
                 .UsingFactoryMethod(() => GetConnection(container.Resolve<IConfiguration>())).LifestyleTransient());
 
             container.Register(Component.For<IUnitOfWork>()
-                .ImplementedBy<SqlUnitOfWork>());
+                .ImplementedBy<SqlUnitOfWork>().LifestyleTransient());
 
             SetupWindsorPerformanceCounters(container, container.Resolve<IConfiguration>());
         }
