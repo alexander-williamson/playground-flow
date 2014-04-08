@@ -87,6 +87,7 @@
     <Compile Include="Data\Abstract\IUnitOfWork.cs" />
     <Compile Include="Data\Abstract\SqlUnitOfWork.cs" />
     <Compile Include="Data\Abstract\IFlowTemplateStep.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Steps\CompletedStep.cs" />
     <Compile Include="Core\IDataManipulation.cs" />
     <Compile Include="Core\FlowTemplateStep.cs" />
