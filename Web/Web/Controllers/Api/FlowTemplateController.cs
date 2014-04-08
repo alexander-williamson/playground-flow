@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
-using System.Security.Permissions;
 using System.Web.Http;
-using AutoMapper;
+using Flow.Library.Configuration;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
@@ -22,17 +21,17 @@ namespace Flow.Web.Controllers.Api
         private readonly IUnitOfWork _unitOfWork;
         private readonly SqlConnection _connection;
         private readonly FlowTemplateService _flowTemplateService;
-        private const string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=Flow;Integrated Security=True";
 
-        public FlowTemplateController(IUnitOfWork unitOfWork)
+        public FlowTemplateController(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            IConfiguration configuration1 = configuration;
             _flowTemplateService = new FlowTemplateService();
         }
 
-        public FlowTemplateController()
+        public FlowTemplateController(IConfiguration configuration)
         {
-            _connection = new SqlConnection(ConnectionString);
+            _connection = new SqlConnection(configuration.ConnectionString);
             _connection.Open();
             _unitOfWork = new SqlUnitOfWork(_connection);
             _flowTemplateService = new FlowTemplateService();
@@ -59,7 +58,7 @@ namespace Flow.Web.Controllers.Api
             if (flow == null)
                 return null;
 
-            var mappedDtoFlowTemplate = Mapper.Map<FlowTemplateDto>(flow);
+            var mappedDtoFlowTemplate = AutoMapper.Mapper.Map<FlowTemplateDto>(flow);
             return mappedDtoFlowTemplate;
         }
 
@@ -87,13 +86,13 @@ namespace Flow.Web.Controllers.Api
             switch (dto.StepTypeName)
             {
                 case "StartStep":
-                    return Mapper.Map<StartStep>(dto);
+                    return AutoMapper.Mapper.Map<StartStep>(dto);
                 case "StopStep":
-                    return Mapper.Map<StopStep>(dto);
+                    return AutoMapper.Mapper.Map<StopStep>(dto);
                 case "CollectDataStep":
-                    return Mapper.Map<CollectDataStep>(dto);
+                    return AutoMapper.Mapper.Map<CollectDataStep>(dto);
                 case "StoreDataStep":
-                    return Mapper.Map<StoreDataStep>(dto);
+                    return AutoMapper.Mapper.Map<StoreDataStep>(dto);
             }
             throw new NotSupportedException("Unsupported Step StepTypeName provided");
         }
@@ -142,7 +141,7 @@ namespace Flow.Web.Controllers.Api
         public IEnumerable<FlowTemplateDto> Get()
         {
             var flowTemplates = _flowTemplateService.GetFlowTemplates(_unitOfWork).ToList();
-            var mapped = flowTemplates.Select(Mapper.Map<FlowTemplateDto>).ToList();
+            var mapped = flowTemplates.Select(AutoMapper.Mapper.Map<FlowTemplateDto>).ToList();
             return mapped;
         }
 
