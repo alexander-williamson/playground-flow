@@ -7,9 +7,11 @@
 <script src="~/Scripts/jquery-1.7.1.min.js"></script>
 <script src="~/Scripts/knockout-2.1.0.js"></script>
 <script src="~/Scripts/flow.Models.js"></script>
+<script src="~/Scripts/jquery.pubsub.js"></script>
 
-<ul class="template-list" data-bind="foreach: Templates">
+<ul class="template-list" data-bind="foreach:Templates">
     <li>
+        <span><button type="button" class="delete-template-button" name="deleteTemplateButton" value="Delete" data-bind="click: Delete">Delete</button></span>
         <span data-bind="text: Id">Id</span>
         <span data-bind="text: Name">Name</span>
     </li>
@@ -17,22 +19,117 @@
 
 <div id="template-add-form">
     <p>
-        Name: <br /> <input type="text" value="" name="Name"/>
+        Name: <br /> <input type="text" value="" name="Name" />
     </p>
     <p>
-        <input type="submit" name="submit" value="Add FlowTemplate"/>
+        <input type="submit" name="submit" value="Add FlowTemplate" />
     </p>
 </div>
 
 <script type="text/javascript">
-    var PageModel = new FlowTemplateIndexModel();
-    ko.applyBindings(PageModel, document.getElementsByClassName("template-list")[0]);
+    
+    var flowTemplateActions = {
+        
+        get : function () {
+            console.log("Fetching FlowTemplates for the first time");
+            $.ajax("/api/FlowTemplates").done(function (data) {
+                data.forEach(function (e) {
+                   $.publish("flowtemplate.added", new FlowTemplateModel($, e));
+                });
+            }).fail(function () {
+                console.log("Unable to get FlowTemplates");
+                throw "Unable to get FlowTemplates";
+            });
+        },
+
+        add : function (template) {
+
+            var jsonData = ko.toJSON(template);
+            $.ajax({
+                url: "/api/FlowTemplates/" + template.Id(),
+                data: jsonData,
+                type: "POST",
+                contentType: "application/json"
+            }).success(function (resultData) {
+                template.Id(resultData.Id);
+                $.publish("flowtemplate.added", template);
+            }).error(function () {
+                console.log("Unable to update template " + template.Id);
+                throw "Unable to update template";
+            });
+        },
+
+        update : function (template) {
+
+            var data = ko.toJSON(template);
+            $.ajax({
+                url: "/api/FlowTemplates/" + template.Id,
+                data: data,
+                type: "PUT",
+                contentType: "application/json"
+            }).success(function () {
+                $.publish("flowtemplate.updated", template);
+            }).error(function (err) {
+                console.log("Unable to update template " + template.Id);
+                console.log(err);
+                throw err;
+            });
+        },
+
+        remove : function (template) {
+            $.ajax({
+                url: "/api/FlowTemplates/" + template.Id(),
+                type: "DELETE",
+            }).success(function () {
+                $.publish("flowtemplate.deleted", template);
+            }).error(function (err) {
+                console.log("Unable to delete template " + template.Id());
+                console.log(err);
+                throw err;
+            });
+        }
+    }
+
 </script>
 
 <script type="text/javascript">
-    $("#template-add-form input[type=submit]").click(function () {
-        var newFlowTemplateModel = new FlowTemplateModel();
-        newFlowTemplateModel.Name = $(this).parent().siblings().find("input[name=Name]").val();
-        PageModel.Add(newFlowTemplateModel);
-    })
+
+    var pageModel = new FlowTemplateIndexModel();
+
+    $(document).ready(function () {
+
+        ko.applyBindings(pageModel, document.getElementsByClassName("template-list")[0]);
+
+        flowTemplateActions.get();
+
+        $("#template-add-form input[type=submit]").click(function () {
+            var newItem = new FlowTemplateModel($);
+            newItem.Name = $(this).parent().siblings().find("input[name=Name]").val();
+            $.publish("flowtemplate.add", newItem);
+        });
+
+        $.subscribe("flowtemplate.add", function (e, flowTemplate) {
+            flowTemplateActions.add(flowTemplate);
+        });
+
+        $.subscribe("flowtemplate.added", function (e, flowTemplate) {
+            pageModel.Templates.push(flowTemplate);
+        });
+
+        $.subscribe("flowtemplate.delete", function (e, flowTemplate) {
+            var result = flowTemplateActions.remove(flowTemplate);
+            if (result) {
+                $.publish("flowtemplate.deleted", flowTemplate);
+            }
+        });
+
+        $.subscribe("flowtemplate.deleted", function (e, flowTemplate) {
+            for (var i = 0; i < pageModel.Templates().length; i++) {
+                if (pageModel.Templates()[i].Id() == flowTemplate.Id()) {
+                    pageModel.Templates.remove(pageModel.Templates()[i]);
+                }
+            }
+        });
+
+    });
 </script>
