@@ -84,7 +84,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
     <Compile Include="Configuration\WebConfigurationTests.cs" />
     <Compile Include="FlowTemplateControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

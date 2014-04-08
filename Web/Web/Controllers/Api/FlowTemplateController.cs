@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using Flow.Library.Configuration;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
@@ -15,13 +13,12 @@ using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Flow.Web.Controllers.Api
 {
-    
     public class FlowTemplateController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly FlowTemplateService _flowTemplateService;
 
-        public FlowTemplateController(IUnitOfWork unitOfWork, IConfiguration configuration)
+        public FlowTemplateController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _flowTemplateService = new FlowTemplateService();

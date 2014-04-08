@@ -21,6 +21,11 @@ namespace Flow.Web
 
             container.Register(Classes.FromThisAssembly().BasedOn<IHttpController>().LifestyleTransient());
 
+            container.Register(
+                Component.For<IConfigurationProvider>()
+                    .ImplementedBy<ConfigurationManagerProvider>()
+                    .LifestyleSingleton());
+
             container.Register(Component.For<IConfiguration>()
                 .ImplementedBy<WebConfiguration>().LifestyleSingleton());
 

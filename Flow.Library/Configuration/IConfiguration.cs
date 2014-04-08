@@ -2,6 +2,7 @@
 {
     public interface IConfiguration
     {
+        bool CollectCastleWindsorPerformanceCounters { get; }
         string ConnectionString { get; }
     }
 }
