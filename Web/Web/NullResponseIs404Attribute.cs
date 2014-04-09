@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
 
-namespace Web
+namespace Flow.Web
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public sealed class NullResponseIs404Attribute : ActionFilterAttribute
@@ -13,8 +13,8 @@ namespace Web
         {
             if ((actionExecutedContext.Response != null) && actionExecutedContext.Response.IsSuccessStatusCode)
             {
-                object contentValue = null;
-                actionExecutedContext.Response.TryGetContentValue<object>(out contentValue);
+                object contentValue;
+                actionExecutedContext.Response.TryGetContentValue(out contentValue);
                 if (contentValue == null)
                 {
                     actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Object not found");

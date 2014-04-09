@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.Expando;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
-using System.Web.UI.WebControls;
 using FakeItEasy;
+using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Flow.Web.Controllers.Api;
 using Flow.Web.Dto;
 using Xunit;
-using FlowTemplate = Flow.Library.Core.FlowTemplate;
-using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 using RouteParameter = System.Web.Http.RouteParameter;
 
-namespace Flow.Web.Tests
+namespace Flow.Web.Tests.Controller.Api
 {
     public class FlowTemplateControllerTests
     {
@@ -436,6 +432,7 @@ namespace Flow.Web.Tests
 
             // Act
             var controller = new FlowTemplatesController(database);
+            controller.Delete(1);
 
             // Assert
             A.CallTo(() => database.FlowTemplates.Delete(1)).MustHaveHappened(Repeated.Exactly.Once);

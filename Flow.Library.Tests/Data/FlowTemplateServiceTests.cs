@@ -8,6 +8,7 @@ using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
+using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
 namespace Flow.Library.Tests.Data
 {
@@ -208,6 +209,45 @@ namespace Flow.Library.Tests.Data
 
             Assert.DoesNotThrow(() => _flowTemplateService.Delete(uow, instance));
         }
+
+        [Fact]
+        public void Should_return_step_by_id()
+        {
+            var uow = A.Fake<IUnitOfWork>();
+            A.CallTo(() => uow.FlowTemplateSteps.Get(A<int>._))
+                .Returns(new FlowTemplateStep {Id = 1, StepTypeId = 1, Name = "Example Step", FlowTemplateId = 1});
+
+            Assert.Equal(1, _flowTemplateService.GetFlowTemplateStep(uow, 1).Id);
+            Assert.Equal("Example Step", _flowTemplateService.GetFlowTemplateStep(uow, 1).Name);
+        }
+
+        [Fact]
+        public void Should_return_null_if_step_does_not_exist()
+        {
+            var uow = A.Fake<IUnitOfWork>();
+            A.CallTo(() => uow.FlowTemplateSteps.Get(A<int>._)).Returns(null);
+
+            Assert.DoesNotThrow(() => _flowTemplateService.GetFlowTemplateStep(uow, 1));
+        }
+
+        [Fact]
+        public void Should_return_steps_for_flow_template()
+        {
+            var uow = A.Fake<IUnitOfWork>();
+            var items = new List<FlowTemplateStep>
+            {
+                new FlowTemplateStep {Id = 1, FlowTemplateId = 1, StepTypeId = 1},
+                new FlowTemplateStep {Id = 2, FlowTemplateId = 2, StepTypeId = 1},
+                new FlowTemplateStep {Id = 3, FlowTemplateId = 1, StepTypeId = 2},
+            };
+            A.CallTo(() => uow.FlowTemplateSteps.Get()).Returns(items);
+
+            var result = _flowTemplateService.GetFlowTemplateSteps(uow, 1);
+
+            Assert.Equal(2, result.Count());
+        }
+
+
 
     }
 }

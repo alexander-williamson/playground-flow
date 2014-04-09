@@ -148,6 +148,7 @@
     <Compile Include="Configuration\ConfigurationManagerProvider.cs" />
     <Compile Include="Configuration\FlowConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationProvider.cs" />
+    <Compile Include="Controllers\Api\FlowTemplateStepsController.cs" />
     <Compile Include="Controllers\Api\TestController.cs" />
     <Compile Include="Controllers\FlowTemplatesController.cs" />
     <Compile Include="Controllers\FlowController.cs" />

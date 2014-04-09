@@ -7,15 +7,6 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Data
 {
-    public interface IFlowTemplateService
-    {
-        IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork);
-        Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id);
-        int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template);
-        void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template);
-        void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template);
-    }
-
     public class FlowTemplateService : IFlowTemplateService
     {
         public IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
@@ -25,8 +16,8 @@ namespace Flow.Library.Data
             {
                 var id = template.Id;
                 var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
-                
-                if(template.Steps == null)
+
+                if (template.Steps == null)
                     template.Steps = new List<IStep>();
 
                 foreach (var step in steps)
@@ -68,8 +59,8 @@ namespace Flow.Library.Data
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = new Core.FlowTemplateStep(step) {FlowTemplateId = id };
-                    
+                    var stepInstance = new Core.FlowTemplateStep(step) { FlowTemplateId = id };
+
                     // todo should not need a list
                     // todo needs an extension point
 
@@ -122,6 +113,44 @@ namespace Flow.Library.Data
             steps.ToList().ForEach(o => unitOfWork.FlowTemplateSteps.Delete(o.Id));
             unitOfWork.FlowTemplates.Delete(template.Id);
             unitOfWork.Commit();
+        }
+
+        public IEnumerable<IStep> GetFlowTemplateSteps(IUnitOfWork unitOfWork, int flowTemplateId)
+        {
+            var id = flowTemplateId;
+            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
+            return steps.ToList();
+        }
+
+        public IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id)
+        {
+            var step = unitOfWork.FlowTemplateSteps.Get(id);
+            if (step == null)
+                return null;
+
+            var result = new Core.FlowTemplateStep
+            {
+                Id = step.Id,
+                Name = step.Name,
+                FlowTemplateId = step.FlowTemplateId,
+                StepTypeId = step.StepTypeId
+            };
+            return result;
+        }
+
+        public int Add(IUnitOfWork unitOfWork, IStep step)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(IUnitOfWork unitOfWork, IStep step)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(IUnitOfWork unitOfWork, IStep step)
+        {
+            throw new NotImplementedException();
         }
     }
 }

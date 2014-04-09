@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Web.Caching;
 using System.Web.Http;
 using System.Web.Mvc;
 using Flow.Library.Data;
@@ -12,33 +10,10 @@ using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Flow.Web.Dto;
-using Web;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
 
 namespace Flow.Web.Controllers.Api
 {
-    public class CustomHttpResponseMessage : HttpResponseMessage
-    {
-        private readonly MediaTypeFormatter _mediaType;
-
-        public CustomHttpResponseMessage(MediaTypeFormatter mediaType, object value)
-        {
-            _mediaType = mediaType;
-            Value = value;
-        }
-
-        private object _value;
-        public object Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                Content = new ObjectContent(Value.GetType(), Value, _mediaType);
-            }
-        }
-    }
-
     public class FlowTemplatesController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -48,11 +23,6 @@ namespace Flow.Web.Controllers.Api
         {
             _unitOfWork = unitOfWork;
             _flowTemplateService = new FlowTemplateService();
-        }
-
-        ~FlowTemplatesController()
-        {
-            Dispose(false);
         }
 
         [NullResponseIs404]

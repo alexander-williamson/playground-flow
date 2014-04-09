@@ -1,4 +1,6 @@
 ﻿using System.Web.Http;
+using Flow.Web.Controllers;
+using Flow.Web.Controllers.Api;
 
 namespace Flow.Web
 {
@@ -11,6 +13,15 @@ namespace Flow.Web
                 "api/{controller}/{id}",
                 new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                "FlowTemplateSteps",
+                "api/FlowTemplates/{parent}/Steps/{id}",
+                new
+                {
+                    controller = "FlowTemplateSteps",
+                    id = RouteParameter.Optional
+                });
         }
     }
 }
