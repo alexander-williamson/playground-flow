@@ -37,24 +37,24 @@ namespace Flow.Web.Tests.Controller.Api
         }
 
         [Fact]
-        public async void Get_with_id_should_return_matching_templateStep()
+        public async void Get_FlowTemplateSteps_should_return_steps_matching_parent()
         {
             var unitOfWork = A.Fake<IUnitOfWork>();
-            A.CallTo(() => unitOfWork.FlowTemplateSteps.Get(2)).Returns(
-            new FlowTemplateStep
-            {
-                Id = 2,
-                Name = "Correct Step",
-                FlowTemplateId = 1,
-                StepTypeId = 1
-            });
+            A.CallTo(() => unitOfWork.FlowTemplateSteps.Get()).Returns(
+                new List<FlowTemplateStep>
+                {
+                    new FlowTemplateStep {Id = 1, Name = "Correct Step 1", FlowTemplateId = 1, StepTypeId = 1},
+                    new FlowTemplateStep {Id = 2, Name = "Incorrect Step", FlowTemplateId = 2, StepTypeId = 1},
+                    new FlowTemplateStep {Id = 3, Name = "Correct Step 3", FlowTemplateId = 1, StepTypeId = 2}
+                });
             var sut = new FlowTemplateStepsController(unitOfWork);
             SetupController(sut, "http://example.com/api/FlowTemplates/1/Step/2", HttpMethod.Get);
 
             var response = sut.Get(2);
-            var result = await response.Content.ReadAsAsync<FlowTemplateStepDto>();
+            var result = await response.Content.ReadAsAsync<List<FlowTemplateStepDto>>();
 
-            Assert.Equal(2, result.Id);
+            Assert.Equal(2, result.Count);
+            Assert.Equal(1, result[0].Id);
         }
 
         [Fact]

@@ -25,18 +25,16 @@ namespace Flow.Web.Controllers.Api
             _flowTemplateService = new FlowTemplateService();
         }
 
-        [NullResponseIs404]
-        public HttpResponseMessage Get(int id)
+        public HttpResponseMessage Get(int parent)
         {
-            var step = _flowTemplateService.GetFlowTemplateStep(_unitOfWork, id);
+            var step = _flowTemplateService.GetFlowTemplateStep(_unitOfWork, parent);
             if (step == null)
-                return null;
+                return Request.CreateResponse(HttpStatusCode.NotFound);
 
             var mappedDtoFlowTemplate = AutoMapper.Mapper.Map<FlowTemplateStepDto>(step);
             return Request.CreateResponse(HttpStatusCode.OK, mappedDtoFlowTemplate);
         }
 
-        [NullResponseIs404]
         public HttpResponseMessage Get(int parent, int id)
         {
             var step = _flowTemplateService.GetFlowTemplateStep(_unitOfWork, id);
