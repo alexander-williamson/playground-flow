@@ -9,6 +9,11 @@ namespace Flow.Library.Validation
     {
         private readonly string[] _brokenRules;
 
+        public string[] BrokenRules
+        {
+            get { return _brokenRules; }
+        }
+
         public ValidationException(string[] brokenRules)
         {
             _brokenRules = brokenRules;

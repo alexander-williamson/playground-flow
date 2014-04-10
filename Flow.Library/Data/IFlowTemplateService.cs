@@ -14,7 +14,7 @@ namespace Flow.Library.Data
 
         IEnumerable<IStep> GetFlowTemplateSteps(IUnitOfWork unitOfWork, int flowTemplateId);
         IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id);
-        int Add(IUnitOfWork unitOfWork, IStep step);
+        int Add(IUnitOfWork unitOfWork, IStep step, int flowTemplateId);
         void Update(IUnitOfWork unitOfWork, IStep step);
         void Delete(IUnitOfWork unitOfWork, IStep step);
     }

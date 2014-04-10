@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Flow.Library.Validation;
@@ -9,6 +10,12 @@ namespace Flow.Library.Data
 {
     public class FlowTemplateService : IFlowTemplateService
     {
+        // todo use step provider mapping
+        private IStep Map(IFlowTemplateStep template)
+        {
+            return new StartStep {Id = template.Id, Name = template.Name, VersionId = template.VersionId};
+        }
+
         public IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
         {
             var templates = unitOfWork.FlowTemplates.Get().ToList();
@@ -22,7 +29,7 @@ namespace Flow.Library.Data
 
                 foreach (var step in steps)
                 {
-                    template.Steps.Add(step);
+                    template.Steps.Add(Map(step));
                 }
             }
             return templates;
@@ -39,7 +46,7 @@ namespace Flow.Library.Data
 
                 foreach (var step in steps)
                 {
-                    result.Steps.Add(step);
+                    result.Steps.Add(Map(step));
                 }
             }
 
@@ -59,15 +66,7 @@ namespace Flow.Library.Data
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = new Core.FlowTemplateStep(step) { FlowTemplateId = id };
-
-                    // todo should not need a list
-                    // todo needs an extension point
-
-                    if (step.GetType() == typeof(StartStep)) { stepInstance.StepTypeId = 0; }
-                    if (step.GetType() == typeof(StopStep)) { stepInstance.StepTypeId = 1; }
-                    if (step.GetType() == typeof(CollectDataStep)) { stepInstance.StepTypeId = 2; }
-                    if (step.GetType() == typeof(StoreDataStep)) { stepInstance.StepTypeId = 3; }
+                    var stepInstance = Mapper.Map<Core.FlowTemplateStep>(step);
 
                     unitOfWork.FlowTemplateSteps.Add(stepInstance);
                 }
@@ -119,7 +118,7 @@ namespace Flow.Library.Data
         {
             var id = flowTemplateId;
             var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
-            return steps.ToList();
+            return steps.Select(Map).ToList();
         }
 
         public IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id)
@@ -138,9 +137,18 @@ namespace Flow.Library.Data
             return result;
         }
 
-        public int Add(IUnitOfWork unitOfWork, IStep step)
+        public int Add(IUnitOfWork unitOfWork, IStep step, int flowTemplateId)
         {
-            throw new NotImplementedException();
+            // todo support max
+            var list = unitOfWork.FlowTemplateSteps.Get().ToList();
+            var max = list.Any() ? list.Max(o => o.Id) + 1 : 1;
+
+            var mapped = Mapper.Map<Core.FlowTemplateStep>(step);
+            mapped.FlowTemplateId = flowTemplateId;
+            mapped.Id = max;
+
+            unitOfWork.FlowTemplateSteps.Add(mapped);
+            return max;
         }
 
         public void Update(IUnitOfWork unitOfWork, IStep step)
@@ -150,7 +158,8 @@ namespace Flow.Library.Data
 
         public void Delete(IUnitOfWork unitOfWork, IStep step)
         {
-            throw new NotImplementedException();
+            unitOfWork.FlowTemplateSteps.Delete(step.Id);
+            unitOfWork.Commit();
         }
     }
 }

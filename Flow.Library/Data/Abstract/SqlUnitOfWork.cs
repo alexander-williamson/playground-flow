@@ -31,7 +31,6 @@ namespace Flow.Library.Data.Abstract
         {
             FlowTemplates.Save();
             FlowTemplateSteps.Save();
-            //FlowTemplateStepRules.Save();
             _transaction.Commit();
         }
 

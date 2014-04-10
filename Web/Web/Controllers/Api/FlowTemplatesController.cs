@@ -60,13 +60,13 @@ namespace Flow.Web.Controllers.Api
             switch (dto.StepTypeName)
             {
                 case "StartStep":
-                    return AutoMapper.Mapper.Map<StartStep>(dto);
+                    return global::AutoMapper.Mapper.Map<StartStep>(dto);
                 case "StopStep":
-                    return AutoMapper.Mapper.Map<StopStep>(dto);
+                    return global::AutoMapper.Mapper.Map<StopStep>(dto);
                 case "CollectDataStep":
-                    return AutoMapper.Mapper.Map<CollectDataStep>(dto);
+                    return global::AutoMapper.Mapper.Map<CollectDataStep>(dto);
                 case "StoreDataStep":
-                    return AutoMapper.Mapper.Map<StoreDataStep>(dto);
+                    return global::AutoMapper.Mapper.Map<StoreDataStep>(dto);
             }
             throw new NotSupportedException("Unsupported Step StepTypeName provided");
         }

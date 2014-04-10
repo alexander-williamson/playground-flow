@@ -5,7 +5,7 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Core
 {
-    public class FlowTemplateStep : IFlowTemplateStep
+    public class FlowTemplateStep : IFlowTemplateStep, IStep
     {
         public int Id { get; set; }
         public int VersionId { get; set; }
@@ -15,20 +15,5 @@ namespace Flow.Library.Core
         public bool IsDirty { get; set; }
         public int FlowTemplateId { get; set; }
         public int StepTypeId { get; set; }
-
-        public FlowTemplateStep(IStep step)
-        {
-            //EntryRules = step.EntryRules;
-            //ExitRules = step.ExitRules;
-            Id = step.Id;
-            IsDirty = step.IsDirty;
-            Name = step.Name;
-            VersionId = step.Id;
-        }
-
-        public FlowTemplateStep()
-        {
-            // default constructor
-        }
     }
 }

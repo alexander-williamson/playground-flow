@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using FakeItEasy;
 using Flow.Library.Data;
-using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
 using Xunit;
 using FlowTemplate = Flow.Library.Core.FlowTemplate;
@@ -16,8 +14,8 @@ namespace Flow.Library.Tests.Data
         private readonly SqlTransaction _transaction;
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
-        
-        private readonly IRepository<FlowTemplate> _repository;
+
+        private readonly FlowTemplateRepository _repository;
         private readonly FlowDataContext _context;
 
         public FlowTemplateRepositoryTests()

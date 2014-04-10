@@ -11,7 +11,6 @@ using System.Web.Http.Routing;
 using FakeItEasy;
 using Flow.Library.Core;
 using Flow.Library.Data.Abstract;
-using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Flow.Web.Controllers.Api;
 using Flow.Web.Dto;
@@ -27,6 +26,7 @@ namespace Flow.Web.Tests.Controller.Api
 
         public FlowTemplateControllerTests()
         {
+            Library.Configuration.AutoMapperConfig.Configure();
             AutoMapperConfig.Configure();
             _unitOfWork = A.Fake<IUnitOfWork>();
             _sut = new FlowTemplatesController(_unitOfWork);
@@ -147,7 +147,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             // assert
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(0, captured);
+            Assert.Equal(1, captured);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             // assert
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(1, captured);
+            Assert.Equal(2, captured);
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             // assert
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(2, captured);
+            Assert.Equal(3, captured);
         }
 
         [Fact]
@@ -253,7 +253,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             // assert
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(3, captured);
+            Assert.Equal(4, captured);
         }
 
         [Fact]
@@ -287,12 +287,14 @@ namespace Flow.Web.Tests.Controller.Api
         [Fact]
         public void Should_return_flow_steps_when_getting_single_flow()
         {
+            AutoMapperConfig.Configure();
+            Library.Configuration.AutoMapperConfig.Configure();
             var steps = new List<IFlowTemplateStep>
             {
                 // TODO fix inheritance here
-                new FlowTemplateStep(new StartStep { Id = 1, Name = "Start Step 1", }) { FlowTemplateId = 1, StepTypeId = 1},
-                new FlowTemplateStep(new CollectDataStep { Id = 2, Name = "Collect Data 1"}) { FlowTemplateId = 1, StepTypeId = 3},
-                new FlowTemplateStep(new StopStep { Id = 3, Name = "Steop Step 3"}) { FlowTemplateId = 1, StepTypeId = 2}
+                new FlowTemplateStep { Id = 1, Name = "Start Step 1", FlowTemplateId = 1, StepTypeId = 1},
+                new FlowTemplateStep { Id = 2, Name = "Collect Data 1", FlowTemplateId = 1, StepTypeId = 3},
+                new FlowTemplateStep { Id = 3, Name = "Steop Step 3", FlowTemplateId = 1, StepTypeId = 2}
             };
 
             A.CallTo(() => _unitOfWork.FlowTemplateSteps.Get()).Returns(steps);
