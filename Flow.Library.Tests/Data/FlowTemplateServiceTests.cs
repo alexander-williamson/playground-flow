@@ -190,7 +190,7 @@ namespace Flow.Library.Tests.Data
             // Arrange
             A.CallTo(() => _unitofwork.FlowTemplateSteps.Get()).Returns(new List<IFlowTemplateStep>
             {
-                new Library.Core.FlowTemplateStep {Id = 20, FlowTemplateId = 2 }
+                new FlowTemplateStep {Id = 20, FlowTemplateId = 2 }
             });
             
             // Act
