@@ -293,7 +293,7 @@ namespace Flow.Web.Tests.Controller.Api
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(11, result.Id);
             Assert.Equal(3, captured.FlowTemplateId);
-            Assert.Equal(3, captured.StepTypeId);
+            Assert.Equal(4, captured.StepTypeId);
             Assert.Equal("New StoreDataStep", captured.Name);
         }
 
