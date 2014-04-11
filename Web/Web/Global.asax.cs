@@ -31,7 +31,9 @@ namespace Flow.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            
             AutoMapperConfig.Configure();
+            Library.Configuration.AutoMapperConfig.Configure();
             
             //GlobalConfiguration.Configuration.Formatters.XmlFormatter.UseXmlSerializer = true;
 
