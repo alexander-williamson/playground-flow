@@ -8,6 +8,12 @@ namespace Flow.Library.Tests.Automapper
 {
     public class AutoMapperTests
     {
+        public AutoMapperTests()
+        {
+            AutoMapperConfig.Configure();
+           
+        }
+
         [Fact]
         public void Should_map_StartStep_value_types_to_FlowTemplateStep()
         {
@@ -16,7 +22,6 @@ namespace Flow.Library.Tests.Automapper
                 Id = 10,
                 Name = "Start Step 1"
             };
-            AutoMapperConfig.Configure();
 
             // Act
             var result = Mapper.Map<FlowTemplateStep>(step);
@@ -36,7 +41,6 @@ namespace Flow.Library.Tests.Automapper
                 Id = 22,
                 Name = "Stop Step 2"
             };
-            AutoMapperConfig.Configure();
 
             // Act
             var result = Mapper.Map<FlowTemplateStep>(step);
@@ -56,7 +60,6 @@ namespace Flow.Library.Tests.Automapper
                 Id = 33,
                 Name = "Example CollectData Step 3"
             };
-            AutoMapperConfig.Configure();
 
             // Act
             var result = Mapper.Map<FlowTemplateStep>(step);
@@ -76,7 +79,6 @@ namespace Flow.Library.Tests.Automapper
                 Id = 14,
                 Name = "Store Data 4"
             };
-            AutoMapperConfig.Configure();
 
             // Act
             var result = Mapper.Map<FlowTemplateStep>(step);
@@ -86,6 +88,16 @@ namespace Flow.Library.Tests.Automapper
             Assert.Equal(14, result.Id);
             Assert.Equal("Store Data 4", result.Name);
             Assert.Equal(4, result.StepTypeId);
+        }
+
+        [Fact]
+        public void Should_map_StartStep_even_if_variable_is_abstract()
+        {
+            IStep step = new StartStep();
+
+            var result = Mapper.Map<FlowTemplateStep>(step);
+
+            Assert.IsType<FlowTemplateStep>(result);
         }
 
     }
