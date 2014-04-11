@@ -32,7 +32,7 @@ namespace Flow.Library.Data.Repositories
 
         public void Add(IFlowTemplateStep instance)
         {
-            var newId = _context.FlowTemplateSteps.Max(o => o.Id) + 1;
+            var newId = _context.FlowTemplateSteps.Any() ? _context.FlowTemplateSteps.Max(o => o.Id) + 1 : 1;
             var data = new FlowTemplateStep
             {
                 FlowTemplateId = instance.FlowTemplateId,

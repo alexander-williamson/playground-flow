@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
+using Flow.Library.Steps;
 using Xunit;
 using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
@@ -15,7 +17,7 @@ namespace Flow.Library.Tests.Data
         private readonly SqlTransaction _transaction;
 
         private const string LocalConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=""|DataDirectory|\Sample Data\LocalDbTests.mdf"";Integrated Security=True";
-        
+
         private readonly IRepository<IFlowTemplateStep> _repository;
         private readonly FlowDataContext _context;
 
@@ -34,7 +36,7 @@ namespace Flow.Library.Tests.Data
             }
 
             _transaction.Save("insert");
-            _context = new FlowDataContext(_connection) {Transaction = _transaction};
+            _context = new FlowDataContext(_connection) { Transaction = _transaction };
             _repository = new FlowTemplateStepRepository(_context);
         }
 
@@ -85,9 +87,26 @@ namespace Flow.Library.Tests.Data
         }
 
         [Fact]
+        public void Should_set_first_id_to_one()
+        {
+            using (var command = new SqlCommand(@"DELETE FROM FlowTemplateStep", _connection, _transaction))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            var repository = new FlowTemplateStepRepository(_context);
+            var instance = new FlowTemplateStep {Name = "Example Template 2"};
+
+            repository.Add(instance);
+            repository.Save();
+
+            Assert.Equal(1, instance.Id);
+        }
+
+        [Fact]
         public void Should_set_id_when_inserting_template_step()
         {
-            var instance = new FlowTemplateStep { Name = "Example Template 2"};
+            var instance = new FlowTemplateStep { Name = "Example Template 2" };
 
             _repository.Add(instance);
             _repository.Save();
@@ -105,13 +124,14 @@ namespace Flow.Library.Tests.Data
             var sut = r.Where(o => o.Id == 2).ToList().Last();
 
             Assert.Equal("Updated", sut.Name);
+            Assert.Equal(1, sut.FlowTemplateId);
             Assert.Equal(2, sut.Id);
         }
 
         [Fact]
         public void Should_throw_exception_when_updating_if_row_does_not_exist()
         {
-            Assert.Throws<InvalidOperationException>(() => _repository.Update(-1, new FlowTemplateStep {Name = "Updated "}));
+            Assert.Throws<InvalidOperationException>(() => _repository.Update(-1, new FlowTemplateStep { Name = "Updated " }));
         }
 
         [Fact]
@@ -177,7 +197,5 @@ namespace Flow.Library.Tests.Data
             var result = _repository.Get().ToList();
             Assert.Equal(4, result[3].StepTypeId);
         }
-
-
-    } 
+    }
 }
