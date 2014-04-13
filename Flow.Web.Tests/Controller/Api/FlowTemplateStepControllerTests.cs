@@ -196,6 +196,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Get()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => unitOfWork.Commit()).MustHaveHappened(Repeated.Exactly.Once);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(11, result.Id);
             Assert.Equal(captured.Id, result.Id);
@@ -228,6 +229,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Get()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => unitOfWork.Commit()).MustHaveHappened(Repeated.Exactly.Once);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(11, result.Id);
             Assert.Equal(3, captured.FlowTemplateId);
@@ -259,6 +261,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Get()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => unitOfWork.Commit()).MustHaveHappened(Repeated.Exactly.Once);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(11, result.Id);
             Assert.Equal(3, captured.FlowTemplateId);
@@ -290,6 +293,7 @@ namespace Flow.Web.Tests.Controller.Api
 
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Get()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => unitOfWork.Commit()).MustHaveHappened(Repeated.Exactly.Once);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(11, result.Id);
             Assert.Equal(3, captured.FlowTemplateId);

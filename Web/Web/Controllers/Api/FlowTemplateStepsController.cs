@@ -70,6 +70,7 @@ namespace Flow.Web.Controllers.Api
             {
                 var mapped = Mapper.Map<IStep>(instance);
                 var id = _flowTemplateService.Add(_unitOfWork, mapped, parent);
+                _unitOfWork.Commit();
                 return Request.CreateResponse(HttpStatusCode.OK, new { Id = id });
             }
             catch (ValidationException ex)
