@@ -131,5 +131,45 @@ namespace Flow.Web.Tests
             Assert.Equal(1, result.Id);
             Assert.Equal("StoreDataStep Example", result.Name);
         }
+
+        [Fact]
+        public void FlowTemplateStepDto_should_map_to_StartStep_when_mapped_to_IStep()
+        {
+            var origin = new FlowTemplateStepDto {Name = "StartStep Example", StepTypeName = "StartStep"};
+
+            var result = Mapper.Map<IStep>(origin);
+
+            Assert.IsType<StartStep>(result);
+        }
+
+        [Fact]
+        public void FlowTemplateStepDto_should_map_to_StopStep_when_mapped_to_IStep()
+        {
+            var origin = new FlowTemplateStepDto { Name = "StopStep Example", StepTypeName = "StopStep" };
+
+            var result = Mapper.Map<IStep>(origin);
+
+            Assert.IsType<StopStep>(result);
+        }
+
+        [Fact]
+        public void FlowTemplateStepDto_should_map_to_CollectDataStep_when_mapped_to_IStep()
+        {
+            var origin = new FlowTemplateStepDto { Name = "CollectDataStep Example", StepTypeName = "CollectDataStep" };
+
+            var result = Mapper.Map<IStep>(origin);
+
+            Assert.IsType<CollectDataStep>(result);
+        }
+
+        [Fact]
+        public void FlowTemplateStepDto_should_map_to_StoreDataStep_when_mapped_to_IStep()
+        {
+            var origin = new FlowTemplateStepDto { Name = "StoreDataStep Example", StepTypeName = "StoreDataStep" };
+
+            var result = Mapper.Map<IStep>(origin);
+
+            Assert.IsType<StoreDataStep>(result);
+        }
     }
 }

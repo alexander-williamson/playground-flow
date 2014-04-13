@@ -32,7 +32,7 @@ namespace Flow.Web.Controllers.Api
             if (flow == null)
                 return null;
 
-            var mappedDtoFlowTemplate = AutoMapper.Mapper.Map<FlowTemplateDto>(flow);
+            var mappedDtoFlowTemplate = Map<FlowTemplateDto>(flow);
             return mappedDtoFlowTemplate;
         }
 
@@ -41,7 +41,7 @@ namespace Flow.Web.Controllers.Api
             var steps = new List<IStep>();
             if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
             {
-                steps = flowTemplateDto.Steps.Select(Map).ToList();
+                steps = flowTemplateDto.Steps.Select(Map<IStep>).ToList();
             }
 
             var template = new FlowTemplate
@@ -55,20 +55,16 @@ namespace Flow.Web.Controllers.Api
             return Request.CreateResponse(HttpStatusCode.Created, new {Id = id});
         }
 
-        protected static IStep Map(FlowTemplateStepDto dto)
+        protected static T Map<T>(object source)
         {
-            switch (dto.StepTypeName)
+            try
             {
-                case "StartStep":
-                    return global::AutoMapper.Mapper.Map<StartStep>(dto);
-                case "StopStep":
-                    return global::AutoMapper.Mapper.Map<StopStep>(dto);
-                case "CollectDataStep":
-                    return global::AutoMapper.Mapper.Map<CollectDataStep>(dto);
-                case "StoreDataStep":
-                    return global::AutoMapper.Mapper.Map<StoreDataStep>(dto);
+                return AutoMapper.Mapper.Map<T>(source);
             }
-            throw new NotSupportedException("Unsupported Step StepTypeName provided");
+            catch (AutoMapper.AutoMapperMappingException ex)
+            {
+                throw new NotSupportedException("Step is unknown", ex);
+            }
         }
 
         public void Put(FlowTemplateDto flowTemplateDto)
@@ -77,10 +73,9 @@ namespace Flow.Web.Controllers.Api
             var steps = new List<IStep>();
             if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
             {
-                //steps = flowTemplateDto.Steps.Select(Map).ToList();
                 foreach (var step in flowTemplateDto.Steps)
                 {
-                    var mappedStep = Map(step);
+                    var mappedStep = Map<IStep>(step);
                     if (step.Id > 0)
                     {
                         var match = _unitOfWork.FlowTemplateSteps.Get(mappedStep.Id);
