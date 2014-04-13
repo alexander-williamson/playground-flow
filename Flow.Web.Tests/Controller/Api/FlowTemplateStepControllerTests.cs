@@ -160,7 +160,7 @@ namespace Flow.Web.Tests.Controller.Api
             SetupController(sut, "http://example.com/api/FlowTemplates/1/Steps", HttpMethod.Post);
 
             // Act
-             var instance = new FlowTemplateStepDto {StepTypeName = "StartStep"};
+            var instance = new FlowTemplateStepDto {StepTypeName = "StartStep"};
             var response = sut.Post(3, instance);
 
             var task = response.Content.ReadAsAsync<ExpandoObject>();
@@ -222,7 +222,6 @@ namespace Flow.Web.Tests.Controller.Api
             // Act
             var instance = new FlowTemplateStepDto { Name = "New StopStep", StepTypeName = "StopStep" };
             var response = sut.Post(3, instance);
-
             var task = response.Content.ReadAsAsync<ExpandoObject>();
             task.Wait();
             dynamic result = task.Result;

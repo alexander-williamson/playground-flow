@@ -145,7 +145,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WindsorActivator.cs" />
     <Compile Include="App_Start\WindsorInstaller.cs" />
-    <Compile Include="Configuration\ConfigurationManagerProvider.cs" />
+    <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Configuration\FlowConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationProvider.cs" />
     <Compile Include="Controllers\Api\FlowTemplateStepsController.cs" />

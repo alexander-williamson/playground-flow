@@ -50,9 +50,9 @@ namespace Flow.Web
         private static void SetupWindsorPerformanceCounters(IWindsorContainer container, IConfiguration configuration)
         {
             if (!configuration.CollectCastleWindsorPerformanceCounters) return;
-            var diagnostic = LifecycledComponentsReleasePolicy.GetTrackedComponentsDiagnostic(container.Kernel);
-            var counter = LifecycledComponentsReleasePolicy.GetTrackedComponentsPerformanceCounter(new PerformanceMetricsFactory());
-            container.Kernel.ReleasePolicy = new LifecycledComponentsReleasePolicy(diagnostic, counter);
+            var trackedDiagnostics = LifecycledComponentsReleasePolicy.GetTrackedComponentsDiagnostic(container.Kernel);
+            var trackedPerformanceCounter = LifecycledComponentsReleasePolicy.GetTrackedComponentsPerformanceCounter(new PerformanceMetricsFactory());
+            container.Kernel.ReleasePolicy = new LifecycledComponentsReleasePolicy(trackedDiagnostics, trackedPerformanceCounter);
         }
 
     }

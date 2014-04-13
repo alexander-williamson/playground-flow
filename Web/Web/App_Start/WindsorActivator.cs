@@ -29,16 +29,16 @@ namespace Flow.Web
 
         private class Releaser : IDisposable
         {
-            private readonly Action _action;
+            private readonly Action _actionToRunWhenDisposed;
 
-            public Releaser(Action action)
+            public Releaser(Action actionToRunWhenDisposed)
             {
-                _action = action;
+                _actionToRunWhenDisposed = actionToRunWhenDisposed;
             }
 
             public void Dispose()
             {
-                _action();
+                _actionToRunWhenDisposed();
             }
         }
     }

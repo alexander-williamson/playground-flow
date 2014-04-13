@@ -17,42 +17,82 @@ namespace Flow.Web.Controllers.Api
     public class FlowTemplatesController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly FlowTemplateService _flowTemplateService;
+        private readonly FlowTemplateService _templates;
 
         public FlowTemplatesController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _flowTemplateService = new FlowTemplateService();
+            _templates = new FlowTemplateService();
+        }
+
+        public IEnumerable<FlowTemplateDto> Get()
+        {
+            var flowTemplates = _templates.GetFlowTemplates(_unitOfWork).ToList();
+            var mapped = flowTemplates.Select(AutoMapper.Mapper.Map<FlowTemplateDto>).ToList();
+            return mapped;
         }
 
         [NullResponseIs404]
         public FlowTemplateDto Get(int id)
         {
-            var flow = _flowTemplateService.GetFlowTemplate(_unitOfWork, id);
-            if (flow == null)
+            var flowTemplate = _templates.GetFlowTemplate(_unitOfWork, id);
+            if (flowTemplate == null)
                 return null;
 
-            var mappedDtoFlowTemplate = Map<FlowTemplateDto>(flow);
-            return mappedDtoFlowTemplate;
+            var flowTemplateDto = Map<FlowTemplateDto>(flowTemplate);
+            return flowTemplateDto;
         }
 
-        public HttpResponseMessage Post(FlowTemplateDto flowTemplateDto)
+        public HttpResponseMessage Post(FlowTemplateDto source)
         {
-            var steps = new List<IStep>();
-            if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
+            var flowTemplate = Map<FlowTemplate>(source);
+
+            if (source.Steps != null && source.Steps.Any())
             {
-                steps = flowTemplateDto.Steps.Select(Map<IStep>).ToList();
+                flowTemplate.Steps = source.Steps.Select(Map<IStep>).ToList();
             }
 
-            var template = new FlowTemplate
+            var id = _templates.Add(_unitOfWork, flowTemplate);
+            return Request.CreateResponse(HttpStatusCode.Created, new {Id = id});
+        }
+
+        public void Put(FlowTemplateDto source)
+        {
+            var flowTemplate = new FlowTemplate
             {
-                Id = flowTemplateDto.Id,
-                Name = flowTemplateDto.Name,
-                Steps = steps
+                Id = source.Id,
+                Name = source.Name,
             };
 
-            var id = _flowTemplateService.Add(_unitOfWork, template);
-            return Request.CreateResponse(HttpStatusCode.Created, new {Id = id});
+            if (source.Steps != null && source.Steps.Any())
+            {
+                flowTemplate.Steps = new List<IStep>();
+                foreach (var step in source.Steps)
+                {
+                    var mappedStep = Map<IStep>(step);
+                    if (step.Id > 0)
+                    {
+                        var match = _unitOfWork.FlowTemplateSteps.Get(mappedStep.Id);
+                        if (match == null)
+                        {
+                            throw new ValidationException(String.Format("Step with Id {0} does not exist. Cannot update step.", step.Id));
+                        }
+                        mappedStep.IsDirty = true;
+                    }
+                    flowTemplate.Steps.Add(mappedStep);
+                }
+            }
+
+            _templates.Update(_unitOfWork, flowTemplate);
+        }
+
+        public HttpStatusCodeResult Delete(int id)
+        {
+            if(_unitOfWork.FlowTemplates.Get(id) == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            _templates.Delete(_unitOfWork, new FlowTemplate { Id = id });
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         protected static T Map<T>(object source)
@@ -65,54 +105,6 @@ namespace Flow.Web.Controllers.Api
             {
                 throw new NotSupportedException("Step is unknown", ex);
             }
-        }
-
-        public void Put(FlowTemplateDto flowTemplateDto)
-        {
-
-            var steps = new List<IStep>();
-            if (flowTemplateDto.Steps != null && flowTemplateDto.Steps.Any())
-            {
-                foreach (var step in flowTemplateDto.Steps)
-                {
-                    var mappedStep = Map<IStep>(step);
-                    if (step.Id > 0)
-                    {
-                        var match = _unitOfWork.FlowTemplateSteps.Get(mappedStep.Id);
-                        if (match == null)
-                        {
-                            throw new ValidationException(String.Format("Step with Id {0} does not exist. Cannot update step.", step.Id));
-                        }
-                        mappedStep.IsDirty = true;
-                    }
-                    steps.Add(mappedStep);
-                }
-            }
-
-            var templateResult = new FlowTemplate
-            {
-                Id = flowTemplateDto.Id,
-                Name = flowTemplateDto.Name,
-                Steps = steps,
-            };
-
-            _flowTemplateService.Update(_unitOfWork, templateResult);
-        }
-
-        public HttpStatusCodeResult Delete(int id)
-        {
-            if(_unitOfWork.FlowTemplates.Get(id) == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            _flowTemplateService.Delete(_unitOfWork, new FlowTemplate { Id = id });
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
-        }
-
-        public IEnumerable<FlowTemplateDto> Get()
-        {
-            var flowTemplates = _flowTemplateService.GetFlowTemplates(_unitOfWork).ToList();
-            var mapped = flowTemplates.Select(AutoMapper.Mapper.Map<FlowTemplateDto>).ToList();
-            return mapped;
         }
 
     }
