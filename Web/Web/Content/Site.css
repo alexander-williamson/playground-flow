@@ -7,6 +7,7 @@
 
 header, footer, nav, section {
     display: block;
+    margin-bottom:1em;
 }
 
 
