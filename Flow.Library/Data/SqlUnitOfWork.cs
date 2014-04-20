@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Data;
-using System.Data.Common;
+using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
 using Flow.Library.Validation;
 
-namespace Flow.Library.Data.Abstract
+namespace Flow.Library.Data
 {
     // TODO Test Saving part of commit
     public class SqlUnitOfWork : IUnitOfWork, IDisposable
     {
         private IDbConnection _connection;
-        private readonly IDbTransaction _transaction;
+        private readonly FlowDataContext _context;
 
         public SqlUnitOfWork(IDbConnection connection)
         {
             _connection = connection;
-            _transaction = _connection.BeginTransaction();
-            var context = new FlowDataContext(_connection) {Transaction = (DbTransaction) _transaction};
-            FlowTemplates = new FlowTemplateRepository(context);
-            FlowTemplateSteps = new FlowTemplateStepRepository(context);
+            _context = new FlowDataContext(_connection);
+            FlowTemplates = new FlowTemplateRepository(_context);
+            FlowTemplateSteps = new FlowTemplateStepRepository(_context);
         }
 
         public IRepository<Core.FlowTemplate> FlowTemplates { get; set; }
@@ -29,9 +28,7 @@ namespace Flow.Library.Data.Abstract
 
         public void Commit()
         {
-            FlowTemplates.Save();
-            FlowTemplateSteps.Save();
-            _transaction.Commit();
+            _context.SubmitChanges();
         }
 
         public void Dispose()
@@ -48,7 +45,6 @@ namespace Flow.Library.Data.Abstract
         {
             if (isDisposing)
             {
-                _transaction.Dispose();
                 _connection.Dispose();
                 _connection = null;
             }
