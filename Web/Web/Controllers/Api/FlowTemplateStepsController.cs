@@ -76,7 +76,7 @@ namespace Flow.Web.Controllers.Api
             }
         }
 
-        public static T Map<T>(object source)
+        private static T Map<T>(object source)
         {
             return Mapper.Map<T>(source);
         }
