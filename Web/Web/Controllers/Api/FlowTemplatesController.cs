@@ -28,7 +28,7 @@ namespace Flow.Web.Controllers.Api
         public IEnumerable<FlowTemplateDto> Get()
         {
             var flowTemplates = _templates.GetFlowTemplates(_unitOfWork).ToList();
-            var mapped = flowTemplates.Select(AutoMapper.Mapper.Map<FlowTemplateDto>).ToList();
+            var mapped = flowTemplates.Select(Map<FlowTemplateDto>).ToList();
             return mapped;
         }
 
