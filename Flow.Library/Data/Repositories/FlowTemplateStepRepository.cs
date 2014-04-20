@@ -30,18 +30,21 @@ namespace Flow.Library.Data.Repositories
             return items.Select(o => new Core.FlowTemplateStep {Id = o.Id, Name = o.Name, FlowTemplateId = o.FlowTemplateId, StepTypeId = o.StepTypeId}).First();
         }
 
-        public void Add(IFlowTemplateStep instance)
+        public void Add(IFlowTemplateStep item)
         {
-            var newId = _context.FlowTemplateSteps.Any() ? _context.FlowTemplateSteps.Max(o => o.Id) + 1 : 1;
             var data = new FlowTemplateStep
             {
-                FlowTemplateId = instance.FlowTemplateId,
-                Id = newId,
-                Name = instance.Name,
-                StepTypeId = instance.StepTypeId
+                FlowTemplateId = item.FlowTemplateId,
+                Name = item.Name,
+                StepTypeId = item.StepTypeId
             };
             _context.FlowTemplateSteps.InsertOnSubmit(data);
-            instance.Id = newId;
+            item.Id = GetNextId();
+        }
+
+        private int GetNextId()
+        {
+            return _context.FlowTemplateSteps.Any() ? _context.FlowTemplateSteps.Max(o => o.Id) + 1 : 1;
         }
 
         public void Update(int id, IFlowTemplateStep instance)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using Flow.Library.Data;
 using Flow.Library.Data.Repositories;
@@ -23,7 +24,7 @@ namespace Flow.Library.Tests.Data
             _connection = new SqlConnection(LocalConnectionString);
             _connection.Open();
             _transaction = _connection.BeginTransaction();
-            using (var command = new SqlCommand(@"INSERT INTO FlowTemplate (Id, Name) VALUES (1, 'Example Template 1');", _connection, _transaction))
+            using (var command = new SqlCommand(@"INSERT INTO FlowTemplate (Name) VALUES ('Example Template 1');", _connection, _transaction))
             {
                 command.ExecuteNonQuery();
             }
@@ -62,10 +63,16 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_template()
         {
-            var sut = _repository.Get(1);
+            var lastInsertedId = GetLastId();
+            var sut = _repository.Get(lastInsertedId);
 
-            Assert.Equal(1, sut.Id);
+            Assert.Equal(lastInsertedId, sut.Id);
             Assert.Equal("Example Template 1", sut.Name);
+        }
+
+        private int GetLastId()
+        {
+            return _context.FlowTemplates.Max(o => o.Id);
         }
 
         [Fact]
@@ -82,7 +89,7 @@ namespace Flow.Library.Tests.Data
             _repository.Add(instance);
             _repository.Save();
 
-            Assert.Equal(2, instance.Id);
+            Assert.Equal(GetLastId(), instance.Id);
         }
 
         [Fact]
@@ -103,13 +110,13 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_update_row_with_new_data()
         {
-            _repository.Update(1, new FlowTemplate {Id = 2, Name = "Updated"});
+            _repository.Update(GetLastId(), new FlowTemplate {Id = 2, Name = "Updated"});
             _repository.Save();
 
             var sut = _context.FlowTemplates.First();
 
             Assert.Equal("Updated", sut.Name);
-            Assert.Equal(1, sut.Id);
+            Assert.Equal(GetLastId(), sut.Id);
         }
 
         [Fact]
@@ -121,7 +128,7 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_remove_row_from_database()
         {
-            _repository.Delete(1);
+            _repository.Delete(GetLastId());
             _repository.Save();
             Assert.Equal(0, _context.FlowTemplates.Count());
         }

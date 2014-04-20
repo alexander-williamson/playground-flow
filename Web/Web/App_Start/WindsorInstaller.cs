@@ -8,7 +8,6 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Castle.Windsor.Diagnostics;
 using Flow.Library.Configuration;
-using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Web.Configuration;
 

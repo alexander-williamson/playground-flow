@@ -92,7 +92,7 @@
     <Compile Include="Data\Abstract\IDataContext.cs" />
     <Compile Include="Data\Abstract\IRepository.cs" />
     <Compile Include="Data\Abstract\IUnitOfWork.cs" />
-    <Compile Include="Data\SqlUnitOfWork.cs" />
+    <Compile Include="Data\Abstract\SqlUnitOfWork.cs" />
     <Compile Include="Data\Abstract\IFlowTemplateStep.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\AutoMapper.cs" />

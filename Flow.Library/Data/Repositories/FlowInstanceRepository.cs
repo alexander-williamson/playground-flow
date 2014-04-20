@@ -23,9 +23,9 @@ namespace Flow.Library.Data.Repositories
             return _context.FlowInstances.Where(o => o.Id == id).Select(o => new Core.FlowInstance {Id = o.Id}).First();
         }
 
-        public void Add(Core.FlowInstance instance)
+        public void Add(Core.FlowInstance item)
         {
-            _context.FlowInstances.InsertOnSubmit(new FlowInstance {Id = instance.Id});
+            _context.FlowInstances.InsertOnSubmit(new FlowInstance {Id = item.Id});
         }
 
         public void Update(int id, Core.FlowInstance instance)

@@ -23,11 +23,16 @@ namespace Flow.Library.Data.Repositories
             var items = _context.FlowTemplates.Where(o => o.Id == id);
             return items.Any() ? items.Select(o => new Core.FlowTemplate {Id = o.Id, Name = o.Name}).First() : null;
         }
-        public void Add(Core.FlowTemplate instance)
+
+        private int GetNextId()
         {
-            var newId = _context.FlowTemplates.Any() ? _context.FlowTemplates.Max(o => o.Id) + 1 : 1;
-            _context.FlowTemplates.InsertOnSubmit(new FlowTemplate { Id = newId, Name = instance.Name });
-            instance.Id = newId;
+            return _context.FlowTemplates.Any() ? _context.FlowTemplates.Max(o => o.Id) + 1 : 1;
+        }
+        public void Add(Core.FlowTemplate item)
+        {
+            var itemToInsert = new FlowTemplate {Name = item.Name};
+            _context.FlowTemplates.InsertOnSubmit(itemToInsert);
+            item.Id = GetNextId();
         }
         public void Update(int id, Core.FlowTemplate instance)
         {
@@ -42,6 +47,9 @@ namespace Flow.Library.Data.Repositories
 
         public void Save()
         {
+            
+            
+            
             _context.SubmitChanges(ConflictMode.FailOnFirstConflict);
         }
     }

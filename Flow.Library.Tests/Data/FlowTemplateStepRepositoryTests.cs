@@ -4,6 +4,7 @@ using System.Linq;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
+using Flow.Library.Steps;
 using Xunit;
 using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 
@@ -19,22 +20,55 @@ namespace Flow.Library.Tests.Data
         private readonly IRepository<IFlowTemplateStep> _repository;
         private readonly FlowDataContext _context;
 
+        private Library.Data.FlowTemplate newTemplate;
+        private Library.Data.FlowTemplateStep startStep, stopStep, collectDataStep, storeDataStep;
+
         public FlowTemplateStepRepositoryTests()
         {
             _connection = new SqlConnection(LocalConnectionString);
             _connection.Open();
             _transaction = _connection.BeginTransaction();
-            using (var command = new SqlCommand(@"INSERT INTO FlowTemplate (Id, Name) VALUES (1, 'Example Template 1');", _connection, _transaction))
-            {
-                command.ExecuteNonQuery();
-            }
-            using (var command = new SqlCommand(@"INSERT INTO FlowTemplateStep (Id, FlowTemplateId, StepTypeId, Name) VALUES (1, 1, 1, 'Example StartStep 1'), (2, 1, 2, 'Example StopStep 2'), (3, 1, 3, 'Example CollectDataStep 3'), (4, 1, 4, 'Example StoreDataStep 4');", _connection, _transaction))
-            {
-                command.ExecuteNonQuery();
-            }
-
-            _transaction.Save("insert");
             _context = new FlowDataContext(_connection) { Transaction = _transaction };
+
+            newTemplate = new FlowTemplate
+            {
+                Name = "Example Template 1"
+            };
+
+            _context.FlowTemplates.InsertOnSubmit(newTemplate);
+            _context.SubmitChanges();
+
+            startStep = new Library.Data.FlowTemplateStep
+            {
+                FlowTemplateId = newTemplate.Id,
+                Name = "Example StartStep 1",
+                StepTypeId = 1
+            };
+
+            collectDataStep = new Library.Data.FlowTemplateStep
+            {
+                FlowTemplateId = newTemplate.Id,
+                Name = "Example CollectDataStep 2",
+                StepTypeId = 3
+            };
+
+            storeDataStep = new Library.Data.FlowTemplateStep
+            {
+                FlowTemplateId = newTemplate.Id,
+                Name = "Example StoreDataStep 3",
+                StepTypeId = 4
+            };
+
+            stopStep = new Library.Data.FlowTemplateStep
+            {
+                FlowTemplateId = newTemplate.Id,
+                Name = "Example StopStep 4",
+                StepTypeId = 2
+            };
+
+            _context.FlowTemplateSteps.InsertAllOnSubmit(new[] { startStep, collectDataStep ,storeDataStep, stopStep });
+            _context.SubmitChanges();
+            _transaction.Save("insert");
             _repository = new FlowTemplateStepRepository(_context);
         }
 
@@ -57,25 +91,30 @@ namespace Flow.Library.Tests.Data
             Dispose(false);
         }
 
+        public int GetLastId()
+        {
+            return _context.FlowTemplateSteps.Max(o => o.Id);
+        }
+
         [Fact]
         public void Should_return_correct_amount_of_items_from_database()
         {
             var sut = _repository.Get().ToArray();
 
             Assert.Equal(4, sut.Count());
-            Assert.Equal(2, sut[1].Id);
-            Assert.Equal("Example StopStep 2", sut[1].Name);
-            Assert.Equal(1, sut[1].FlowTemplateId);
+            Assert.Equal(collectDataStep.Id, sut[1].Id);
+            Assert.Equal("Example CollectDataStep 2", sut[1].Name);
+            Assert.Equal(newTemplate.Id, sut[1].FlowTemplateId);
         }
 
         [Fact]
         public void Should_return_template_steps()
         {
-            var sut = _repository.Get(2);
+            var sut = _repository.Get(stopStep.Id);
 
-            Assert.Equal(2, sut.Id);
-            Assert.Equal("Example StopStep 2", sut.Name);
-            Assert.Equal(1, sut.FlowTemplateId);
+            Assert.Equal(stopStep.Id, sut.Id);
+            Assert.Equal("Example StopStep 4", sut.Name);
+            Assert.Equal(newTemplate.Id, sut.FlowTemplateId);
         }
 
         [Fact]
@@ -93,7 +132,7 @@ namespace Flow.Library.Tests.Data
             }
 
             var repository = new FlowTemplateStepRepository(_context);
-            var instance = new FlowTemplateStep {Name = "Example Template 2"};
+            var instance = new FlowTemplateStep { Name = "Example Template 2" };
 
             repository.Add(instance);
             repository.Save();
@@ -104,26 +143,27 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_set_id_when_inserting_template_step()
         {
+            var expected = GetLastId() + 1;
             var instance = new FlowTemplateStep { Name = "Example Template 2" };
 
             _repository.Add(instance);
             _repository.Save();
 
-            Assert.Equal(5, instance.Id);
+            Assert.Equal(expected, instance.Id);
         }
 
         [Fact]
         public void Should_update_row_with_new_data()
         {
-            _repository.Update(2, new FlowTemplateStep { Name = "Updated", FlowTemplateId = 1 });
+            _repository.Update(collectDataStep.Id, new FlowTemplateStep { Name = "Updated", FlowTemplateId = 1 });
             _repository.Save();
 
             var r = _context.FlowTemplateSteps;
-            var sut = r.Where(o => o.Id == 2).ToList().Last();
+            var sut = r.Where(o => o.Id == collectDataStep.Id).ToList().Last();
 
             Assert.Equal("Updated", sut.Name);
-            Assert.Equal(1, sut.FlowTemplateId);
-            Assert.Equal(2, sut.Id);
+            Assert.Equal(newTemplate.Id, sut.FlowTemplateId);
+            Assert.Equal(collectDataStep.Id, sut.Id);
         }
 
         [Fact]
@@ -135,7 +175,7 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_remove_row_from_database_when_Step_deleted()
         {
-            _repository.Delete(1);
+            _repository.Delete(GetLastId());
             _repository.Save();
             Assert.Equal(1, _context.FlowTemplates.Count());
         }
@@ -143,28 +183,31 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_return_correct_StartStep_for_single_step()
         {
-            var result = _repository.Get(1);
+            var result = _repository.Get(startStep.Id);
             Assert.Equal(1, result.StepTypeId);
         }
 
         [Fact]
         public void Should_return_correct_StopStep_for_single_step()
         {
-            var result = _repository.Get(2);
+            var result = _repository.Get(stopStep.Id);
             Assert.Equal(2, result.StepTypeId);
         }
 
         [Fact]
         public void Should_return_correct_CollectDataStep_for_single_step()
         {
-            var result = _repository.Get(3);
-            Assert.Equal(3, result.StepTypeId);
+            var result = _repository.Get(GetLastId());
+
+            Assert.Equal(2, result.StepTypeId);
         }
 
         [Fact]
         public void Should_return_correct_StoreDataStep_for_single_step()
         {
-            var result = _repository.Get(4);
+            var result = _repository.Get(storeDataStep.Id);
+
+            Assert.Equal(storeDataStep.Id, result.Id);
             Assert.Equal(4, result.StepTypeId);
         }
 
@@ -179,21 +222,21 @@ namespace Flow.Library.Tests.Data
         public void Should_return_correct_StopStep()
         {
             var result = _repository.Get().ToList();
-            Assert.Equal(2, result[1].StepTypeId);
+            Assert.Equal(3, result[1].StepTypeId);
         }
 
         [Fact]
         public void Should_return_correct_CollectDataStep()
         {
             var result = _repository.Get().ToList();
-            Assert.Equal(3, result[2].StepTypeId);
+            Assert.Equal(4, result[2].StepTypeId);
         }
 
         [Fact]
         public void Should_return_correct_StoreDataStep()
         {
             var result = _repository.Get().ToList();
-            Assert.Equal(4, result[3].StepTypeId);
+            Assert.Equal(2, result[3].StepTypeId);
         }
     }
 }

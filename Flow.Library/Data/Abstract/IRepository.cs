@@ -6,7 +6,7 @@ namespace Flow.Library.Data.Abstract
     {
         IEnumerable<T> Get();
         T Get(int id);
-        void Add(T instance);
+        void Add(T item);
         void Update(int id, T instance);
         void Delete(int id);
         void Save();
