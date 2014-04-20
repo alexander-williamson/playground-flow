@@ -11,9 +11,9 @@ namespace Flow.Library.Data
     public class FlowTemplateService : IFlowTemplateService
     {
         // todo use step provider mapping
-        private IStep Map(IFlowTemplateStep template)
+        private static T Map<T>(object source)
         {
-            return new StartStep {Id = template.Id, Name = template.Name, VersionId = template.VersionId};
+            return Mapper.Map<T>(source);
         }
 
         public IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
@@ -29,7 +29,7 @@ namespace Flow.Library.Data
 
                 foreach (var step in steps)
                 {
-                    template.Steps.Add(Map(step));
+                    template.Steps.Add(Map<IStep>(step));
                 }
             }
             return templates;
@@ -46,7 +46,7 @@ namespace Flow.Library.Data
 
                 foreach (var step in steps)
                 {
-                    result.Steps.Add(Map(step));
+                    result.Steps.Add(Map<IStep>(step));
                 }
             }
 
@@ -58,8 +58,7 @@ namespace Flow.Library.Data
             if (string.IsNullOrWhiteSpace(template.Name))
                 throw new ValidationException("Template Name missing");
 
-            var id = unitOfWork.FlowTemplates.Get().Any() ? unitOfWork.FlowTemplates.Get().Select(o => o.Id).Last() : 0;
-            template.Id = ++id;
+            template.Id = GetNextId(unitOfWork);
             unitOfWork.FlowTemplates.Add(template);
 
             if (template.Steps != null && template.Steps.Any())
@@ -73,7 +72,13 @@ namespace Flow.Library.Data
             }
 
             unitOfWork.Commit();
-            return id;
+            return template.Id;
+        }
+
+        private static int GetNextId(IUnitOfWork unitOfWork)
+        {
+            var id = unitOfWork.FlowTemplates.Get().Any() ? unitOfWork.FlowTemplates.Get().Select(o => o.Id).Last() : 0;
+            return id + 1;
         }
 
         public void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template)
@@ -118,7 +123,7 @@ namespace Flow.Library.Data
         {
             var id = flowTemplateId;
             var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
-            return steps.Select(Map).ToList();
+            return steps.Select(Map<IStep>).ToList();
         }
 
         public IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Flow.Library.Configuration;
 using Flow.Library.Core;
+using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 using Xunit;
 
@@ -98,6 +99,46 @@ namespace Flow.Library.Tests.Automapper
             var result = Mapper.Map<FlowTemplateStep>(step);
 
             Assert.IsType<FlowTemplateStep>(result);
+        }
+
+        [Fact]
+        public void Should_map_FlowTemplateStep_to_StartStep()
+        {
+            IFlowTemplateStep source = new FlowTemplateStep {StepTypeId = 1};
+
+            var result = Mapper.Map<IStep>(source);
+
+            Assert.IsType<StartStep>(result);
+        }
+
+        [Fact]
+        public void Should_map_FlowTemplateStep_to_StopStep()
+        {
+            IFlowTemplateStep source = new FlowTemplateStep { StepTypeId = 2 };
+
+            var result = Mapper.Map<IStep>(source);
+
+            Assert.IsType<StopStep>(result);
+        }
+
+        [Fact]
+        public void Should_map_FlowTemplateStep_to_CollectDataStep()
+        {
+            IFlowTemplateStep source = new FlowTemplateStep { StepTypeId = 3 };
+
+            var result = Mapper.Map<IStep>(source);
+
+            Assert.IsType<CollectDataStep>(result);
+        }
+
+        [Fact]
+        public void Should_map_FlowTemplateStep_to_StoreDataStep()
+        {
+            IFlowTemplateStep source = new FlowTemplateStep { StepTypeId = 4 };
+
+            var result = Mapper.Map<IStep>(source);
+
+            Assert.IsType<StoreDataStep>(result);
         }
 
     }

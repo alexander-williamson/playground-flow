@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Library.Data.Repositories;
-using Flow.Library.Steps;
 using Xunit;
 using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 

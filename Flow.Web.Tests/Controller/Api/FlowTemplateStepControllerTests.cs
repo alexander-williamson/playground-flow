@@ -138,7 +138,7 @@ namespace Flow.Web.Tests.Controller.Api
             var unitOfWork = A.Fake<IUnitOfWork>();
             A.CallTo(() => unitOfWork.FlowTemplateSteps.Get())
                 .Returns(new List<IFlowTemplateStep> {
-                    new FlowTemplateStep {Id = 3, FlowTemplateId = 3} });
+                    new FlowTemplateStep {Id = 3, FlowTemplateId = 3, StepTypeId = 1 } });
             var sut = new FlowTemplateStepsController(unitOfWork);
             SetupController(sut, "http://example.com/api/FlowTemplates/1/Steps", HttpMethod.Delete);
 
