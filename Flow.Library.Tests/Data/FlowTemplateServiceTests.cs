@@ -34,6 +34,11 @@ namespace Flow.Library.Tests.Data
             A.CallTo(() => _unitofwork.FlowTemplates).Returns(templateRepo);
         }
 
+        public List<IStep> FlowTemplateSteps
+        {
+            get { return _flowTemplateSteps; }
+        }
+
         [Fact]
         public void Should_add_template_using_iunit_of_work()
         {
@@ -48,12 +53,11 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_add_child_steps()
         {
-            var instance = new FlowTemplate {Name = "Example"};
-            instance.Steps = new List<IStep>();
-            instance.Steps.Add(new StartStep());
-            instance.Steps.Add(new CollectDataStep());
-            instance.Steps.Add(new StoreDataStep());
-            instance.Steps.Add(new StopStep());
+            var instance = new FlowTemplate
+            {
+                Name = "Example",
+                Steps = new List<IStep> {new StartStep(), new CollectDataStep(), new StoreDataStep(), new StopStep()}
+            };
 
             _flowTemplateService.Add(_unitofwork, instance);
 
@@ -140,10 +144,12 @@ namespace Flow.Library.Tests.Data
         [Fact]
         public void Should_add_flow_steps_when_updating_template()
         {
-            var instance = new FlowTemplate { Name = "First Value", Id = 2 };
-            instance.Steps = new List<IStep>();
-            instance.Steps.Add(A.Fake<IFlowTemplateStep>());
-            instance.Steps.Add(A.Fake<IFlowTemplateStep>());
+            var instance = new FlowTemplate
+            {
+                Name = "First Value",
+                Id = 2,
+                Steps = new List<IStep> {A.Fake<IFlowTemplateStep>(), A.Fake<IFlowTemplateStep>()}
+            };
 
             _flowTemplateService.Update(_unitofwork, instance);
 
@@ -156,9 +162,7 @@ namespace Flow.Library.Tests.Data
             var instance = new FlowTemplate { Name = "First Value", Id = 2 };
             var mock = A.Fake<IFlowTemplateStep>();
             A.CallTo(() => mock.IsDirty).Returns(true);
-            instance.Steps = new List<IStep>();
-            instance.Steps.Add(mock);
-            instance.Steps.Add(mock);
+            instance.Steps = new List<IStep> {mock, mock};
 
             _flowTemplateService.Update(_unitofwork, instance);
 
