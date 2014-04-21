@@ -124,45 +124,15 @@ namespace Flow.Library.Tests.Data
         }
 
         [Fact]
-        public void Should_set_first_id_to_one()
-        {
-            using (var command = new SqlCommand(@"DELETE FROM FlowTemplateStep", _connection, _transaction))
-            {
-                command.ExecuteNonQuery();
-            }
-
-            var repository = new FlowTemplateStepRepository(_context);
-            var instance = new FlowTemplateStep { Name = "Example Template 2" };
-
-            repository.Add(instance);
-            repository.Save();
-
-            Assert.Equal(1, instance.Id);
-        }
-
-        [Fact]
-        public void Should_set_id_when_inserting_template_step()
-        {
-            var expected = GetLastId() + 1;
-            var instance = new FlowTemplateStep { Name = "Example Template 2" };
-
-            _repository.Add(instance);
-            _repository.Save();
-
-            Assert.Equal(expected, instance.Id);
-        }
-
-        [Fact]
         public void Should_update_row_with_new_data()
         {
             _repository.Update(collectDataStep.Id, new FlowTemplateStep { Name = "Updated", FlowTemplateId = 1 });
-            _repository.Save();
 
             var r = _context.FlowTemplateSteps;
             var sut = r.Where(o => o.Id == collectDataStep.Id).ToList().Last();
 
             Assert.Equal("Updated", sut.Name);
-            Assert.Equal(newTemplate.Id, sut.FlowTemplateId);
+            Assert.Equal(1, sut.FlowTemplateId);
             Assert.Equal(collectDataStep.Id, sut.Id);
         }
 
@@ -176,7 +146,6 @@ namespace Flow.Library.Tests.Data
         public void Should_remove_row_from_database_when_Step_deleted()
         {
             _repository.Delete(GetLastId());
-            _repository.Save();
             Assert.Equal(1, _context.FlowTemplates.Count());
         }
 

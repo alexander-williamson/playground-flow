@@ -21,12 +21,12 @@ namespace Flow.Web.Controllers.Api
         public FlowTemplateStepsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _templates = new FlowTemplateService();
+            _templates = new FlowTemplateService(_unitOfWork);
         }
 
         public HttpResponseMessage Get(int parent)
         {
-            var steps = _templates.GetFlowTemplateSteps(_unitOfWork, parent);
+            var steps = _templates.GetFlowTemplateSteps(parent);
             var stepsArray = steps as IStep[] ?? steps.ToArray();
 
             if (!stepsArray.Any())
@@ -38,7 +38,7 @@ namespace Flow.Web.Controllers.Api
 
         public HttpResponseMessage Get(int parent, int id)
         {
-            var steps = _templates.GetFlowTemplateSteps(_unitOfWork, parent).ToList();
+            var steps = _templates.GetFlowTemplateSteps(parent).ToList();
             var matching = steps.Where(o => o.Id == id).ToList();
             
             if (!matching.Any())
@@ -50,13 +50,13 @@ namespace Flow.Web.Controllers.Api
 
         public HttpResponseMessage Delete(int parent, int id)
         {
-            var parentSteps = _templates.GetFlowTemplateSteps(_unitOfWork, parent);
+            var parentSteps = _templates.GetFlowTemplateSteps(parent);
             var matching = parentSteps.Where(o => o.Id == id).ToList();
 
             if (!matching.Any())
                 return Request.CreateResponse(HttpStatusCode.NotFound);
 
-            _templates.Delete(_unitOfWork, new FlowTemplate { Id = id });
+            _templates.Delete(new FlowTemplate { Id = id });
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
@@ -65,8 +65,8 @@ namespace Flow.Web.Controllers.Api
 
             try
             {
-                var mapped = Map<IStep>(instance);
-                var id = _templates.Add(_unitOfWork, mapped, parent);
+                var source = Map<IStep>(instance);
+                var id = _templates.Add(source, parent);
                 _unitOfWork.Commit();
                 return Request.CreateResponse(HttpStatusCode.OK, new { Id = id });
             }

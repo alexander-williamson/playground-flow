@@ -19,7 +19,7 @@ namespace Flow.Web.Controllers
             _connection = new SqlConnection(ConnectionString);
             _connection.Open();
             _unitOfWork = new SqlUnitOfWork(_connection);
-            _flowTemplateService =  new FlowTemplateService();
+            _flowTemplateService = new FlowTemplateService(_unitOfWork);
         }
 
         protected override void Dispose(bool disposing)
@@ -39,7 +39,7 @@ namespace Flow.Web.Controllers
         public ActionResult Index()
         {
             var model = new FlowTemplateIndexViewModel();
-            model.Templates = _flowTemplateService.GetFlowTemplates(_unitOfWork);
+            model.Templates = _flowTemplateService.GetFlowTemplates();
             return View(model);
         }
 
@@ -50,10 +50,10 @@ namespace Flow.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(global::Flow.Web.Dto.FlowTemplateDto templateDto)
+        public ActionResult Add(Dto.FlowTemplateDto templateDto)
         {
-            var flowTemplate = Mapper.Map<Flow.Library.Core.FlowTemplate>(templateDto);
-            var id = _flowTemplateService.Add(_unitOfWork, flowTemplate);
+            var flowTemplate = Mapper.Map<Library.Core.FlowTemplate>(templateDto);
+            var id = _flowTemplateService.Add(flowTemplate);
             return RedirectToAction("Index", "FlowTemplateController", new {Success = true, Id = id});
         }
 

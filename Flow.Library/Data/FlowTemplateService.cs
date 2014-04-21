@@ -8,9 +8,16 @@ using Flow.Library.Validation;
 
 namespace Flow.Library.Data
 {
+
+
     public class FlowTemplateService : IFlowTemplateService
     {
+        private readonly IUnitOfWork _unitOfWork;
 
+        public FlowTemplateService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         // todo use step provider mapping
         private static T Map<T>(object source)
@@ -18,13 +25,13 @@ namespace Flow.Library.Data
             return Mapper.Map<T>(source);
         }
 
-        public IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork)
+        public IEnumerable<Core.FlowTemplate> GetFlowTemplates()
         {
-            var templates = unitOfWork.FlowTemplates.Get().ToList();
+            var templates = _unitOfWork.FlowTemplates.Get().ToList();
             foreach (var template in templates)
             {
                 var id = template.Id;
-                var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
+                var steps = _unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
 
                 if (template.Steps == null)
                     template.Steps = new List<IStep>();
@@ -37,10 +44,10 @@ namespace Flow.Library.Data
             return templates;
         }
 
-        public Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id)
+        public Core.FlowTemplate GetFlowTemplate(int id)
         {
-            var result = unitOfWork.FlowTemplates.Get(id);
-            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id);
+            var result = _unitOfWork.FlowTemplates.Get(id);
+            var steps = _unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id);
 
             if (result != null && result.Steps == null)
             {
@@ -55,13 +62,12 @@ namespace Flow.Library.Data
             return result;
         }
 
-        public int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template)
+        public int Add(Core.FlowTemplate template)
         {
             if (string.IsNullOrWhiteSpace(template.Name))
                 throw new ValidationException("Template Name missing");
 
-            template.Id = GetNextId(unitOfWork);
-            unitOfWork.FlowTemplates.Add(template);
+            _unitOfWork.FlowTemplates.Add(template);
 
             if (template.Steps != null && template.Steps.Any())
             {
@@ -69,68 +75,61 @@ namespace Flow.Library.Data
                 {
                     var stepInstance = Mapper.Map<Core.FlowTemplateStep>(step);
 
-                    unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                    _unitOfWork.FlowTemplateSteps.Add(stepInstance);
                 }
             }
 
-            unitOfWork.Commit();
+            _unitOfWork.Commit();
             return template.Id;
         }
 
-        private static int GetNextId(IUnitOfWork unitOfWork)
+        public void Update(Core.FlowTemplate template)
         {
-            var id = unitOfWork.FlowTemplates.Get().Any() ? unitOfWork.FlowTemplates.Get().Select(o => o.Id).Last() : 0;
-            return id + 1;
-        }
-
-        public void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template)
-        {
-            var existing = unitOfWork.FlowTemplates.Get(template.Id);
+            var existing = _unitOfWork.FlowTemplates.Get(template.Id);
             if (existing == null)
             {
                 throw new ValidationException(String.Format("FlowTemplate Id: {0} does not exist", template.Id));
             }
 
-            unitOfWork.FlowTemplates.Update(template.Id, template);
+            _unitOfWork.FlowTemplates.Update(template.Id, template);
             if (template.Steps != null && template.Steps.Any())
             {
                 foreach (var step in template.Steps)
                 {
-                    var stepInstance = new Core.FlowTemplateStep();
-                    stepInstance.FlowTemplateId = template.Id;
+                    var stepInstance = new Core.FlowTemplateStep {FlowTemplateId = template.Id};
 
                     if (step.IsDirty)
                     {
-                        unitOfWork.FlowTemplateSteps.Update(step.Id, stepInstance);
+                        _unitOfWork.FlowTemplateSteps.Update(step.Id, stepInstance);
                     }
                     else
                     {
-                        unitOfWork.FlowTemplateSteps.Add(stepInstance);
+                        _unitOfWork.FlowTemplateSteps.Add(stepInstance);
                     }
                 }
             }
 
-            unitOfWork.Commit();
+            _unitOfWork.Commit();
         }
 
-        public void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template)
+        public void Delete(Core.FlowTemplate template)
         {
-            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == template.Id);
-            steps.ToList().ForEach(o => unitOfWork.FlowTemplateSteps.Delete(o.Id));
-            unitOfWork.FlowTemplates.Delete(template.Id);
-            unitOfWork.Commit();
+            var steps = _unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == template.Id);
+            steps.ToList().ForEach(o => _unitOfWork.FlowTemplateSteps.Delete(o.Id));
+            _unitOfWork.FlowTemplates.Delete(template.Id);
+            _unitOfWork.Commit();
         }
 
-        public IEnumerable<IStep> GetFlowTemplateSteps(IUnitOfWork unitOfWork, int flowTemplateId)
+        public IEnumerable<IStep> GetFlowTemplateSteps(int flowTemplateId)
         {
             var id = flowTemplateId;
-            var steps = unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
+            var steps = _unitOfWork.FlowTemplateSteps.Get().Where(o => o.FlowTemplateId == id).ToList();
             return steps.Select(Map<IStep>).ToList();
         }
 
-        public IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id)
+        public IStep GetFlowTemplateStep(int id)
         {
-            var step = unitOfWork.FlowTemplateSteps.Get(id);
+            var step = _unitOfWork.FlowTemplateSteps.Get(id);
             if (step == null)
                 return null;
 
@@ -144,29 +143,29 @@ namespace Flow.Library.Data
             return result;
         }
 
-        public int Add(IUnitOfWork unitOfWork, IStep step, int flowTemplateId)
+        public int Add(IStep step, int flowTemplateId)
         {
             // todo support max
-            var list = unitOfWork.FlowTemplateSteps.Get().ToList();
+            var list = _unitOfWork.FlowTemplateSteps.Get().ToList();
             var max = list.Any() ? list.Max(o => o.Id) + 1 : 1;
 
             var mapped = Mapper.Map<Core.FlowTemplateStep>(step);
             mapped.FlowTemplateId = flowTemplateId;
             mapped.Id = max;
 
-            unitOfWork.FlowTemplateSteps.Add(mapped);
+            _unitOfWork.FlowTemplateSteps.Add(mapped);
             return max;
         }
 
-        public void Update(IUnitOfWork unitOfWork, IStep step)
+        public void Update(IStep step)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(IUnitOfWork unitOfWork, IStep step)
+        public void Delete(IStep step)
         {
-            unitOfWork.FlowTemplateSteps.Delete(step.Id);
-            unitOfWork.Commit();
+            _unitOfWork.FlowTemplateSteps.Delete(step.Id);
+            _unitOfWork.Commit();
         }
     }
 }

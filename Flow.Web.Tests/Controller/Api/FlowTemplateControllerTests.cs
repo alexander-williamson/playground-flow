@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,12 +10,14 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
 using FakeItEasy;
-using Flow.Library.Core;
-using Flow.Library.Data.Abstract;
+using Flow.Library.Data;
+using Flow.Library.Steps;
 using Flow.Library.Validation;
 using Flow.Web.Controllers.Api;
 using Flow.Web.Dto;
 using Xunit;
+using FlowTemplate = Flow.Library.Core.FlowTemplate;
+using FlowTemplateStep = Flow.Library.Core.FlowTemplateStep;
 using RouteParameter = System.Web.Http.RouteParameter;
 
 namespace Flow.Web.Tests.Controller.Api
@@ -22,20 +25,20 @@ namespace Flow.Web.Tests.Controller.Api
     public class FlowTemplateControllerTests
     {
         private readonly FlowTemplatesController _sut;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IFlowTemplateService _flowTemplateService;
 
         public FlowTemplateControllerTests()
         {
             Library.Configuration.AutoMapperConfig.Configure();
             AutoMapperConfig.Configure();
-            _unitOfWork = A.Fake<IUnitOfWork>();
-            _sut = new FlowTemplatesController(_unitOfWork);
+            _flowTemplateService = A.Fake<IFlowTemplateService>();
+            _sut = new FlowTemplatesController(_flowTemplateService);
         }
 
         [Fact]
         public void Post_should_add_template()
         {
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -47,17 +50,16 @@ namespace Flow.Web.Tests.Controller.Api
 
             controller.Post(new FlowTemplateDto { Id = 1, Name = "Test 1" });
 
-            A.CallTo(() => _unitOfWork.FlowTemplates.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Post_success_should_return_new_id()
         {
             // Assemble
-            A.CallTo(() => _unitOfWork.FlowTemplates.Get()).Returns(new List<FlowTemplate> { new FlowTemplate { Id = 2 } });
-            A.CallTo(() => _unitOfWork.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 3});
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).Returns(3);
             
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -79,12 +81,6 @@ namespace Flow.Web.Tests.Controller.Api
         }
 
         [Fact]
-        public void Should_throw_validation_error_if_name_missing_on_post()
-        {
-            Assert.Throws<ValidationException>(() => _sut.Post(new FlowTemplateDto()));
-        }
-
-        [Fact]
         public void Post_Should_save_supported_child_steps()
         {
             // Assemble
@@ -98,7 +94,7 @@ namespace Flow.Web.Tests.Controller.Api
                 }
             };
 
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -111,17 +107,13 @@ namespace Flow.Web.Tests.Controller.Api
             // Assert
             controller.Post(instance);
 
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Times(2));
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Post_Should_store_StartStep_type()
         {
             // assemble
-            int captured = -1;
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._))
-                .Invokes((IFlowTemplateStep item) => captured = item.StepTypeId);
-
             var instance = new FlowTemplateDto
             {
                 Name = "Example Step",
@@ -131,7 +123,7 @@ namespace Flow.Web.Tests.Controller.Api
                 }
             };
 
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -146,17 +138,16 @@ namespace Flow.Web.Tests.Controller.Api
             controller.Post(instance);
 
             // assert
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(1, captured);
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Post_Should_store_StopStep_type()
         {
             // assemble
-            int captured = 0;
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._))
-                .Invokes((IFlowTemplateStep item) => captured = item.StepTypeId);
+            FlowTemplate captured = null;
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._))
+                .Invokes((FlowTemplate item) => captured = item);
 
             var instance = new FlowTemplateDto
             {
@@ -167,7 +158,7 @@ namespace Flow.Web.Tests.Controller.Api
                 }
             };
 
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -182,17 +173,17 @@ namespace Flow.Web.Tests.Controller.Api
             controller.Post(instance);
 
             // assert
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(2, captured);
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<StopStep>(captured.Steps[0]);
         }
 
         [Fact]
         public void Post_Should_store_CollectDataStep_type()
         {
             // assemble
-            int captured = 0;
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._))
-                .Invokes((IFlowTemplateStep item) => captured = item.StepTypeId);
+            FlowTemplate captured = null;
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._))
+                .Invokes((FlowTemplate item) => captured = item);
 
             var instance = new FlowTemplateDto
             {
@@ -203,7 +194,7 @@ namespace Flow.Web.Tests.Controller.Api
                 }
             };
 
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -217,17 +208,17 @@ namespace Flow.Web.Tests.Controller.Api
             controller.Post(instance);
 
             // assert
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(3, captured);
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<CollectDataStep>(captured.Steps[0]);
         }
 
         [Fact]
         public void Post_should_store_StoreDataStep_type()
         {
             // assemble
-            int captured = 0;
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._))
-                .Invokes((IFlowTemplateStep item) => captured = item.StepTypeId);
+            FlowTemplate captured = null;
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._))
+                .Invokes((FlowTemplate item) => captured = item);
 
             var instance = new FlowTemplateDto
             {
@@ -238,7 +229,7 @@ namespace Flow.Web.Tests.Controller.Api
                 }
             };
 
-            var controller = new FlowTemplatesController(_unitOfWork);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var config = new HttpConfiguration();
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
             var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
@@ -252,8 +243,8 @@ namespace Flow.Web.Tests.Controller.Api
             controller.Post(instance);
 
             // assert
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(4, captured);
+            A.CallTo(() => _flowTemplateService.Add(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<StoreDataStep>(captured.Steps[0]);
         }
 
         [Fact]
@@ -276,7 +267,7 @@ namespace Flow.Web.Tests.Controller.Api
         [Fact]
         public void Should_return_flow_template_by_id()
         {
-            A.CallTo(() => _unitOfWork.FlowTemplates.Get(2)).Returns(new FlowTemplate {Id = 2, Name = "Template 2"});
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(2)).Returns(new FlowTemplate {Id = 2, Name = "Template 2"});
 
             var result = _sut.Get(2);
 
@@ -289,16 +280,16 @@ namespace Flow.Web.Tests.Controller.Api
         {
             AutoMapperConfig.Configure();
             Library.Configuration.AutoMapperConfig.Configure();
-            var steps = new List<IFlowTemplateStep>
+            var steps = new List<IStep>
             {
                 // TODO fix inheritance here
-                new FlowTemplateStep { Id = 1, Name = "Start Step 1", FlowTemplateId = 1, StepTypeId = 1},
-                new FlowTemplateStep { Id = 2, Name = "Collect Data 1", FlowTemplateId = 1, StepTypeId = 3},
-                new FlowTemplateStep { Id = 3, Name = "Steop Step 3", FlowTemplateId = 1, StepTypeId = 2}
+                new StartStep { Id = 1, Name = "Start Step 1"},
+                new CollectDataStep { Id = 2, Name = "Collect Data 1"},
+                new StopStep { Id = 3, Name = "Stop Step 3"}
             };
 
-            A.CallTo(() => _unitOfWork.FlowTemplateSteps.Get()).Returns(steps);
-            A.CallTo(() => _unitOfWork.FlowTemplates.Get(1)).Returns(new FlowTemplate { Id = 1, Name = "Template 1" });
+            A.CallTo(() => _flowTemplateService.GetFlowTemplateSteps(1)).Returns(steps);
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(1)).Returns(new FlowTemplate { Id = 1, Name = "Template 1", Steps = steps});
 
             var result = _sut.Get(1);
             Assert.Equal(3, result.Steps.Count);
@@ -307,8 +298,18 @@ namespace Flow.Web.Tests.Controller.Api
         [Fact]
         public void Put_template_should_update_template()
         {
+            var controller = new FlowTemplatesController(_flowTemplateService);
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
+            var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", "FlowTemplates" } });
+            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
+            controller.Request = request;
+            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
+            controller.Request.Properties.Add(HttpPropertyKeys.HttpRouteDataKey, routeData);
+            
             // Act
-            _sut.Put(new FlowTemplateDto
+            controller.Put(new FlowTemplateDto
             {
                 Id = 2,
                 Steps = new List<FlowTemplateStepDto>
@@ -318,17 +319,25 @@ namespace Flow.Web.Tests.Controller.Api
             });
 
             // Assert
-            A.CallTo(() => _unitOfWork.FlowTemplates.Update(2, A<FlowTemplate>._)).MustHaveHappened();
+            A.CallTo(() => _flowTemplateService.Update(A<FlowTemplate>._)).MustHaveHappened();
         }
 
         [Fact]
         public void Put_new_template_step_should_create_template_step()
         {
             // Assemble
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplateSteps.Get(A<int>._)).Returns(null);
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1 });
-            var controller = new FlowTemplatesController(database);
+            A.CallTo(() => _flowTemplateService.GetFlowTemplateSteps(A<int>._)).Returns(null);
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(A<int>._)).Returns(new FlowTemplate { Id = 1 });
+            
+            var controller = new FlowTemplatesController(_flowTemplateService);
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
+            var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", "FlowTemplates" } });
+            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
+            controller.Request = request;
+            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
+            controller.Request.Properties.Add(HttpPropertyKeys.HttpRouteDataKey, routeData);
 
             // Act
             controller.Put(new FlowTemplateDto
@@ -339,82 +348,73 @@ namespace Flow.Web.Tests.Controller.Api
                     new FlowTemplateStepDto {Name = "Updated Step", StepTypeName = "StartStep" }
                 }
             });
-            A.CallTo(() => database.FlowTemplateSteps.Add(A<IFlowTemplateStep>._)).MustHaveHappened();
+            A.CallTo(() => _flowTemplateService.Update(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Put_existing_template_step_should_update_template_step()
         {
-            // Assemble
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1 });
-            A.CallTo(() => database.FlowTemplateSteps.Get(0)).Returns(null);
-            A.CallTo(() => database.FlowTemplateSteps.Get(10))
-                .Returns(new FlowTemplateStep {Id = 10, StepTypeId = 1, FlowTemplateId = 1});
-            FlowTemplateStep captured = null;
-            A.CallTo(() => database.FlowTemplateSteps.Update(A<int>._, A<IFlowTemplateStep>._))
-                .Invokes(f =>
-                {
-                    captured = (FlowTemplateStep)f.Arguments[1];
-                });
 
-            // Act
-            var controller = new FlowTemplatesController(database);
+            var controller = new FlowTemplatesController(_flowTemplateService);
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
+            var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", "FlowTemplates" } });
+            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
+            controller.Request = request;
+            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
+            controller.Request.Properties.Add(HttpPropertyKeys.HttpRouteDataKey, routeData);
+
+            
             controller.Put(new FlowTemplateDto
             {
                 Id = 1,
+                Name = "Example Template Step",
                 Steps = new List<FlowTemplateStepDto>
                 {
                     new FlowTemplateStepDto {Id = 10, Name = "Updated Step", StepTypeName = "StartStep" }
                 }
             });
-            A.CallTo(() => database.FlowTemplateSteps.Update(10, A<IFlowTemplateStep>._)).MustHaveHappened();
-            Assert.Equal(1, captured.FlowTemplateId);
+
+            A.CallTo(() => _flowTemplateService.Update(A<FlowTemplate>._)).MustHaveHappened();
         }
 
         [Fact]
-        public void Put_should_throw_exception_if_flow_template_step_does_not_exist_when_id_set()
+        public void Put_should_return_validation_messages_if_validation_exception_thrown()
         {
             // Assemble
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 1});
-            A.CallTo(() => database.FlowTemplateSteps.Get(A<int>._)).Returns(null);
-            var controller = new FlowTemplatesController(database);
-
-            // Assert
-            Assert.Throws<ValidationException>(() => controller.Put(new FlowTemplateDto
-            {
-                Steps = new List<FlowTemplateStepDto> {new FlowTemplateStepDto
-                {
-                    Id = 10,
-                    StepTypeName = "StartStep"
-                }}
-            }));
-        }
-
-        [Fact]
-        public void Put_should_throw_exception_if_flow_template_does_not_exist()
-        {
-            // Assemble
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
+            A.CallTo(() => _flowTemplateService.Update(A<FlowTemplate>._)).Throws(new ValidationException("Validation Message"));
 
             // Act
-            var controller = new FlowTemplatesController(database);
+            var controller = new FlowTemplatesController(_flowTemplateService);
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/FlowTemplates");
+            var route = config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", "FlowTemplates" } });
+            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
+            controller.Request = request;
+            controller.Request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
+            controller.Request.Properties.Add(HttpPropertyKeys.HttpRouteDataKey, routeData);
+
+            // act
+            var response = controller.Put(new FlowTemplateDto {Id = 1, Name = "NonExistant"});
 
             // Assert
-            Assert.Throws<ValidationException>(() => controller.Put(new FlowTemplateDto {Id = 1, Name = "Example"}));
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            var content = (ObjectContent) response.Content;
+            var value = content.Value;
+            Assert.Equal("Message", ((HttpError)value).First().Key);
+            Assert.Contains("Validation", ((HttpError)value).First().Value.ToString());
         }
 
         [Fact]
         public void Delete_should_return_not_found_if_not_exists()
         {
             // Assemble
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(null);
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(A<int>._)).Returns(null);
 
             // Act
-            var controller = new FlowTemplatesController(database);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             
             // Assert
             Assert.Throws<HttpResponseException>(() => controller.Delete(100));
@@ -423,9 +423,8 @@ namespace Flow.Web.Tests.Controller.Api
         [Fact]
         public void Delete_should_request_item_to_be_deleted_from_repository()
         {
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate {Id = 1, Name = "Example"});
-            A.CallTo(() => database.FlowTemplateSteps.Get()).Returns(new List<FlowTemplateStep>
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(A<int>._)).Returns(new FlowTemplate {Id = 1, Name = "Example"});
+            A.CallTo(() => _flowTemplateService.GetFlowTemplateSteps(A<int>._)).Returns(new List<FlowTemplateStep>
             {
                 new FlowTemplateStep {Id = 10, FlowTemplateId = 1},
                 new FlowTemplateStep {Id = 20, FlowTemplateId = 1},
@@ -433,24 +432,20 @@ namespace Flow.Web.Tests.Controller.Api
             });
 
             // Act
-            var controller = new FlowTemplatesController(database);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             controller.Delete(1);
 
             // Assert
-            A.CallTo(() => database.FlowTemplates.Delete(1)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => database.FlowTemplateSteps.Delete(10)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => database.FlowTemplateSteps.Delete(20)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => database.FlowTemplateSteps.Delete(30)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => _flowTemplateService.Delete(A<FlowTemplate>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Successful_delete_should_return_200()
         {
-            var database = A.Fake<IUnitOfWork>();
-            A.CallTo(() => database.FlowTemplates.Get(A<int>._)).Returns(new FlowTemplate { Id = 1, Name = "Example" });
+            A.CallTo(() => _flowTemplateService.GetFlowTemplate(A<int>._)).Returns(new FlowTemplate { Id = 1, Name = "Example" });
 
             // Act
-            var controller = new FlowTemplatesController(database);
+            var controller = new FlowTemplatesController(_flowTemplateService);
             var result = controller.Delete(1);
 
             // Assert

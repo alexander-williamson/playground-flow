@@ -1,21 +1,20 @@
 using System.Collections.Generic;
-using Flow.Library.Data.Abstract;
 using Flow.Library.Steps;
 
 namespace Flow.Library.Data
 {
     public interface IFlowTemplateService
     {
-        IEnumerable<Core.FlowTemplate> GetFlowTemplates(IUnitOfWork unitOfWork);
-        Core.FlowTemplate GetFlowTemplate(IUnitOfWork unitOfWork, int id);
-        int Add(IUnitOfWork unitOfWork, Core.FlowTemplate template);
-        void Update(IUnitOfWork unitOfWork, Core.FlowTemplate template);
-        void Delete(IUnitOfWork unitOfWork, Core.FlowTemplate template);
+        IEnumerable<Core.FlowTemplate> GetFlowTemplates();
+        Core.FlowTemplate GetFlowTemplate(int id);
+        int Add(Core.FlowTemplate template);
+        void Update(Core.FlowTemplate template);
+        void Delete(Core.FlowTemplate template);
 
-        IEnumerable<IStep> GetFlowTemplateSteps(IUnitOfWork unitOfWork, int flowTemplateId);
-        IStep GetFlowTemplateStep(IUnitOfWork unitOfWork, int id);
-        int Add(IUnitOfWork unitOfWork, IStep step, int flowTemplateId);
-        void Update(IUnitOfWork unitOfWork, IStep step);
-        void Delete(IUnitOfWork unitOfWork, IStep step);
+        IEnumerable<IStep> GetFlowTemplateSteps(int flowTemplateId);
+        IStep GetFlowTemplateStep(int id);
+        int Add(IStep step, int flowTemplateId);
+        void Update(IStep step);
+        void Delete(IStep step);
     }
 }

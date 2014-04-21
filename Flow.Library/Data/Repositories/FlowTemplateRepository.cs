@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
@@ -24,15 +25,17 @@ namespace Flow.Library.Data.Repositories
             return items.Any() ? items.Select(o => new Core.FlowTemplate {Id = o.Id, Name = o.Name}).First() : null;
         }
 
-        private int GetNextId()
-        {
-            return _context.FlowTemplates.Any() ? _context.FlowTemplates.Max(o => o.Id) + 1 : 1;
-        }
         public void Add(Core.FlowTemplate item)
         {
             var itemToInsert = new FlowTemplate {Name = item.Name};
             _context.FlowTemplates.InsertOnSubmit(itemToInsert);
-            item.Id = GetNextId();
+            itemToInsert.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "Id")
+                {
+                    item.Id = ((FlowTemplate)sender).Id;
+                }
+            };
         }
         public void Update(int id, Core.FlowTemplate instance)
         {
@@ -43,14 +46,6 @@ namespace Flow.Library.Data.Repositories
         {
             var existing = (from o in _context.FlowTemplates where o.Id == id select o).First();
             _context.FlowTemplates.DeleteOnSubmit(existing);
-        }
-
-        public void Save()
-        {
-            
-            
-            
-            _context.SubmitChanges(ConflictMode.FailOnFirstConflict);
         }
     }
 }

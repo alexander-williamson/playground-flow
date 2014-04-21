@@ -82,36 +82,21 @@ namespace Flow.Library.Tests.Data
         }
 
         [Fact]
-        public void Should_set_id_when_inserting_template()
+        public void Should_add_item_to_context()
         {
+            var expectedCount = _context.FlowTemplates.Count() + 1;
             var instance = new FlowTemplate {Name = "Example Template 2"};
 
             _repository.Add(instance);
-            _repository.Save();
+            _context.SubmitChanges();
 
-            Assert.Equal(GetLastId(), instance.Id);
-        }
-
-        [Fact]
-        public void Should_set_first_id_to_1()
-        {
-            var instance = new FlowTemplate { Name = "Example Template 2" };
-            using (var command = new SqlCommand(@"DELETE FROM FlowTemplate", _connection, _transaction))
-            {
-                command.ExecuteNonQuery();
-            }
-
-            _repository.Add(instance);
-            _repository.Save();
-
-            Assert.Equal(1, instance.Id);
+            Assert.Equal(expectedCount, _context.FlowTemplates.Count());
         }
 
         [Fact]
         public void Should_update_row_with_new_data()
         {
             _repository.Update(GetLastId(), new FlowTemplate {Id = 2, Name = "Updated"});
-            _repository.Save();
 
             var sut = _context.FlowTemplates.First();
 
@@ -129,7 +114,7 @@ namespace Flow.Library.Tests.Data
         public void Should_remove_row_from_database()
         {
             _repository.Delete(GetLastId());
-            _repository.Save();
+            _context.SubmitChanges();
             Assert.Equal(0, _context.FlowTemplates.Count());
         }
     }

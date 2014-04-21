@@ -8,6 +8,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Castle.Windsor.Diagnostics;
 using Flow.Library.Configuration;
+using Flow.Library.Data;
 using Flow.Library.Data.Abstract;
 using Flow.Web.Configuration;
 
@@ -32,10 +33,13 @@ namespace Flow.Web
                 .ImplementedBy<WebConfiguration>().LifestyleSingleton());
 
             container.Register(Component.For<IDbConnection>()
-                .UsingFactoryMethod(() => GetConnection(container.Resolve<IConfiguration>())).LifestyleTransient());
+                .UsingFactoryMethod(() => GetConnection(container.Resolve<IConfiguration>())).LifestylePerWebRequest());
 
             container.Register(Component.For<IUnitOfWork>()
                 .ImplementedBy<SqlUnitOfWork>().LifestyleTransient());
+
+            container.Register(
+                Component.For<IFlowTemplateService>().ImplementedBy<FlowTemplateService>().LifestyleTransient());
 
             SetupWindsorPerformanceCounters(container, container.Resolve<IConfiguration>());
         }
